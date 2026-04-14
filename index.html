@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中华历史人物图谱</title>
+<meta name="description" content="中华历史人物时间轴 - 交互式三视图历史数据可视化">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+  <!-- 顶部导航 -->
+  <header id="header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">中华历史人物图谱</span>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="era-tabs" id="eraTabs"></div>
+    </div>
+    <div class="header-right">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜索人物、事件…" aria-label="搜索人物和事件" />
+        <span class="search-icon">🔍</span>
+      </div>
+      <div class="view-toggle" role="tablist" aria-label="视图切换">
+        <button class="btn-view active" id="btnTimeline" title="时间轴视图 (1)" aria-label="时间轴视图">⏸</button>
+        <button class="btn-view" id="btnGraph" title="关系图视图 (2)" aria-label="关系图视图">⬡</button>
+        <button class="btn-view" id="btnMap" title="地图视图 (3)" aria-label="地图视图">🗺️</button>
+      </div>
+      <button class="btn-add-person" id="btnAddPerson" title="添加新人物">➕ 添加人物</button>
+    </div>
+  </header>
+
+  <!-- 分类筛选条 -->
+  <nav id="filterBar" aria-label="分类筛选">
+    <span class="filter-label">筛选：</span>
+    <button class="filter-btn active" data-cat="all">全部</button>
+    <button class="filter-btn" data-cat="emperor">帝王</button>
+    <button class="filter-btn" data-cat="military">将领</button>
+    <button class="filter-btn" data-cat="scholar">文人</button>
+    <button class="filter-btn" data-cat="philosopher">思想家</button>
+    <button class="filter-btn" data-cat="scientist">科学家</button>
+    <button class="filter-btn" data-cat="artist">艺术家</button>
+    <button class="filter-btn" data-cat="politician">政治家</button>
+    <button class="filter-btn" data-cat="sage">圣贤</button>
+    <button class="filter-btn" data-cat="diplomat">外交家</button>
+  </nav>
+
+  <!-- 主视图容器 -->
+  <main id="mainContainer">
+
+    <!-- 时间轴视图 -->
+    <section id="timelineView" aria-label="时间轴视图">
+      <div id="timelineWrapper">
+        <!-- 缩放控制 -->
+        <div class="zoom-controls">
+          <button id="zoomIn" title="放大 (+)">+</button>
+          <button id="zoomReset" title="重置缩放 (0)">↺</button>
+          <button id="zoomOut" title="缩小 (-)">−</button>
+        </div>
+        <!-- 朝代背景色带 -->
+        <div id="dynastyBands"></div>
+        <!-- 主时间轴 -->
+        <div id="axisLine"></div>
+        <!-- 刻度 -->
+        <div id="axisTicks"></div>
+        <!-- 事件节点（轴上方） -->
+        <div id="eventsAbove"></div>
+        <!-- 事件节点（轴下方） -->
+        <div id="eventsBelow"></div>
+        <!-- 人物条（轴上方） -->
+        <div id="personsAbove"></div>
+        <!-- 人物条（轴下方） -->
+        <div id="personsBelow"></div>
+      </div>
+    </section>
+
+    <!-- 关系图视图 -->
+    <section id="graphView" style="display:none;" aria-label="关系图视图">
+      <canvas id="graphCanvas"></canvas>
+      <div class="graph-controls">
+        <div class="graph-filter-row">
+          <div class="graph-dynasty-select">
+            <label for="graphDynastySelect">🏛️ 朝代：</label>
+            <select id="graphDynastySelect">
+              <option value="all">全部朝代</option>
+            </select>
+          </div>
+          <div class="graph-rel-select">
+            <label for="graphRelType">🔗 关系：</label>
+            <select id="graphRelType">
+              <option value="all">全部关系</option>
+            </select>
+          </div>
+        </div>
+        <div class="graph-legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#e74c3c"></span>帝王</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span>将领</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#3498db"></span>文人</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#1abc9c"></span>思想家</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span>科学家</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#e67e22"></span>艺术家</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#7f8c8d"></span>政治家</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#d4a843"></span>圣贤</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#00bcd4"></span>外交家</span>
+        </div>
+        <div class="graph-rel-legend" id="graphRelLegend"></div>
+      </div>
+      <div id="graphInfo">点击人物节点查看详情 · 滚轮缩放 · 拖拽移动 · 悬浮高亮关联</div>
+    </section>
+
+    <!-- 地图视图 -->
+    <section id="mapView" style="display:none;" aria-label="地图视图">
+      <div id="leafletMap"></div>
+      <div class="map-controls">
+        <div class="map-filter-row">
+          <div class="map-dynasty-select">
+            <label for="mapDynastySelect">🏛️ 朝代：</label>
+            <select id="mapDynastySelect">
+              <option value="all">全部朝代</option>
+            </select>
+          </div>
+          <div class="map-year-display">
+            <span id="mapYearLabel">显示全部时期</span>
+            <input type="range" id="mapYearSlider" min="-4500" max="2001" value="-4500" aria-label="年份筛选滑块" />
+          </div>
+        </div>
+        <div class="map-legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#e74c3c"></span>帝王</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span>将领</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#3498db"></span>文人</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#1abc9c"></span>思想家</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span>科学家</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#e67e22"></span>艺术家</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#7f8c8d"></span>政治家</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#d4a843"></span>圣贤</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#00bcd4"></span>外交家</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 人物详情面板 -->
+  <aside id="detailPanel" class="panel hidden" aria-label="人物详情">
+    <div class="panel-header-bar">
+      <button class="panel-close" id="panelClose" aria-label="关闭详情面板">✕</button>
+      <button class="panel-edit-btn" id="panelEditBtn" title="编辑人物信息">✏️ 编辑</button>
+      <button class="panel-delete-btn" id="panelDeleteBtn" title="删除此人物">🗑️ 删除</button>
+    </div>
+    <div class="panel-avatar" id="panelAvatar"></div>
+    <div class="panel-name" id="panelName"></div>
+    <div class="panel-meta" id="panelMeta"></div>
+    <div class="panel-desc" id="panelDesc"></div>
+    <div class="panel-section">
+      <div class="panel-section-title">主要成就</div>
+      <div class="panel-achievements" id="panelAchievements"></div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">相关人物</div>
+      <div class="panel-relations" id="panelRelations"></div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">相关事件</div>
+      <div class="panel-events" id="panelEvents"></div>
+    </div>
+    <!-- 编辑模式按钮 -->
+    <div class="panel-edit-actions hidden" id="panelEditActions">
+      <button class="edit-save-btn" id="editSaveBtn">💾 保存</button>
+      <button class="edit-cancel-btn" id="editCancelBtn">取消</button>
+    </div>
+  </aside>
+
+  <!-- 事件详情气泡 -->
+  <div id="eventTooltip" class="tooltip hidden" role="tooltip"></div>
+
+  <!-- 背景装饰 -->
+  <div class="bg-deco"></div>
+
+  <!-- 删除人物确认弹窗 -->
+  <div id="deletePersonModal" class="modal-overlay hidden">
+    <div class="modal-content" style="width:400px">
+      <div class="modal-header">
+        <h3>⚠️ 确认删除</h3>
+        <button class="modal-close" id="deletePersonClose">✕</button>
+      </div>
+      <div class="modal-body" style="text-align:center;padding:24px">
+        <div style="font-size:48px;margin-bottom:12px">🗑️</div>
+        <p style="font-size:15px;color:var(--text);margin-bottom:8px">确定要删除人物 <strong id="deletePersonName"></strong> 吗？</p>
+        <p style="font-size:12px;color:var(--text3)">此操作不可撤销，该人物的所有关联关系也将被移除。</p>
+      </div>
+      <div class="modal-footer">
+        <button class="edit-cancel-btn" id="deletePersonCancel">取消</button>
+        <button class="delete-confirm-btn" id="deletePersonConfirm">🗑️ 确认删除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加人物弹窗 - 分步向导 -->
+  <div id="addPersonModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>➕ 添加新人物</h3>
+        <button class="modal-close" id="addPersonClose">✕</button>
+      </div>
+      <!-- 步骤指示器 -->
+      <div class="step-indicator">
+        <div class="step-dot active" data-step="1"><span>1</span><small>基本信息</small></div>
+        <div class="step-line"></div>
+        <div class="step-dot" data-step="2"><span>2</span><small>详细介绍</small></div>
+        <div class="step-line"></div>
+        <div class="step-dot" data-step="3"><span>3</span><small>关联人物</small></div>
+      </div>
+      <!-- 第一步：基本信息 -->
+      <div class="step-panel active" id="step1">
+        <div class="modal-body">
+          <div class="form-row">
+            <label>名字 <span class="required">*</span></label>
+            <input type="text" id="addName" placeholder="如：李白" class="form-input" />
+          </div>
+          <div class="form-row form-row-3">
+            <div>
+              <label>生年 <span class="required">*</span> <small style="color:var(--text3);font-weight:400">（公元前用负数）</small></label>
+              <input type="number" id="addBirth" placeholder="-701" class="form-input" />
+            </div>
+            <div>
+              <label>卒年 <span class="required">*</span></label>
+              <input type="number" id="addDeath" placeholder="-762" class="form-input" />
+            </div>
+            <div>
+              <label>享年</label>
+              <div class="form-static" id="addLifespan">—</div>
+            </div>
+          </div>
+          <div class="form-row form-row-2">
+            <div>
+              <label>朝代 <span class="required">*</span> <small id="dynastyAutoHint" style="color:var(--accent);font-weight:400;display:none">✨ 已自动推断</small></label>
+              <select id="addDynasty" class="form-select"></select>
+            </div>
+            <div>
+              <label>类别</label>
+              <select id="addCat" class="form-select">
+                <option value="emperor">👑 帝王</option>
+                <option value="general">⚔️ 将领</option>
+                <option value="scholar">📖 文人</option>
+                <option value="philosopher">💡 思想家</option>
+                <option value="scientist">🔬 科学家</option>
+                <option value="artist">🎨 艺术家</option>
+                <option value="politician">🏛️ 政治家</option>
+                <option value="sage">🌟 圣贤</option>
+                <option value="diplomat">🤝 外交家</option>
+                <option value="inventor">🔧 发明家</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 第二步：详细介绍 -->
+      <div class="step-panel" id="step2">
+        <div class="modal-body">
+          <div class="form-row">
+            <label>简介</label>
+            <textarea id="addDesc" rows="3" placeholder="人物简介…" class="form-textarea"></textarea>
+          </div>
+          <div class="form-row">
+            <label>主要成就</label>
+            <div id="addAchievements" class="form-achievements">
+              <div class="form-achievement-item">
+                <input type="text" class="form-input add-achievement-input" placeholder="输入成就…" />
+                <button class="form-achievement-remove" title="删除">✕</button>
+              </div>
+            </div>
+            <button class="edit-add-btn" id="addMoreAchievement">+ 添加成就</button>
+          </div>
+          <div class="form-row">
+            <label>地点</label>
+            <input type="text" id="addPlace" placeholder="长安（今陕西西安）" class="form-input" />
+          </div>
+          <div class="form-row form-row-2">
+            <div>
+              <label>纬度 <small style="color:var(--text3);font-weight:400">（可选）</small></label>
+              <input type="number" id="addLat" step="0.1" placeholder="35.0" class="form-input" />
+            </div>
+            <div>
+              <label>经度 <small style="color:var(--text3);font-weight:400">（可选）</small></label>
+              <input type="number" id="addLng" step="0.1" placeholder="114.0" class="form-input" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 第三步：关联人物 -->
+      <div class="step-panel" id="step3">
+        <div class="modal-body">
+          <p class="step-hint">添加与此人物有关联的其他历史人物（可跳过）</p>
+          <div id="addRelations" class="form-relations"></div>
+          <button class="edit-add-btn" id="addMoreRelation">+ 添加关联</button>
+        </div>
+      </div>
+      <!-- 底部按钮 -->
+      <div class="modal-footer">
+        <button class="edit-cancel-btn" id="addPersonCancel">取消</button>
+        <button class="step-prev-btn" id="stepPrev" style="display:none">← 上一步</button>
+        <button class="step-next-btn" id="stepNext">下一步 →</button>
+        <button class="edit-save-btn" id="addPersonSave" style="display:none">💾 添加人物</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="data.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
