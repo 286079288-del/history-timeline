@@ -2837,6 +2837,93 @@ const PERSONS = [
 { id: 'lang_ying', name: '郎瑛', birth: 1487, death: 1566, cat: 'scholar', dynasty: '明', emoji: '📝', desc: '明代学者、笔记作家。所著《七修类稿》涵盖天文、地理、历史、文学等各领域，是了解明代社会文化的珍贵史料。', achievements: ['七修类稿'], relations: [], events: [] },
 { id: 'zheng_zhilong', name: '郑芝龙', birth: 1604, death: 1661, cat: 'military', dynasty: '明', emoji: '⛵', desc: '明末海上霸主，郑成功之父。以台湾为基地垄断中日海上贸易，拥有庞大舰队。降清后被软禁并杀害。', achievements: ['海上霸主', '垄断中日贸易'], relations: [], events: [] },
 { id: 'lan_yu', name: '蓝玉', birth: 1340, death: 1393, cat: 'general', dynasty: '明', emoji: '⚔️', desc: '明朝开国名将。捕鱼儿海之战大破北元残余势力，俘获元皇子及妃嫔大臣数百人。后以谋反罪被朱元璋诛杀，牵连者达一万五千人。', achievements: ['捕鱼儿海大捷', '灭北元残余'], relations: [], events: [] },
+// === 洪武 (朱元璋) 1368-1398 相关 ===
+// 朱元璋 已有。新增关联人物：
+{ id: 'ma_empress', name: '马皇后', birth: 1332, death: 1382, cat: 'politician', dynasty: '明', emoji: '👸', desc: '明太祖朱元璋的结发妻子。出身贫寒，聪慧贤德，多次劝谏朱元璋减少杀戮。传说朱元璋发怒时无人敢劝，唯有马皇后能使他息怒。', achievements: ['贤后典范', '劝谏减刑'], relations: [{ id: 'zhu_yuanzhang', type: '夫妻', label: '朱元璋' }], events: [] },
+{ id: 'li_shanzhang', name: '李善长', birth: 1314, death: 1390, cat: 'politician', dynasty: '明', emoji: '🏛️', desc: '明朝开国第一功臣，韩国公。辅助朱元璋建立明朝，制定各项制度。后因胡惟庸案牵连，全家七十余口被诛杀。', achievements: ['首任丞相', '制定律令'], relations: [], events: [] },
+{ id: 'hu_weiyong', name: '胡惟庸', birth: 1325, death: 1380, cat: 'politician', dynasty: '明', emoji: '🕸️', desc: '明朝最后一位丞相。以谋反罪被诛杀，株连三万余人。朱元璋借此废除丞相制度，将权力集中于皇帝一身。', achievements: ['末代丞相', '胡惟庸案'], relations: [], events: [] },
+{ id: 'mu_ying', name: '沐英', birth: 1345, death: 1392, cat: 'general', dynasty: '明', emoji: '⚔️', desc: '朱元璋养子，世镇云南的黔国公。平定云南，设卫所屯田。沐氏世袭镇守云南直至明亡，是明代最显赫的世袭武将家族。', achievements: ['平定云南', '世镇云南'], relations: [], events: [] },
+
+// === 建文 (朱允炆) 1398-1402 相关 ===
+// 建文帝已有。新增：
+{ id: 'qi_tai', name: '齐泰', birth: 1365, death: 1402, cat: 'politician', dynasty: '明', emoji: '📜', desc: '建文帝兵部尚书，削藩政策的主要策划者。靖难之役中兵败，被朱棣处死，全家被灭族。', achievements: ['削藩策划'], relations: [], events: [] },
+{ id: 'huang_zicheng', name: '黄子澄', birth: 1350, death: 1402, cat: 'politician', dynasty: '明', emoji: '📜', desc: '建文朝太常寺卿，与齐泰共同推进削藩。靖难之役兵败被俘，被朱棣凌迟处死，株连九族。', achievements: ['削藩谋臣'], relations: [], events: [] },
+
+// === 永乐 (朱棣) 1402-1424 相关 ===
+// 朱棣已有。新增：
+{ id: 'yao_guangxiao', name: '姚广孝', birth: 1335, death: 1418, cat: 'philosopher', dynasty: '明', emoji: '🔮', desc: '僧侣出身，靖难之役的首席谋士。辅佐朱棣夺取天下后不恋权位，回寺为僧。被称为黑衣宰相。', achievements: ['靖难首谋', '黑衣宰相'], relations: [], events: [] },
+{ id: 'zhang_fu', name: '张辅', birth: 1375, death: 1449, cat: 'general', dynasty: '明', emoji: '⚔️', desc: '永乐朝名将。四征安南，将安南并入明朝版图。后在土木堡之变中战死，一门忠烈。', achievements: ['四征安南', '土木堡殉国'], relations: [], events: [] },
+{ id: 'hou_xian', name: '侯显', birth: 1370, death: 1430, cat: 'politician', dynasty: '明', emoji: '⛵', desc: '明代宦官航海家。五次出使西洋和西藏，是郑和之外明朝最重要的航海外交使节。', achievements: ['五使西洋', '航海外交'], relations: [], events: [] },
+
+// === 洪熙 (朱高炽) 1424-1425 ===
+{ id: 'hongxi', name: '洪熙帝朱高炽', birth: 1378, death: 1425, cat: 'emperor', dynasty: '明', emoji: '👑', desc: '明朝第四位皇帝。在位仅十个月即病逝。但停止下西洋、平反建文旧臣、减免赋税，开创了转向文治的方向。其子宣德帝继承其政策。', achievements: ['停止下西洋', '平反旧臣', '在位仅十月'], relations: [{ id: 'yongle', type: '父子', label: '朱棣' }], events: [] },
+// 同期世界: 日本室町幕府足利义教在位 朝鲜世宗大王创造韩文
+
+// === 宣德 (朱瞻基) 1425-1435 ===
+{ id: 'xuande', name: '宣德帝朱瞻基', birth: 1399, death: 1435, cat: 'emperor', dynasty: '明', emoji: '👑', desc: '明朝第五位皇帝。与其父洪熙帝共同开创仁宣之治，与汉代文景之治并称。善书画，尤工花鸟。平定汉王朱高煦叛乱。', achievements: ['仁宣之治', '善书画', '平定汉王之乱'], relations: [], events: [] },
+{ id: 'yang_rong', name: '杨荣', birth: 1371, death: 1440, cat: 'politician', dynasty: '明', emoji: '🏛️', desc: '三杨之一。历事成祖至英宗四朝，多次随军出征参与决策。以机敏果决著称，被誉为"东杨"。', achievements: ['四朝元老', '随军决策'], relations: [], events: [] },
+{ id: 'yang_pu', name: '杨溥', birth: 1372, death: 1446, cat: 'politician', dynasty: '明', emoji: '🏛️', desc: '三杨之一。因建文旧臣入狱十年仍坚持读书。仁宣时复起，位居首辅。以宽厚稳重著称。', achievements: ['狱中读书十年', '宽厚首辅'], relations: [], events: [] },
+// 同期: 1433郑和第七次下西洋结束 朝鲜颁布训民正音
+
+// === 正统 (朱祁镇) 1435-1449 相关 ===
+// 明英宗已有。新增：
+// 同期事件: 1444匈牙利击败奥斯曼 1449也先俘虏英宗
+
+// === 景泰 (朱祁钰) 1449-1457 相关 ===
+// 景泰帝已有。新增：
+// 同期世界: 1453君士坦丁堡陷落 东罗马灭亡
+
+// === 天顺 (朱祁镇复辟) 1457-1464 ===
+{ id: 'cao_jixiang', name: '曹吉祥', birth: 1410, death: 1461, cat: 'politician', dynasty: '明', emoji: '🕸️', desc: '英宗复辟的功臣太监。夺门之变中帮助英宗复位。后因野心膨胀起兵谋反，兵败被凌迟处死。', achievements: ['夺门之变', '太监谋反'], relations: [], events: [] },
+// 同期世界: 1467应仁之乱 日本战国时代开始
+
+// === 成化 (朱见深) 1464-1487 ===
+{ id: 'chenghua', name: '成化帝朱见深', birth: 1447, death: 1487, cat: 'emperor', dynasty: '明', emoji: '👑', desc: '明朝第八位皇帝。童年因土木堡之变历经坎坷。在位时万贵妃专宠，设立西厂特务机构。但成化瓷器（斗彩鸡缸杯）为中国瓷器巅峰。', achievements: ['成化斗彩', '设立西厂', '万贵妃专宠'], relations: [], events: [] },
+{ id: 'wan_gui_fei', name: '万贵妃', birth: 1428, death: 1487, cat: 'politician', dynasty: '明', emoji: '💋', desc: '明宪宗宠妃。比皇帝年长19岁却专宠终生。其骄纵导致后宫无人敢生育皇子。成化帝死后不久她也去世，随帝而去。', achievements: ['专宠终生', '年差19岁'], relations: [], events: [] },
+{ id: 'wang_zhi', name: '汪直', birth: 1450, death: 1505, cat: 'politician', dynasty: '明', emoji: '👁️', desc: '成化朝权宦，西厂提督。以特务手段监控全国官员，权倾一时。后失宠被贬，年仅四十余岁退隐。', achievements: ['西厂首领', '特务统治'], relations: [], events: [] },
+// 同期世界: 1480莫斯科大公国摆脱蒙古统治 1492哥伦布发现美洲
+
+// === 弘治 (朱祐樘) 1487-1505 ===
+{ id: 'hongzhi', name: '弘治帝朱祐樘', birth: 1470, death: 1505, cat: 'emperor', dynasty: '明', emoji: '👑', desc: '明朝第九位皇帝。中国历史上唯一坚持一夫一妻的皇帝。勤政爱民，罢黜奸宦，起用正直大臣，开创弘治中兴。', achievements: ['一夫一妻', '弘治中兴', '勤政爱民'], relations: [], events: [] },
+{ id: 'liu_jian', name: '刘健', birth: 1433, death: 1526, cat: 'politician', dynasty: '明', emoji: '🏛️', desc: '弘治朝首辅。辅佐孝宗开创弘治中兴，为人刚正不阿。正德初年因反对刘瑾专权愤而辞职。', achievements: ['弘治中兴', '刚正不阿'], relations: [], events: [] },
+// 同期世界: 1498达伽马到印度 1500葡萄牙发现巴西
+
+// === 正德 (朱厚照) 1505-1521 ===
+{ id: 'zhengde', name: '正德帝朱厚照', birth: 1491, death: 1521, cat: 'emperor', dynasty: '明', emoji: '🎭', desc: '明朝第十位皇帝。明朝最另类的皇帝。喜欢微服出巡，自封威武大将军，在豹房玩乐。曾亲自率军在应州击退蒙古入侵。无子而终。', achievements: ['自封大将军', '应州大捷', '豹房'], relations: [], events: [] },
+{ id: 'liu_jin', name: '刘瑾', birth: 1451, death: 1510, cat: 'politician', dynasty: '明', emoji: '🕸️', desc: '正德朝权倾天下的大太监。与另外七名太监结为八虎。贪污腐败至极，被凌迟3357刀处死，是明代最著名的权阉之一。', achievements: ['八虎之首', '凌迟处死'], relations: [], events: [] },
+// 同期世界: 1517马丁路德发表95条论纲 1519麦哲伦环球航行 1521麦哲伦在菲律宾被杀
+
+// === 嘉靖 (朱厚熜) 1521-1567 ===
+{ id: 'jiajing', name: '嘉靖帝朱厚熜', birth: 1507, death: 1567, cat: 'emperor', dynasty: '明', emoji: '👑', desc: '明朝第十一位皇帝。前期革除弊政出现中兴迹象，后期沉迷道教炼丹求长生，二十余年不上朝。大礼议之争影响深远。海瑞上疏骂皇帝。', achievements: ['大礼议', '嘉靖中兴', '二十年不上朝'], relations: [], events: [] },
+{ id: 'xia_yan', name: '夏言', birth: 1482, death: 1548, cat: 'politician', dynasty: '明', emoji: '🏛️', desc: '嘉靖朝首辅。力主收复河套，被严嵩陷害致死。其死标志着嘉靖朝政治从清明转向腐败。', achievements: ['首辅', '被严嵩陷害'], relations: [], events: [] },
+{ id: 'xu_jie', name: '徐阶', birth: 1503, death: 1583, cat: 'politician', dynasty: '明', emoji: '🎯', desc: '嘉靖末年至隆庆初年首辅。隐忍数十年最终扳倒严嵩，为杨继盛等忠臣平反。以其政治智慧结束了一个黑暗时代。', achievements: ['扳倒严嵩', '为忠臣平反'], relations: [], events: [] },
+// 同期世界: 1543哥白尼日心说出版 1545特伦托会议开始反宗教改革 1564莎士比亚诞生
+
+// === 隆庆 (朱载坖) 1567-1572 ===
+{ id: 'longqing', name: '隆庆帝朱载坖', birth: 1537, death: 1572, cat: 'emperor', dynasty: '明', emoji: '👑', desc: '明朝第十二位皇帝。在位仅六年但意义重大。解除海禁（隆庆开关），允许民间海外贸易。与蒙古俺答汗达成隆庆和议，结束长达百年的北疆战争。', achievements: ['隆庆开关', '隆庆和议', '结束百年北疆战事'], relations: [], events: [] },
+{ id: 'gao_gong', name: '高拱', birth: 1513, death: 1578, cat: 'politician', dynasty: '明', emoji: '🏛️', desc: '隆庆朝首辅。积极支持隆庆和议与开关政策。性格刚烈，与张居正有过激烈权力斗争，最终被罢官。', achievements: ['隆庆和议', '支持开关'], relations: [], events: [] },
+// 同期世界: 1568织田信长上洛 1571勒班多海战
+
+// === 万历 (朱翊钧) 1572-1620 相关 ===
+// 万历帝已有。新增：
+{ id: 'li_ru_song', name: '李如松', birth: 1549, death: 1598, cat: 'general', dynasty: '明', emoji: '⚔️', desc: '万历朝名将。平定宁夏哱拜之乱，朝鲜之役中率明军收复平壤大破日军。后在与蒙古作战中阵亡。是万历三大征的主要统帅。', achievements: ['收复平壤', '三大征统帅'], relations: [], events: [] },
+{ id: 'shen_yiguan', name: '沈一贯', birth: 1531, death: 1615, cat: 'politician', dynasty: '明', emoji: '🏛️', desc: '万历时首辅。在国本之争中调和皇权与文官集团，但也被指责导致后来的党争激化。', achievements: ['首辅', '调和国本之争'], relations: [], events: [] },
+// 同期世界: 1588西班牙无敌舰队覆灭 1592壬辰倭乱 1600关原之战
+
+// === 泰昌 (朱常洛) 1620 ===
+{ id: 'taichang', name: '泰昌帝朱常洛', birth: 1582, death: 1620, cat: 'emperor', dynasty: '明', emoji: '👑', desc: '明朝第十四位皇帝。苦等39年终于即位，但在位仅29天即因红丸案暴毙。是明朝最短命的皇帝之一。其死引发明末三大案。', achievements: ['在位29天', '红丸案'], relations: [], events: [] },
+
+// === 天启 (朱由校) 1620-1627 ===
+{ id: 'tianqi', name: '天启帝朱由校', birth: 1605, death: 1627, cat: 'emperor', dynasty: '明', emoji: '👑', desc: '明朝第十五位皇帝。酷爱木工手艺胜于朝政，将国事尽付魏忠贤。其在位期间太监专权达到顶峰，后金（清朝）趁机壮大。', achievements: ['木工皇帝', '魏忠贤专权'], relations: [], events: [] },
+{ id: 'yang_lian', name: '杨涟', birth: 1572, death: 1625, cat: 'politician', dynasty: '明', emoji: '✊', desc: '东林党领袖。上疏弹劾魏忠贤二十四条大罪，被诬陷下狱。狱中被铁钉贯耳、土袋压身，临终血书"大笑大笑还大笑，刀砍东风，于我何有哉"，从容赴死。', achievements: ['弹劾魏忠贤', '东林六君子'], relations: [], events: [] },
+{ id: 'sun_chengzong', name: '孙承宗', birth: 1563, death: 1638, cat: 'general', dynasty: '明', emoji: '🛡️', desc: '明末军事家。督师蓟辽，建立关宁锦防线，培养袁崇焕等名将。清军攻高阳时率全家守城，城破全家百余人殉国。', achievements: ['关宁锦防线', '培养袁崇焕', '阖门殉国'], relations: [], events: [] },
+// 同期世界: 1620五月花号 1626荷兰买曼哈顿
+
+// === 崇祯 (朱由检) 1627-1644 相关 ===
+// 崇祯已有。新增：
+{ id: 'wu_sangui', name: '吴三桂', birth: 1612, death: 1678, cat: 'general', dynasty: '明', emoji: '⚔️', desc: '明末宁远总兵。李自成攻破北京后降清，引清军入关。后镇守云南反清复明失败，是明末最具争议的历史人物。', achievements: ['引清军入关', '三藩之首'], relations: [], events: [] },
+{ id: 'hong_chengchou', name: '洪承畴', birth: 1593, death: 1665, cat: 'general', dynasty: '明', emoji: '⚔️', desc: '明末著名统帅。松锦之战兵败降清，成为清朝开国功臣。明人耻其降敌，清人也讥其不忠，一生背负骂名。', achievements: ['降清贰臣', '松锦之战'], relations: [], events: [] },
+{ id: 'chen_yuanyuan', name: '陈圆圆', birth: 1623, death: 1695, cat: 'artist', dynasty: '明', emoji: '🌸', desc: '明末秦淮八艳之一。吴三桂为其"冲冠一怒为红颜"引清兵入关。其美貌与命运交织了大时代的剧变。', achievements: ['秦淮八艳', '冲冠一怒为红颜'], relations: [], events: [] },
 
   // 清
   {
@@ -3502,6 +3589,18 @@ const JAPAN_DYNASTIES = [
 { id: 'e_donglin', year: 1604, name: '东林书院重建', type: 'culture', desc: '顾宪成重建东林书院，讲学议政，"风声雨声读书声声声入耳，家事国事天下事事事关心"成为东林精神。' },
 { id: 'e_weizhongxian', year: 1625, name: '魏忠贤擅权', type: 'politics', desc: '天启年间魏忠贤权倾朝野，自称九千岁，残酷镇压东林党人。其擅权标志着明代宦官专权达到顶峰。' },
 { id: 'e_chongzhen_meishan', year: 1644, name: '崇祯帝煤山自缢', type: 'politics', desc: '李自成攻破北京，崇祯帝在煤山（景山）自缢殉国，明朝灭亡。他在衣襟上留下血书"任贼分裂朕尸，勿伤百姓一人"。' },
+
+{ id: 'e_hongwu_reign', year: 1368, name: '洪武之治', type: 'politics', desc: '朱元璋建立明朝后轻徭薄赋、惩治贪腐、休养生息。推行里甲制和黄册制度，为明朝300年统治奠定基础。' },
+{ id: 'e_jingnan', year: 1399, name: '靖难之役', type: 'war', desc: '燕王朱棣以清君侧为名起兵，历时四年攻破南京。建文帝失踪，朱棣即位成为明成祖。是中国历史上唯一成功的藩王夺位。' },
+{ id: 'e_yongle_reign', year: 1405, name: '永乐盛世', type: 'politics', desc: '朱棣迁都北京，修建紫禁城。郑和下西洋，编永乐大典，五次亲征漠北。是明朝国力最强盛的时期。' },
+{ id: 'e_renxuan_rule', year: 1425, name: '仁宣之治', type: 'politics', desc: '洪熙、宣德两朝停止大规模军事行动和下西洋，与民休息。三杨辅政，政治清明。被称为明代的文景之治。' },
+{ id: 'e_chenghua_era', year: 1470, name: '成化朝政', type: 'politics', desc: '成化前期有商辂等名臣辅政，后期万贵妃弄权。设西厂，斗彩瓷器为明代之冠。' },
+{ id: 'e_hongzhi_rule', year: 1488, name: '弘治中兴', type: 'politics', desc: '弘治帝勤政爱民，一夫一妻，史称弘治中兴。但其后继者正德帝荒淫导致中兴昙花一现。' },
+{ id: 'e_zhengde_era', year: 1510, name: '正德荒政', type: 'politics', desc: '正德帝微服私访、豹房玩乐。刘瑾弄权后被杀。宁王朱宸濠叛乱被王阳明平定。' },
+{ id: 'e_jiajing_era', year: 1530, name: '嘉靖中后期', type: 'politics', desc: '嘉靖帝痴迷道教，严嵩专权二十年。庚戌之变蒙古俺答兵临北京城下。在政治黑暗的同时，文学艺术空前繁荣。' },
+{ id: 'e_longqing_era', year: 1568, name: '隆庆新政', type: 'politics', desc: '隆庆开关海外贸易、隆庆和议结束百年边患。为万历中兴铺平了道路。' },
+{ id: 'e_wanli_era', year: 1580, name: '万历中兴与怠政', type: 'politics', desc: '张居正改革（一条鞭法）带来短暂中兴。张死后万历帝长期不上朝，国本之争持续数十年，明朝由盛转衰。' },
+{ id: 'e_tianqi_era', year: 1622, name: '天启朝阉党专权', type: 'politics', desc: '天启帝沉迷木工，魏忠贤阉党残酷镇压东林党。后金占领沈阳、辽阳，明朝已在崩溃边缘。' },
 ];
 
 
