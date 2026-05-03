@@ -2818,6 +2818,25 @@ const PERSONS = [
     relations: [],
     events: []
   },
+// rulers/politicians
+{ id: 'jingtai', name: '景泰帝朱祁钰', birth: 1428, death: 1457, cat: 'emperor', dynasty: '明', emoji: '👑', desc: '明英宗之弟。土木堡之变后在于谦拥立下即位，任用于谦击退瓦剌。英宗复辟后被废为郕王，不久去世。', achievements: ['保卫北京', '任用于谦'], relations: [], events: [] },
+{ id: 'xie_jin', name: '解缙', birth: 1369, death: 1415, cat: 'scholar', dynasty: '明', emoji: '📚', desc: '明代大儒，主持编纂《永乐大典》——世界最大的百科全书。因卷入太子之争被下狱，死于狱中。', achievements: ['编纂永乐大典'], relations: [], events: [] },
+{ id: 'xu_guangqi', name: '徐光启', birth: 1562, death: 1633, cat: 'scientist', dynasty: '明', emoji: '📐', desc: '明朝大臣、科学家。师从利玛窦学习西学，翻译《几何原本》，编纂《农政全书》，是中国近代科学的先驱。', achievements: ['翻译几何原本', '农政全书', '西学引进'], relations: [], events: [] },
+{ id: 'matteo_ricci', name: '利玛窦', birth: 1552, death: 1610, cat: 'scientist', dynasty: '明', emoji: '✝️', desc: '意大利耶稣会传教士。1582年来华，将西方天文、数学、地理引入中国，绘制《坤舆万国全图》。穿儒服、学汉语，开创了中西文化交流的新纪元。', achievements: ['坤舆万国全图', '西学东渐', '中西文化桥梁'], relations: [], events: [] },
+{ id: 'yuan_chonghuan', name: '袁崇焕', birth: 1584, death: 1630, cat: 'general', dynasty: '明', emoji: '🛡️', desc: '明末抗清名将。宁远之战以红衣大炮击伤努尔哈赤（传说致死），宁锦之战再败皇太极。被崇祯帝凌迟处死，明朝自毁长城。', achievements: ['宁远大捷', '宁锦大捷', '明朝长城'], relations: [], events: [] },
+{ id: 'shi_kefa', name: '史可法', birth: 1602, death: 1645, cat: 'general', dynasty: '明', emoji: '🏴', desc: '明末忠臣。清军南下时死守扬州，城破被俘，拒绝投降后被杀。扬州百姓建史公祠纪念，是明末气节的象征。', achievements: ['死守扬州', '民族气节'], relations: [], events: [] },
+{ id: 'fang_xiaoru', name: '方孝孺', birth: 1357, death: 1402, cat: 'scholar', dynasty: '明', emoji: '📜', desc: '建文帝师。朱棣即位后令其草拟诏书，方孝孺投笔于地拒绝，被灭十族（唯一历史记载）。其气节为后世景仰。', achievements: ['忠臣气节', '灭十族'], relations: [], events: [] },
+{ id: 'shen_wansan', name: '沈万三', birth: 1306, death: 1394, cat: 'politician', dynasty: '明', emoji: '💰', desc: '元末明初江南巨富，以海外贸易致富，财富富可敌国。传说资助修建南京城墙三分之一，后因触怒朱元璋被流放云南。', achievements: ['江南巨富', '修筑南京城墙'], relations: [], events: [] },
+{ id: 'wang_zhen', name: '王振', birth: 1400, death: 1449, cat: 'politician', dynasty: '明', emoji: '🕸️', desc: '明英宗时权倾朝野的大太监。怂恿英宗御驾亲征瓦剌，导致土木堡之变，英宗被俘，王振在乱军中被杀。', achievements: ['土木堡之变祸首', '宦官专权'], relations: [], events: [] },
+{ id: 'yu_dayou', name: '俞大猷', birth: 1503, death: 1579, cat: 'general', dynasty: '明', emoji: '⚔️', desc: '抗倭名将，与戚继光并称"俞龙戚虎"。在东南沿海抗击倭寇，转战闽浙粤赣，战功卓著。善诗文，著有《正气堂集》。', achievements: ['俞龙戚虎', '抗倭名将'], relations: [], events: [] },
+{ id: 'yang_jisheng', name: '杨继盛', birth: 1516, death: 1555, cat: 'scholar', dynasty: '明', emoji: '✊', desc: '明朝忠臣。上疏弹劾权臣严嵩十大罪状，被下狱拷打至骨折。狱中用碎碗片自割腐肉，留下"铁肩担道义，辣手著文章"的千古名句，从容赴死。', achievements: ['弹劾严嵩', '铁肩道义'], relations: [], events: [] },
+{ id: 'tang_saier', name: '唐赛儿', birth: 1399, death: 1450, cat: 'military', dynasty: '明', emoji: '⚡', desc: '明初女起义领袖。以白莲教聚众数万起义，攻占州县。明成祖派大军镇压，唐赛儿突围后不知所踪，成为传奇人物。', achievements: ['女起义领袖', '白莲教起义'], relations: [], events: [] },
+{ id: 'kuang_zhong', name: '况钟', birth: 1383, death: 1443, cat: 'politician', dynasty: '明', emoji: '⚖️', desc: '明代著名清官。任苏州知府13年，革除积弊，减轻赋税，深得民心。离任时百姓遮道挽留，是明朝"三大青天"之一。', achievements: ['苏州青天', '三大青天'], relations: [], events: [] },
+{ id: 'yang_shiqi', name: '杨士奇', birth: 1365, death: 1444, cat: 'politician', dynasty: '明', emoji: '🏛️', desc: '明朝名臣，历事五朝的内阁首辅。与杨荣、杨溥并称"三杨"，辅佐仁宣之治。为人宽厚，善于调和，是明代文官政治的典范。', achievements: ['三杨之首', '仁宣之治'], relations: [], events: [] },
+{ id: 'dong_qichang', name: '董其昌', birth: 1555, death: 1636, cat: 'artist', dynasty: '明', emoji: '🖌️', desc: '晚明书画大家，文人画理论集大成者。提出"南北宗论"，影响了其后300年的中国画坛。其书法和山水画均属一流。', achievements: ['南北宗论', '文人画理论', '书画双绝'], relations: [], events: [] },
+{ id: 'lang_ying', name: '郎瑛', birth: 1487, death: 1566, cat: 'scholar', dynasty: '明', emoji: '📝', desc: '明代学者、笔记作家。所著《七修类稿》涵盖天文、地理、历史、文学等各领域，是了解明代社会文化的珍贵史料。', achievements: ['七修类稿'], relations: [], events: [] },
+{ id: 'zheng_zhilong', name: '郑芝龙', birth: 1604, death: 1661, cat: 'military', dynasty: '明', emoji: '⛵', desc: '明末海上霸主，郑成功之父。以台湾为基地垄断中日海上贸易，拥有庞大舰队。降清后被软禁并杀害。', achievements: ['海上霸主', '垄断中日贸易'], relations: [], events: [] },
+{ id: 'lan_yu', name: '蓝玉', birth: 1340, death: 1393, cat: 'general', dynasty: '明', emoji: '⚔️', desc: '明朝开国名将。捕鱼儿海之战大破北元残余势力，俘获元皇子及妃嫔大臣数百人。后以谋反罪被朱元璋诛杀，牵连者达一万五千人。', achievements: ['捕鱼儿海大捷', '灭北元残余'], relations: [], events: [] },
 
   // 清
   {
@@ -3472,6 +3491,17 @@ const JAPAN_DYNASTIES = [
   { name: '安土桃山', start: 1573, end: 1603, color: '#5a3a3a' },
   { name: '江户幕府', start: 1603, end: 1868, color: '#2a2a5a' },
   { name: '明治以后', start: 1868, end: 2025, color: '#c0392b' },
+
+{ id: 'e_blue_jade_case', year: 1393, name: '蓝玉案', type: 'politics', desc: '朱元璋以谋反罪诛杀开国名将蓝玉，株连一万五千余人。明初功臣几乎被清洗殆尽。' },
+{ id: 'e_yongle_encyclopedia', year: 1408, name: '永乐大典成书', type: 'culture', desc: '解缙等2000余人历时五年编成《永乐大典》，共22937卷，是世界最大的纸本百科全书。' },
+{ id: 'e_tumu_crisis', year: 1449, name: '土木堡之变', type: 'war', desc: '明英宗在王振怂恿下亲征瓦剌，在土木堡全军覆没被俘。于谦领导北京保卫战，挽救了明朝。' },
+{ id: 'e_nanjing_capital', year: 1421, name: '正式迁都北京', type: 'politics', desc: '明成祖正式迁都北京，南京作为留都。紫禁城和天坛等宏伟建筑落成。' },
+{ id: 'e_jiajing', year: 1542, name: '壬寅宫变', type: 'politics', desc: '嘉靖帝追求长生服食丹药，虐待宫女。16名宫女试图勒死皇帝，事败被凌迟处死。是中国历史上罕见的宫女起义。' },
+{ id: 'e_longqing_switch', year: 1567, name: '隆庆开关', type: 'economy', desc: '隆庆帝解除海禁，允许民间海外贸易。大量白银流入中国，促进了晚明商品经济的繁荣。' },
+{ id: 'e_ningxia', year: 1592, name: '万历三大征', type: 'war', desc: '万历年间明军三次大规模远征：宁夏之役、朝鲜之役（抗倭援朝）、播州之役。虽皆取胜但耗尽国力。' },
+{ id: 'e_donglin', year: 1604, name: '东林书院重建', type: 'culture', desc: '顾宪成重建东林书院，讲学议政，"风声雨声读书声声声入耳，家事国事天下事事事关心"成为东林精神。' },
+{ id: 'e_weizhongxian', year: 1625, name: '魏忠贤擅权', type: 'politics', desc: '天启年间魏忠贤权倾朝野，自称九千岁，残酷镇压东林党人。其擅权标志着明代宦官专权达到顶峰。' },
+{ id: 'e_chongzhen_meishan', year: 1644, name: '崇祯帝煤山自缢', type: 'politics', desc: '李自成攻破北京，崇祯帝在煤山（景山）自缢殉国，明朝灭亡。他在衣襟上留下血书"任贼分裂朕尸，勿伤百姓一人"。' },
 ];
 
 
@@ -3935,6 +3965,18 @@ const WORLD_PERSONS = [
   { id: 'crick_watson', name: '沃森与克里克', birth: 1928, death: 2025, cat: 'scientist', emoji: '🧬', desc: '詹姆斯·沃森与弗朗西斯·克里克1953年发现DNA双螺旋结构，揭开了生命遗传密码之谜。是20世纪生物学最重大的发现。', achievements: ['DNA双螺旋', '遗传密码', '诺贝尔奖'], relations: [], events: [] },
   { id: 'lennon', name: '约翰·列侬', birth: 1940, death: 1980, cat: 'artist', emoji: '🎸', desc: '英国音乐家，甲壳虫乐队（披头士）灵魂人物。以《Imagine》《Yesterday》等经典歌曲改变了现代流行音乐，倡导和平与爱。', achievements: ['甲壳虫乐队', '《Imagine》', '流行音乐革命'], relations: [], events: [] },
   { id: 'gates', name: '比尔·盖茨', birth: 1955, death: 2025, cat: 'inventor', emoji: '💻', desc: '美国企业家，微软公司创始人。将个人电脑操作系统普及全球，改变了人类工作和生活方式。后全力投入全球健康和气候慈善事业。', achievements: ['微软创始人', 'PC革命', '全球慈善'], relations: [], events: [] },
+
+{ id: 'medici_cosimo', name: '科西莫·德·美第奇', birth: 1389, death: 1464, cat: 'politician', emoji: '🏦', desc: '美第奇家族奠基人。建立美第奇银行成为欧洲首富，以巨额财富赞助文艺复兴，支持布鲁内莱斯基建造圣母百花大教堂穹顶。', achievements: ['美第奇银行', '文艺复兴赞助'], relations: [], events: [] },
+{ id: 'gutenberg', name: '约翰内斯·古滕堡', birth: 1400, death: 1468, cat: 'inventor', emoji: '🖨️', desc: '德国发明家。1439年发明活字印刷术，1455年印刷《古滕堡圣经》。印刷术的发明使知识以前所未有的速度传播，推动了宗教改革和文艺复兴。', achievements: ['活字印刷术', '古滕堡圣经', '知识革命'], relations: [], events: [] },
+{ id: 'vasco_da_gama', name: '瓦斯科·达·伽马', birth: 1469, death: 1524, cat: 'diplomat', emoji: '⛵', desc: '葡萄牙航海家。1498年绕过好望角到达印度，开辟了欧洲至亚洲的海上航线。打破了阿拉伯和威尼斯对香料贸易的垄断。', achievements: ['开辟印度航线', '打破香料垄断'], relations: [], events: [] },
+{ id: 'magellan', name: '费迪南德·麦哲伦', birth: 1480, death: 1521, cat: 'diplomat', emoji: '🌏', desc: '葡萄牙航海家。率西班牙舰队完成了人类历史上首次环球航行。麦哲伦本人在菲律宾被杀，但其船队最终证明了地圆说。', achievements: ['首次环球航行', '证明地圆说'], relations: [], events: [] },
+{ id: 'luther', name: '马丁·路德', birth: 1483, death: 1546, cat: 'philosopher', emoji: '📜', desc: '德国神学家，宗教改革领袖。1517年发表《九十五条论纲》反对赎罪券，点燃了新教改革。将圣经译为德语，深刻改变了基督教世界。', achievements: ['九十五条论纲', '宗教改革', '德语圣经'], relations: [], events: ['e_protestant'] },
+{ id: 'calvin', name: '约翰·加尔文', birth: 1509, death: 1564, cat: 'philosopher', emoji: '✝️', desc: '法国神学家，新教加尔文宗创始人。在日内瓦建立了神权共和国，其《基督教要义》系统阐述了预定论。加尔文主义深刻影响了西方资本主义精神。', achievements: ['加尔文宗', '基督教要义', '预定论'], relations: [], events: [] },
+{ id: 'cervantes', name: '米格尔·德·塞万提斯', birth: 1547, death: 1616, cat: 'artist', emoji: '📖', desc: '西班牙文学巨匠。创作《堂吉诃德》，是世界文学史上第一部现代小说，以骑士的荒诞冒险讽刺没落的骑士制度，被誉为西方文学经典之巅。', achievements: ['堂吉诃德', '第一部现代小说'], relations: [], events: [] },
+{ id: 'bacon_francis', name: '弗朗西斯·培根', birth: 1561, death: 1626, cat: 'scientist', emoji: '🔬', desc: '英国哲学家、科学家，现代科学方法之父。提出"知识就是力量"和归纳法，为科学革命奠定了方法论基础。在实验冷冻保鲜时受寒去世。', achievements: ['知识就是力量', '归纳法', '科学方法'], relations: [], events: [] },
+{ id: 'kepler', name: '约翰内斯·开普勒', birth: 1571, death: 1630, cat: 'scientist', emoji: '🔭', desc: '德国天文学家、数学家。发现行星运动三大定律（椭圆轨道），精确描述了天体运行规律。其著作为牛顿万有引力理论提供了关键基础。', achievements: ['行星运动三大定律', '椭圆轨道'], relations: [], events: [] },
+{ id: 'harvey', name: '威廉·哈维', birth: 1578, death: 1657, cat: 'scientist', emoji: '❤️', desc: '英国医生。1628年发表《心血运动论》，首次正确描述了血液循环系统，证明心脏像泵一样推动血液在全身循环。是现代生理学的奠基之作。', achievements: ['发现血液循环', '心血运动论'], relations: [], events: [] },
+{ id: 'akbar', name: '阿克巴大帝', birth: 1542, death: 1605, cat: 'emperor', emoji: '🕌', desc: '莫卧儿帝国最伟大的皇帝。在位期间将帝国疆域扩张至几乎整个印度次大陆。推行宗教宽容政策，试图融合伊斯兰教、印度教等创建"神圣宗教"。', achievements: ['莫卧儿鼎盛', '宗教宽容', '神圣宗教'], relations: [], events: [] },
 ];
 
 
@@ -3997,6 +4039,13 @@ const WORLD_EVENTS = [
   { id: 'e_eu_founded', year: 1993, name: '欧盟正式成立', type: 'politics', desc: '《马斯特里赫特条约》生效，欧洲联盟正式成立。单一市场和欧元统一了欧洲经济，实现了几百年来欧洲统一的理想。' },
   { id: 'e_911', year: 2001, name: '911恐怖袭击', type: 'war', desc: '基地组织劫持客机撞击纽约世贸中心和五角大楼，近3000人死亡。此后美国发动全球反恐战争，深刻影响21世纪国际格局。' },
   { id: 'e_covid', year: 2020, name: '新冠疫情全球大流行', type: 'economy', desc: '新冠病毒COVID-19席卷全球，造成数百万人死亡，世界经济遭受重创。深刻改变了人类的生活方式和工作模式。' },
+
+{ id: 'e_fall_constantinople', year: 1453, name: '君士坦丁堡陷落', type: 'war', desc: '奥斯曼帝国攻陷君士坦丁堡，东罗马帝国灭亡。大量希腊学者携古籍逃往意大利，直接促进了文艺复兴。' },
+{ id: 'e_reconquista', year: 1492, name: '收复失地运动完成', type: 'war', desc: '西班牙攻陷格拉纳达，结束了近800年的收复失地运动。同年哥伦布发现美洲，西班牙驱逐犹太人。' },
+{ id: 'e_magellan_circumnavigation', year: 1522, name: '麦哲伦船队完成环球航行', type: 'science', desc: '麦哲伦船队中仅存的维多利亚号返回西班牙，完成人类首次环球航行。历时三年，出发时265人仅18人生还。' },
+{ id: 'e_spanish_armada_battle', year: 1588, name: '打败西班牙无敌舰队', type: 'war', desc: '英国海军击败西班牙无敌舰队，打破了西班牙的海上霸权。英国开始崛起为海洋帝国，世界格局从此改变。' },
+{ id: 'e_thirty_years_war', year: 1618, name: '三十年战争爆发', type: 'war', desc: '波希米亚新教徒起义引爆欧洲最惨烈的宗教战争。德意志各邦成为主战场，人口损失达三分之一。1648年《威斯特伐利亚和约》确立现代主权国家体系。' },
+{ id: 'e_galileo_trial', year: 1633, name: '伽利略受审', type: 'culture', desc: '罗马教廷判处伽利略"有强烈异端嫌疑"，迫其放弃日心说。传说他以手拍地说"但它确实在动"。是科学与宗教冲突的象征。' },
 ];
 
 
@@ -4140,6 +4189,20 @@ const JAPAN_PERSONS = [
   { id: 'oda_eiichiro', name: '大江健三郎', birth: 1935, death: 2023, cat: 'artist', emoji: '📕', desc: '日本作家，第二位获得诺贝尔文学奖的日本人。作品以战后日本的创伤和人性的挣扎为主题，代表作《个人的体验》《万延元年的足球队》。', achievements: ['诺贝尔文学奖', '《个人的体验》'], relations: [], events: [] },
   { id: 'suzuki_ichiro', name: '铃木一朗', birth: 1973, death: 2025, cat: 'scientist', emoji: '⚾', desc: '日本棒球运动员，MLB单赛季安打纪录保持者(262支)。以独特的钟摆打法征服美日棒球界，是亚洲运动员在世界体育界的标杆。', achievements: ['MLB安打纪录', '钟摆打法', '亚洲体育标杆'], relations: [], events: [] },
   { id: 'miyazaki_hayao', name: '宫崎骏', birth: 1941, death: 2025, cat: 'artist', emoji: '🐉', desc: '日本动画导演，吉卜力工作室创始人。执导《千与千寻》《龙猫》《幽灵公主》《天空之城》等动画经典，获奥斯卡终身成就奖。', achievements: ['《千与千寻》', '吉卜力工作室', '奥斯卡终身成就奖'], relations: [], events: [] },
+
+// 室町·战国名将
+{ id: 'hosokawa_katsumoto', name: '细川胜元', birth: 1430, death: 1473, cat: 'military', emoji: '⚔️', desc: '室町幕府管领，东军总大将。应仁之乱中与山名宗全对峙，京都化为焦土。乱中病逝，战争却持续了11年。', achievements: ['东军总大将', '应仁之乱'], relations: [], events: ['e_onin_war'] },
+{ id: 'yamana_sozen', name: '山名宗全', birth: 1404, death: 1473, cat: 'military', emoji: '⚔️', desc: '室町幕府重臣，西军总大将。领有六国，人称"六分一众"。与细川胜元在应仁之乱中互为死敌。', achievements: ['西军总大将', '六分一众'], relations: [], events: ['e_onin_war'] },
+{ id: 'mori_motonari', name: '毛利元就', birth: 1497, death: 1571, cat: 'military', emoji: '🏯', desc: '战国大名，中国地方霸主。以智谋著称，"三矢之训"教导三个儿子团结——一支箭易折，三支箭难断。从安艺小豪族发展为中国十国霸主。', achievements: ['三矢之训', '中国十国霸主', '智将'], relations: [], events: [] },
+{ id: 'shimazu_yoshihiro', name: '岛津义弘', birth: 1535, death: 1619, cat: 'military', emoji: '⚔️', desc: '战国九州大名，萨摩岛津氏当主。关原之战中率1500人从东军数万包围中成功突围（岛津之退口），被誉为战国最强武士。', achievements: ['岛津之退口', '战国最强'], relations: [], events: ['e_sekigahara'] },
+{ id: 'honda_tadakatsu', name: '本多忠胜', birth: 1548, death: 1610, cat: 'military', emoji: '🗡️', desc: '德川家康麾下第一猛将，德川四天王之首。一生参战57次从未受伤，被丰臣秀吉称赞为"日本第一勇士"。头盔饰有鹿角，威名远扬。', achievements: ['57战无伤', '德川四天王', '日本第一勇士'], relations: [], events: [] },
+{ id: 'ii_naomasa', name: '井伊直政', birth: 1561, death: 1602, cat: 'military', emoji: '⚔️', desc: '德川四天王之一，"赤鬼"。关原之战中率先冲锋，身负重伤仍坚持追击。其率领的井伊赤备队是战国最精锐的骑兵之一。', achievements: ['德川四天王', '赤鬼', '赤备队'], relations: [], events: ['e_sekigahara'] },
+{ id: 'chosokabe_motochika', name: '长宗我部元亲', birth: 1539, death: 1599, cat: 'military', emoji: '🏯', desc: '四国大名，统一四国全岛。以一领具足制度武装农民，从土佐小国崛起为四国霸主。后在丰臣秀吉征伐下屈膝。', achievements: ['统一四国', '一领具足'], relations: [], events: [] },
+{ id: 'amakusa_shiro', name: '天草四郎', birth: 1621, death: 1638, cat: 'military', emoji: '✝️', desc: '岛原之乱的少年领袖。年仅16岁率领37000名基督徒和农民起义，对抗幕府12万大军。起义失败后壮烈牺牲，是信仰自由的象征。', achievements: ['岛原起义领袖', '信仰自由象征'], relations: [], events: ['e_shimabara'] },
+{ id: 'izumo_okuni', name: '出云阿国', birth: 1572, death: 1613, cat: 'artist', emoji: '💃', desc: '歌舞伎的创始人。在京都四条河原表演新奇的歌舞，风靡全城。歌舞伎从街头表演逐渐发展为日本最代表性的传统戏剧。', achievements: ['创造歌舞伎', '日本传统戏剧之母'], relations: [], events: [] },
+{ id: 'honami_koetsu', name: '本阿弥光悦', birth: 1558, death: 1637, cat: 'artist', emoji: '🎨', desc: '江户初期艺术家，琳派奠基人。精通书法、陶艺、漆艺、茶道。在京都鹰峰创建艺术村光悦村，是日本综合艺术的先驱。', achievements: ['琳派奠基', '光悦村', '综合艺术'], relations: [], events: [] },
+{ id: 'tawaraya_sotatsu', name: '俵屋宗达', birth: 1570, death: 1643, cat: 'artist', emoji: '🖼️', desc: '江户初期画家，琳派创始人之一。与光悦合作创造了独特的装饰画风。代表作《风神雷神图屏风》是日本国宝级艺术品。', achievements: ['琳派创始人', '风神雷神图'], relations: [], events: [] },
+{ id: 'kano_eitoku', name: '狩野永德', birth: 1543, death: 1590, cat: 'artist', emoji: '🏯', desc: '安土桃山时代最具影响力的画家。为织田信长的安土城和丰臣秀吉的大阪城绘制障壁画，以金碧辉煌的浓绘风格开创了桃山美术的黄金时代。', achievements: ['桃山美术代表', '安土城障壁画', '狩野派黄金时代'], relations: [], events: [] },
 ];
 
 
@@ -4206,6 +4269,13 @@ const JAPAN_EVENTS = [
   { id: 'e_jp_ww2_end', year: 1945, name: '广岛长崎原子弹爆炸', type: 'war', desc: '美国在广岛和长崎投下原子弹，死伤数十万平民。苏联对日宣战，日本天皇宣布无条件投降。', dynasty: '昭和' },
   { id: 'e_jp_recovery', year: 1955, name: '经济高速增长开始', type: 'economy', desc: '日本从战败中迅速复兴，进入"神武景气"时期。到1968年成为世界第二大经济体，创造了战后经济奇迹。', dynasty: '昭和' },
   { id: 'e_jp_san Francisco', year: 1951, name: '旧金山和约', type: 'politics', desc: '日本与美国等48国签订和约，正式结束二战状态，恢复国家主权。同时签订美日安保条约。', dynasty: '昭和' },
+
+{ id: 'e_nobunaga_nobuyasu', year: 1579, name: '德川信康切腹', type: 'politics', desc: '织田信长疑德川家康长子信康通敌，命其切腹。家康忍痛服从，体现战国政治的残酷。' },
+{ id: 'e_osaka_jo', year: 1583, name: '大阪城筑城', type: 'culture', desc: '丰臣秀吉在大阪修建日本最宏伟的城堡。动用数万劳工，历时三年完成。天守阁覆以金箔，极尽奢华。' },
+{ id: 'e_sword_hunt', year: 1588, name: '刀狩令', type: 'politics', desc: '丰臣秀吉颁布刀狩令，没收全国农民武器，禁止百姓持有刀剑。此举确立了兵农分离制度，杜绝了民间武装反抗。' },
+{ id: 'e_tokugawa_red_seal', year: 1604, name: '朱印船贸易开始', type: 'economy', desc: '德川家康发放朱印状许可商船出海贸易。日本商船远航东南亚，形成繁荣的朱印船贸易网络。' },
+{ id: 'e_kan_ei_ji', year: 1625, name: '宽永寺建立', type: 'culture', desc: '德川家光在上野建立宽永寺，作为江户城的鬼门镇护。与增上寺并列为德川家的菩提寺。' },
+{ id: 'e_shimabara_aftermath', year: 1639, name: '葡萄牙船来航禁止', type: 'politics', desc: '幕府禁止葡萄牙船来航，完成锁国。仅允许荷兰和中国在长崎出岛进行有限贸易，日本与世界隔绝200余年。' },
 ];
 
 const KOREA_PERSONS = [
@@ -4278,6 +4348,19 @@ const KOREA_PERSONS = [
 { id: 'kim_gu', name: '金九', birth: 1876, death: 1949, cat: 'politician', emoji: '🕊️', desc: '韩国独立运动领袖。大韩民国临时政府主席，领导海外抗日独立运动。战后反对朝鲜半岛分裂，致力于南北统一谈判。被极右势力暗杀。', achievements: ['独立运动领袖', '临时政府主席', '统一运动'], relations: [], events: [] },
 { id: 'syngman_rhee', name: '李承晚', birth: 1875, death: 1965, cat: 'politician', emoji: '🏛️', desc: '韩国首任总统。早年参加独立运动，流亡美国。1948年就任大韩民国首任总统，执政12年。1960年因四一九革命被迫下台，流亡夏威夷。', achievements: ['首任总统', '独立运动先驱'], relations: [], events: [] },
 { id: 'park_chunghee', name: '朴正熙', birth: 1917, death: 1979, cat: 'politician', emoji: '🏗️', desc: '韩国第五至第九任总统。通过军事政变上台，推行经济发展五年计划，创造了汉江奇迹。韩国经济从最贫穷国家跃升为工业强国。1979年被部下刺杀。', achievements: ['汉江奇迹', '经济发展'], relations: [], events: [] },
+
+{ id: 'jeong_dojeon', name: '郑道传', birth: 1342, death: 1398, cat: 'scholar', emoji: '📜', desc: '朝鲜王朝的设计师。辅佐李成桂建立朝鲜，制定《朝鲜经国典》，规划汉阳都城，奠定了朝鲜500年的制度基础。被李芳远（太宗）杀害。', achievements: ['朝鲜王朝设计师', '朝鲜经国典', '规划汉阳'], relations: [], events: ['e_joseon_founded'] },
+{ id: 'hwang_hui', name: '黄喜', birth: 1363, death: 1452, cat: 'politician', emoji: '🏛️', desc: '朝鲜世宗时代名相。担任领议政18年，是朝鲜历史上任职最长的宰相。以宽容和正直辅佐世宗，被称为"太平宰相"。', achievements: ['18年宰相', '太平宰相'], relations: [], events: [] },
+{ id: 'shin_saimdang', name: '申师任堂', birth: 1504, death: 1551, cat: 'artist', emoji: '🍇', desc: '朝鲜女艺术家、诗人。精通书画刺绣，是韩国最受尊敬的女性历史人物之一。其子李珥（栗谷）是朝鲜儒学大师。头像印于韩国5万韩元纸币。', achievements: ['女艺术家', '五万韩元头像', '儒学家之母'], relations: [], events: [] },
+{ id: 'heo_gyun', name: '许筠', birth: 1569, death: 1618, cat: 'artist', emoji: '📕', desc: '朝鲜中期文臣、小说家。创作了朝鲜第一部韩文小说《洪吉童传》，反映了社会下层人民的愿望，是朝鲜文学史上的里程碑。', achievements: ['洪吉童传', '第一部韩文小说'], relations: [], events: [] },
+{ id: 'yi_hangbok', name: '李恒福', birth: 1556, death: 1618, cat: 'politician', emoji: '🏛️', desc: '朝鲜中期文臣。壬辰倭乱中随宣祖播迁，主持与明朝的外交斡旋，请来援军。是乱中国家的中流砥柱。', achievements: ['请明援军', '中流砥柱'], relations: [], events: ['e_imjin_war'] },
+{ id: 'ryu_seongryong', name: '柳成龙', birth: 1542, death: 1607, cat: 'politician', emoji: '📖', desc: '朝鲜领议政。壬辰倭乱中总揽国政，起用李舜臣和权栗等名将。著《惩毖录》反思战争教训，是朝鲜最重要的历史文献之一。', achievements: ['起用李舜臣', '惩毖录', '战争总指挥'], relations: [], events: ['e_imjin_war'] },
+{ id: 'han_seokbong', name: '韩石峰', birth: 1543, death: 1605, cat: 'artist', emoji: '✍️', desc: '朝鲜最伟大的书法家。其楷书被誉为"东方第一"，连明朝使臣也赞不绝口。世传其母为激励他苦练，深夜关灯让他凭感觉写字。', achievements: ['东方第一书法', '石峰体'], relations: [], events: [] },
+{ id: 'kim_siseup', name: '金时习', birth: 1435, death: 1493, cat: 'artist', emoji: '📚', desc: '朝鲜初期文学家。因不满世祖篡位而隐居，著《金鰲新话》——朝鲜文学史上第一部传奇小说集。被称为"方外之人"。', achievements: ['金鳌新话', '第一位小说家'], relations: [], events: [] },
+{ id: 'park_yun', name: '朴堧', birth: 1378, death: 1458, cat: 'scientist', emoji: '🎵', desc: '朝鲜世宗时代的音乐家。整理朝鲜雅乐和乡乐，创制编钟和乐谱体系。为朝鲜宫廷音乐奠定了千年基础。', achievements: ['整理雅乐', '创制编钟', '宫廷音乐奠基'], relations: [], events: [] },
+{ id: 'gang_huian', name: '姜希颜', birth: 1417, death: 1464, cat: 'artist', emoji: '🎨', desc: '朝鲜初期著名画家。随使节赴明朝学习中国绘画，回国后开创朝鲜文人画传统。其山水人物画被奉为国宝。', achievements: ['朝鲜文人画开创', '入明学画'], relations: [], events: [] },
+{ id: 'kwon_yul', name: '权栗', birth: 1537, death: 1599, cat: 'military', emoji: '⚔️', desc: '朝鲜陆军名将。壬辰倭乱中在幸州以三千兵力大破三万日军（幸州大捷），鼓舞了全国抗敌士气。与李舜臣并称陆海双雄。', achievements: ['幸州大捷', '陆海双雄'], relations: [], events: ['e_imjin_war'] },
+{ id: 'kim_deokryeong', name: '金德龄', birth: 1568, death: 1596, cat: 'military', emoji: '🗡️', desc: '朝鲜义兵将领。壬辰倭乱中率义兵屡破日军，被诬陷通敌冤死狱中。其忠勇感动后人，小说《林巨正》以他为原型。', achievements: ['义兵将领', '忠勇之士'], relations: [], events: ['e_imjin_war'] },
 ];
 
 const KOREA_EVENTS = [
@@ -4314,4 +4397,11 @@ const KOREA_EVENTS = [
 { id: 'e_korean_war', year: 1950, name: '朝鲜战争爆发', type: 'war', desc: '朝鲜人民军南下，韩国军队节节败退。以美国为首的联合国军介入，中国派遣志愿军。1953年停战，38线至今仍是分裂线。', dynasty: '现代' },
 { id: 'e_hangang_miracle', year: 1960, name: '汉江奇迹', type: 'economy', desc: '韩国从1960年代开始经济腾飞，30年间从世界最穷国之一跃升为高收入发达国家，创造了汉江奇迹。', dynasty: '现代' },
 { id: 'e_seoul_olympics', year: 1988, name: '汉城奥运会', type: 'culture', desc: '第24届夏季奥运会在汉城举行，是韩国向世界展示发展成就的里程碑。', dynasty: '现代' },
+
+{ id: 'e_hanyang_construction', year: 1395, name: '汉阳都城竣工', type: 'culture', desc: '朝鲜太祖李成桂命郑道传规划建造汉阳（首尔）都城，包括景福宫和宗庙。奠定了600年韩国首都的基础。' },
+{ id: 'e_hunminjeongeum_promulgated', year: 1446, name: '训民正音正式颁布', type: 'culture', desc: '世宗大王正式颁布训民正音，共28个字母。这是世界上唯一知道创制者和创制年份的文字系统。' },
+{ id: 'e_literati_purge', year: 1498, name: '戊午史祸', type: 'politics', desc: '朝鲜历史上第一次大士祸。因金宗直在史书中批评世祖篡位引发，数十名士林派官员被杀或流放。开启了持续百年的四代士祸。' },
+{ id: 'e_gapsin_purge', year: 1504, name: '甲子士祸', type: 'politics', desc: '燕山君得知生母被赐死真相后疯狂报复，屠杀大批官员。燕山君成为朝鲜历史上最著名的暴君，后被中宗反正推翻。' },
+{ id: 'e_gimyo_purge', year: 1519, name: '己卯士祸', type: 'politics', desc: '赵光祖推行激进改革触怒勋旧派，被诬陷赐死。其理想主义的至治政治虽失败，但成为后世士林的精神遗产。' },
+{ id: 'e_sa_Century_purges', year: 1545, name: '乙巳士祸', type: 'politics', desc: '朝鲜第12代王仁宗在位仅8月即死，围绕继位问题发生大规模政治清洗。四次士祸极大削弱了士林势力。' },
 ];
