@@ -1925,6 +1925,7 @@ body {
 #dualTimelineContainer {
   display: flex;
   flex-direction: column;
+  width: max-content;
   min-width: 100%;
   height: 100%;
 }
@@ -1932,6 +1933,7 @@ body {
 .timeline-block {
   flex: 1 1 auto;
   min-height: 200px;
+  width: 100%;
   position: relative;
   border-bottom: 1px solid var(--border);
 }
