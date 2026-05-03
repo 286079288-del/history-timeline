@@ -4076,6 +4076,62 @@ const WORLD_PERSONS = [
 { id: 'kepler', name: '约翰内斯·开普勒', birth: 1571, death: 1630, cat: 'scientist', emoji: '🔭', desc: '德国天文学家、数学家。发现行星运动三大定律（椭圆轨道），精确描述了天体运行规律。其著作为牛顿万有引力理论提供了关键基础。', achievements: ['行星运动三大定律', '椭圆轨道'], relations: [], events: [] },
 { id: 'harvey', name: '威廉·哈维', birth: 1578, death: 1657, cat: 'scientist', emoji: '❤️', desc: '英国医生。1628年发表《心血运动论》，首次正确描述了血液循环系统，证明心脏像泵一样推动血液在全身循环。是现代生理学的奠基之作。', achievements: ['发现血液循环', '心血运动论'], relations: [], events: [] },
 { id: 'akbar', name: '阿克巴大帝', birth: 1542, death: 1605, cat: 'emperor', emoji: '🕌', desc: '莫卧儿帝国最伟大的皇帝。在位期间将帝国疆域扩张至几乎整个印度次大陆。推行宗教宽容政策，试图融合伊斯兰教、印度教等创建"神圣宗教"。', achievements: ['莫卧儿鼎盛', '宗教宽容', '神圣宗教'], relations: [], events: [] },
+
+// === 美索不达米亚 ===
+{ id: 'gilgamesh', name: '吉尔伽美什', birth: -2750, death: -2690, cat: 'emperor', emoji: '🦁', desc: '苏美尔城邦乌鲁克的传说国王。寻求永生而不得的悲剧英雄。《吉尔伽美什史诗》是人类最早的文字文学作品，其中大洪水传说与《圣经》诺亚方舟惊人相似。', achievements: ['《吉尔伽美什史诗》', '最早文学作品'], relations: [], events: [] },
+{ id: 'sargon_akkad', name: '萨尔贡大帝', birth: -2350, death: -2280, cat: 'emperor', emoji: '👑', desc: '阿卡德帝国的创建者，人类历史上第一个建立帝国的人。出身卑微（传说被弃于河中），先后征服苏美尔各城邦，建立了史上第一个多民族中央集权帝国。', achievements: ['第一个帝国建立者', '阿卡德帝国'], relations: [], events: [] },
+{ id: 'urnammu', name: '乌尔纳姆', birth: -2112, death: -2095, cat: 'emperor', emoji: '📜', desc: '苏美尔乌尔第三王朝的创建者。颁布《乌尔纳姆法典》，是已知人类历史上最早的法典（比汉谟拉比早300年），奠定了古代两河流域的法律传统。', achievements: ['最早法典', '乌尔第三王朝'], relations: [], events: [] },
+{ id: 'ashurbanipal', name: '亚述巴尼拔', birth: -668, death: -627, cat: 'emperor', emoji: '📚', desc: '亚述帝国最后一位伟大国王。建立了世界最早的图书馆——尼尼微图书馆，收藏了三万多块楔形文字泥版，保留了大量古代两河流域的文学作品和科学知识。', achievements: ['尼尼微图书馆', '最早系统图书馆'], relations: [], events: [] },
+{ id: 'nebuchadnezzar', name: '尼布甲尼撒二世', birth: -630, death: -562, cat: 'emperor', emoji: '🏛️', desc: '新巴比伦王国最伟大的国王。建造了巴比伦空中花园（古代世界七大奇迹之一），攻陷耶路撒冷掳走犹太人（巴比伦之囚）。古巴比伦文化的最后辉煌。', achievements: ['空中花园', '巴比伦之囚'], relations: [], events: [] },
+
+// === 古埃及 ===
+{ id: 'narmer', name: '纳尔迈（美尼斯）', birth: -3100, death: -3050, cat: 'emperor', emoji: '👑', desc: '古埃及第一王朝建立者，统一了上埃及和下埃及，开创了法老文明。纳尔迈调色板是埃及统一的最早文物证据。', achievements: ['统一上下埃及', '第一王朝'], relations: [], events: [] },
+{ id: 'imhotep', name: '伊姆霍特普', birth: -2670, death: -2600, cat: 'scientist', emoji: '🏗️', desc: '古埃及建筑师、祭司、学者。设计建造了历史上第一座金字塔——左塞尔阶梯金字塔。精通医学，被后世尊为医神。是极少数以平民身份被神化的人物。', achievements: ['第一座金字塔', '阶梯金字塔', '建筑师'], relations: [], events: [] },
+{ id: 'hatshepsut', name: '哈特谢普苏特', birth: -1507, death: -1458, cat: 'emperor', emoji: '👸', desc: '古埃及历史上最成功的女性法老。以男性法老的形象统治埃及22年。建造了壮观的葬祭殿，派遣大型贸易远征队赴蓬特（今索马里）。其继子图特摩斯三世后来试图抹去她的所有痕迹。', achievements: ['女法老', '葬祭殿', '蓬特远征'], relations: [], events: [] },
+{ id: 'akhenaten', name: '阿肯那顿', birth: -1375, death: -1336, cat: 'emperor', emoji: '☀️', desc: '古埃及新王国时期法老。推行宗教革命，废除众神独尊太阳神阿顿，迁都阿玛纳。是人类历史上最早的一神教改革者之一。其妻纳芙蒂蒂以美貌闻名。', achievements: ['宗教改革', '最早一神教'], relations: [], events: [] },
+{ id: 'tutankhamun', name: '图坦卡蒙', birth: -1341, death: -1323, cat: 'emperor', emoji: '👑', desc: '古埃及最著名的少年法老。9岁即位，19岁神秘去世。其墓穴1922年被发现时几乎完整未盗，出土了著名的黄金面具等5000多件珍宝，震惊世界。', achievements: ['黄金面具', '完整陵墓'], relations: [], events: [] },
+
+// === 古希腊 ===
+{ id: 'solon', name: '梭伦', birth: -638, death: -558, cat: 'politician', emoji: '⚖️', desc: '雅典立法者，古希腊七贤之一。废除债务奴隶制，建立四百人会议，推行政治经济改革。其改革奠定了雅典民主制度的基础。', achievements: ['废除债务奴隶', '雅典民主奠基'], relations: [], events: [] },
+{ id: 'thales', name: '泰勒斯', birth: -624, death: -546, cat: 'philosopher', emoji: '💧', desc: '古希腊第一位哲学家，米利都学派创始人。认为水是万物本源，用自然而非神话解释世界。预言了公元前585年的日食。是西方哲学和科学的开端。', achievements: ['西方哲学之父', '预测日食', '水本源说'], relations: [], events: [] },
+{ id: 'pythagoras', name: '毕达哥拉斯', birth: -570, death: -495, cat: 'scientist', emoji: '🔺', desc: '古希腊数学家、哲学家。发现毕达哥拉斯定理（勾股定理），创立毕达哥拉斯学派。其学派兼有数学研究和神秘宗教色彩，提出万物皆数。', achievements: ['勾股定理', '万物皆数', '毕达哥拉斯学派'], relations: [], events: [] },
+{ id: 'leonidas', name: '列奥尼达一世', birth: -540, death: -480, cat: 'military', emoji: '🛡️', desc: '斯巴达国王。温泉关战役中率300名斯巴达战士阻挡数万波斯大军。全军壮烈战死，但为希腊联军争取了宝贵时间。是西方文化中英勇牺牲的象征。', achievements: ['温泉关300勇士', '英勇牺牲'], relations: [], events: ['e_thermopylae'] },
+{ id: 'herodotus', name: '希罗多德', birth: -484, death: -425, cat: 'scholar', emoji: '📖', desc: '古希腊历史学家，"历史之父"。所著《历史》首次系统记录了希波战争和当时已知世界的地理民族，开创了西方历史学的叙事传统。', achievements: ['历史之父', '《历史》'], relations: [], events: [] },
+{ id: 'democritus', name: '德谟克利特', birth: -460, death: -370, cat: 'scientist', emoji: '⚛️', desc: '古希腊哲学家。提出原子论——万物由不可再分的原子和虚空构成。这一理论在两千多年后被现代科学证实，是最伟大的古代科学预见之一。', achievements: ['原子论', '古代科学预见'], relations: [], events: [] },
+{ id: 'sappho', name: '萨福', birth: -630, death: -570, cat: 'artist', emoji: '🖋️', desc: '古希腊最伟大的女诗人。在莱斯博斯岛开办女子诗社，其爱情诗优美动人，柏拉图称她为"第十位缪斯"。其诗作虽多散佚，但残篇至今仍是世界诗歌的瑰宝。', achievements: ['第十位缪斯', '女子诗社', '古希腊最美女诗人'], relations: [], events: [] },
+{ id: 'themistocles', name: '地米斯托克利', birth: -524, death: -459, cat: 'politician', emoji: '⚓', desc: '雅典政治家、海军统帅。力主建立强大海军，在萨拉米斯海战中大败波斯舰队，挽救了希腊文明。后遭陶片放逐，晚年流亡波斯。', achievements: ['萨拉米斯海战', '建立雅典海军'], relations: [], events: [] },
+
+// === 波斯 ===
+{ id: 'cyrus_great', name: '居鲁士大帝', birth: -600, death: -530, cat: 'emperor', emoji: '🦅', desc: '波斯阿契美尼德帝国创建者。统一波斯和米底，征服巴比伦，释放巴比伦之囚的犹太人。其统治以宽容著称，居鲁士圆柱被认为是世界上最早的人权宣言。', achievements: ['建立波斯帝国', '居鲁士圆柱', '释放犹太囚徒'], relations: [], events: [] },
+{ id: 'darius_i', name: '大流士一世', birth: -550, death: -486, cat: 'emperor', emoji: '👑', desc: '波斯帝国最伟大的君主之一。将帝国分为二十个行省，修建皇家御道，统一货币度量衡。发动希波战争，在马拉松战役中首次遭受挫败。波斯波利斯的宏伟宫殿至今可见。', achievements: ['行省制度', '皇家御道', '波斯波利斯'], relations: [], events: ['e_marathon'] },
+{ id: 'xerxes', name: '薛西斯一世', birth: -519, death: -465, cat: 'emperor', emoji: '👑', desc: '波斯帝国国王。率百万大军远征希腊，温泉关击败斯巴达300勇士，火烧雅典。但萨拉米斯海战惨败后退回波斯。是电影《300勇士》中的反派。', achievements: ['远征希腊', '火烧雅典'], relations: [], events: ['e_thermopylae'] },
+{ id: 'zoroaster', name: '琐罗亚斯德', birth: -1500, death: -1400, cat: 'philosopher', emoji: '🔥', desc: '古代波斯先知，琐罗亚斯德教（拜火教）创始人。提出二元宇宙观——善神阿胡拉·马兹达与恶神阿里曼的永恒斗争。其思想深刻影响了犹太教、基督教和伊斯兰教。', achievements: ['创立拜火教', '善恶二元论', '影响三大宗教'], relations: [], events: [] },
+
+// === 古印度 ===
+{ id: 'buddha', name: '释迦牟尼（佛陀）', birth: -563, death: -483, cat: 'philosopher', emoji: '🧘', desc: '佛教创始人。本为古印度迦毗罗卫国王子，29岁出家修行，在菩提树下悟道成佛。提出四圣谛和八正道，其教义影响了东亚和东南亚数十亿人。', achievements: ['创立佛教', '四圣谛', '八正道'], relations: [], events: [] },
+{ id: 'mahavira', name: '大雄（筏驮摩那）', birth: -599, death: -527, cat: 'philosopher', emoji: '☸️', desc: '耆那教第24代祖师，与佛陀同时代的印度宗教改革者。提倡极端的非暴力（不杀生）、严格苦行。其思想至今影响着印度的素食文化和非暴力传统。', achievements: ['创立耆那教', '非暴力哲学'], relations: [], events: [] },
+{ id: 'chandragupta', name: '旃陀罗笈多（月护王）', birth: -340, death: -298, cat: 'emperor', emoji: '👑', desc: '古印度孔雀王朝创立者。推翻难陀王朝统一北印度，击败亚历山大大帝留下的希腊势力。晚年放弃王位成为耆那教僧侣，绝食而终。', achievements: ['建立孔雀王朝', '统一北印度'], relations: [], events: [] },
+{ id: 'ashoka', name: '阿育王', birth: -304, death: -232, cat: 'emperor', emoji: '☸️', desc: '印度孔雀王朝最伟大的皇帝。血腥征服羯陵伽后目睹屠杀惨状，幡然悔悟皈依佛教。在全国竖立石柱发布敕令，推广非暴力和佛法。阿育王柱至今是印度国徽。', achievements: ['皈依佛教', '阿育王柱', '推行非暴力'], relations: [], events: [] },
+{ id: 'chanakya', name: '考底利耶', birth: -371, death: -283, cat: 'scholar', emoji: '🦊', desc: '古印度政治家、哲学家。辅佐旃陀罗笈多建立孔雀王朝，著《政事论》——古代世界最系统的政治学著作之一，涵盖治国、外交、军事、间谍等。被称为印度马基雅维利。', achievements: ['《政事论》', '孔雀王朝奠基人', '印度马基雅维利'], relations: [], events: [] },
+
+// === 古以色列/腓尼基 ===
+{ id: 'solomon', name: '所罗门王', birth: -1010, death: -931, cat: 'emperor', emoji: '✡️', desc: '古代以色列联合王国第三位国王。建造耶路撒冷第一圣殿，以超凡智慧闻名于世。《圣经》中的《箴言》《传道书》《雅歌》等传统上归其名下。', achievements: ['建造第一圣殿', '智慧之王'], relations: [], events: [] },
+{ id: 'hiram_tyre', name: '希兰一世', birth: -1000, death: -940, cat: 'emperor', emoji: '⛵', desc: '腓尼基推罗城邦国王。与所罗门王结盟，为其提供黎巴嫩香柏木建造圣殿。腓尼基人发明字母和紫色染料，是古代最伟大的航海民族。', achievements: ['腓尼基航海', '字母传播'], relations: [], events: [] },
+{ id: 'hannibal', name: '汉尼拔·巴卡', birth: -247, death: -183, cat: 'military', emoji: '🐘', desc: '迦太基军事天才，西方历史上最伟大的战略家之一。率军队和战象翻越阿尔卑斯山奇袭罗马，坎尼之战围歼罗马大军。最终被罗马追逼服毒自尽。', achievements: ['翻越阿尔卑斯山', '坎尼围歼战', '战术天才'], relations: [], events: [] },
+
+// === 古中国 ===
+
+// === 古罗马(补充) ===
+{ id: 'cincinnatus', name: '辛辛纳图斯', birth: -519, death: -430, cat: 'military', emoji: '🌾', desc: '罗马共和国传奇人物。在国家危难时从田间被召为独裁官，击败敌人后仅16天便放弃权力返回务农。是西方文化中公民美德的象征，美国辛辛那提市以其命名。', achievements: ['公民美德象征', '16天放弃权力'], relations: [], events: [] },
+{ id: 'scipio', name: '大西庇阿', birth: -236, death: -183, cat: 'military', emoji: '⚔️', desc: '罗马共和国名将。在扎马战役中击败迦太基天才汉尼拔，结束了第二次布匿战争。因其赫赫战功被称为"非洲征服者"。', achievements: ['击败汉尼拔', '非洲征服者'], relations: [], events: [] },
+{ id: 'gracchus', name: '提比略·格拉古', birth: -163, death: -133, cat: 'politician', emoji: '✊', desc: '罗马共和国保民官。推行土地改革限制贵族兼并土地，分配给贫民。被元老院贵族用板凳活活打死，成为罗马共和国内战的开端。', achievements: ['土地改革先驱', '共和国内战开端'], relations: [], events: [] },
+{ id: 'pompey', name: '庞培', birth: -106, death: -48, cat: 'military', emoji: '⚔️', desc: '罗马共和国末期军事统帅。扫平地中海海盗，征服东方诸国。与凯撒、克拉苏结成前三头同盟。在与凯撒的内战中兵败，逃至埃及被刺杀。', achievements: ['扫平海盗', '前三头同盟'], relations: [{ id: 'caesar', type: '对手', label: '凯撒' }], events: [] },
+{ id: 'trajan', name: '图拉真', birth: 53, death: 117, cat: 'emperor', emoji: '👑', desc: '罗马帝国最伟大的皇帝之一。其在位期间帝国疆域达到极盛（从英国到伊拉克）。建造图拉真广场和纪功柱，推行大规模公共工程和社会福利。被称为"最佳元首"。', achievements: ['疆域极盛', '图拉真纪功柱', '最佳元首'], relations: [], events: [] },
+{ id: 'diocletian', name: '戴克里先', birth: 244, death: 311, cat: 'emperor', emoji: '👑', desc: '罗马帝国皇帝。创立四帝共治制以解决帝国过大难管理的问题，稳定了三世纪危机后的混乱局势。是唯一主动退位的罗马皇帝，隐居达尔马提亚种菜。', achievements: ['四帝共治', '主动退位', '种菜皇帝'], relations: [], events: [] },
+
+// === 其他古文明 ===
+{ id: 'mina_minoan', name: '米诺斯文明（克里特）', birth: -2000, death: -1450, cat: 'emperor', emoji: '🐂', desc: '欧洲最早的先进文明。以克诺索斯宫殿（米诺斯迷宫）闻名，传说中有牛头人身怪物米诺陶洛斯。其壁画和陶器艺术影响了后来的迈锡尼文明和古希腊文化。', achievements: ['欧洲最早文明', '克诺索斯宫殿', '线形文字A'], relations: [], events: [] },
+{ id: 'olmec', name: '奥尔梅克文明', birth: -1500, death: -400, cat: 'emperor', emoji: '🗿', desc: '中美洲最早的先进文明，中美洲文明之母。创造了巨大的玄武岩人头雕像，发明了最早的日历和文字体系。其宗教和艺术传统被玛雅、阿兹特克等后继文明继承。', achievements: ['中美洲文明之母', '巨石头像', '最早日历'], relations: [], events: [] },
 ];
 
 
@@ -4145,6 +4201,32 @@ const WORLD_EVENTS = [
 { id: 'e_spanish_armada_battle', year: 1588, name: '打败西班牙无敌舰队', type: 'war', desc: '英国海军击败西班牙无敌舰队，打破了西班牙的海上霸权。英国开始崛起为海洋帝国，世界格局从此改变。' },
 { id: 'e_thirty_years_war', year: 1618, name: '三十年战争爆发', type: 'war', desc: '波希米亚新教徒起义引爆欧洲最惨烈的宗教战争。德意志各邦成为主战场，人口损失达三分之一。1648年《威斯特伐利亚和约》确立现代主权国家体系。' },
 { id: 'e_galileo_trial', year: 1633, name: '伽利略受审', type: 'culture', desc: '罗马教廷判处伽利略"有强烈异端嫌疑"，迫其放弃日心说。传说他以手拍地说"但它确实在动"。是科学与宗教冲突的象征。' },
+
+{ id: 'e_writing_invention', year: -3300, name: '文字发明', type: 'culture', desc: '苏美尔人在美索不达米亚发明楔形文字。稍后埃及人发明象形文字。文字的诞生标志着人类从史前进入历史时代。' },
+{ id: 'e_pyramid_step', year: -2630, name: '第一座金字塔建成', type: 'culture', desc: '伊姆霍特普为法老左塞尔设计建造了世界上第一座金字塔——萨卡拉阶梯金字塔。开创了金字塔时代。' },
+{ id: 'e_great_pyramid', year: -2560, name: '大金字塔建成', type: 'culture', desc: '胡夫法老在吉萨建造了世界最大的金字塔，高146米，动用十万劳工耗时20年。唯一现存的世界七大奇迹。' },
+{ id: 'e_code_ur_nammu', year: -2100, name: '乌尔纳姆法典颁布', type: 'politics', desc: '苏美尔国王乌尔纳姆颁布人类已知最早的法典。以赔偿代替报复，比汉谟拉比法典早三个世纪。' },
+{ id: 'e_code_hammurabi', year: -1750, name: '汉谟拉比法典颁布', type: 'politics', desc: '巴比伦国王汉谟拉比颁布人类最早的成文法典之一，刻于黑色玄武岩石柱上。以"以眼还眼，以牙还牙"闻名。' },
+{ id: 'e_bronze_age_collapse', year: -1200, name: '青铜时代崩溃', type: 'war', desc: '地中海东部的赫梯、迈锡尼等文明在短短数十年间相继崩溃。海洋民族入侵、地震、饥荒等多重因素导致了这一古代世界的大灾难。' },
+{ id: 'e_troy_war', year: -1184, name: '特洛伊战争（传说）', type: 'war', desc: '阿伽门农率希腊联军围攻小亚细亚的特洛伊城十年之久，终以木马计破城。荷马史诗以此为背景。' },
+{ id: 'e_kingdom_israel', year: -1000, name: '以色列联合王国建立', type: 'politics', desc: '大卫王统一以色列各部落建立王国。其子所罗门建造耶路撒冷圣殿，王国达于鼎盛。后分裂为以色列和犹大两国。' },
+{ id: 'e_assyrian_empire', year: -900, name: '新亚述帝国崛起', type: 'war', desc: '亚述帝国以铁器装备和恐怖统治建立了古代前所未有的军事帝国，其版图从波斯湾延伸到埃及。尼尼微城辉煌一时。' },
+{ id: 'e_first_olympics', year: -776, name: '第一届古代奥运会', type: 'culture', desc: '在奥林匹亚举行第一届古代奥运会。此后每四年一次延续近1200年，直到罗马皇帝狄奥多西一世禁止。' },
+{ id: 'e_rome_founded_event', year: -753, name: '罗马建城', type: 'politics', desc: '据传说罗慕路斯杀死弟弟雷穆斯后建立罗马城，成为第一任国王。此后罗马从小城邦发展为千古帝国。' },
+{ id: 'e_cyrus_babylon', year: -539, name: '居鲁士征服巴比伦', type: 'politics', desc: '波斯居鲁士大帝兵不血刃征服巴比伦，释放被囚禁的犹太人。居鲁士圆柱宣布宗教自由和种族宽容。' },
+{ id: 'e_persian_wars', year: -490, name: '希波战争', type: 'war', desc: '波斯帝国与希腊城邦之间长达半个世纪的战争。马拉松、温泉关、萨拉米斯三场决战成为西方文明的关键转折点。' },
+{ id: 'e_thermopylae', year: -480, name: '温泉关战役', type: 'war', desc: '列奥尼达率300斯巴达勇士在温泉关抵挡波斯数十万大军三日。全军殉国，但精神成为不朽传奇。' },
+{ id: 'e_peloponnesian_war_full', year: -431, name: '伯罗奔尼撒战争', type: 'war', desc: '以雅典为首的提洛同盟与以斯巴达为首的伯罗奔尼撒同盟之间的战争。持续27年，以雅典失败告终，希腊古典文明从此衰落。' },
+{ id: 'e_alexander_conquest', year: -334, name: '亚历山大东征', type: 'war', desc: '20岁的亚历山大率马其顿希腊联军东征，十年间征服波斯帝国、埃及和中亚，兵锋直至印度河流域。33岁病逝于巴比伦。' },
+{ id: 'e_ashoka_convert', year: -261, name: '阿育王皈依佛教', type: 'culture', desc: '阿育王在血腥征服羯陵伽后幡然悔悟，皈依佛教。在全国各地竖立石柱宣扬佛法，派遣僧团到东南亚和地中海传播佛教。' },
+{ id: 'e_punic_wars', year: -264, name: '布匿战争', type: 'war', desc: '罗马与迦太基争夺地中海霸权的三次大战。汉尼拔翻越阿尔卑斯山、扎马决战、迦太基被彻底摧毁。罗马确立了地中海霸权。' },
+{ id: 'e_gaugamela_battle', year: -331, name: '高加米拉战役', type: 'war', desc: '亚历山大大帝在高加米拉以四万兵力大败波斯帝国近百万大军，波斯帝国灭亡。古代世界最经典的以少胜多战役。' },
+{ id: 'e_first_emperor_china', year: -221, name: '秦统一中国', type: 'politics', desc: '秦始皇嬴政灭六国统一中国，建立中国历史上第一个大一统中央集权帝国。车同轨、书同文、统一度量衡。' },
+{ id: 'e_roman_republic_fall', year: -27, name: '罗马共和国终结', type: 'politics', desc: '屋大维获得奥古斯都称号，罗马共和国转变为元首制的罗马帝国。近500年的共和制度终结。' },
+{ id: 'e_jesus_birth', year: -4, name: '耶稣诞生', type: 'culture', desc: '耶稣在伯利恒诞生。其创立的基督教后来成为世界最大宗教，深刻改变了人类文明进程。公元纪年以其诞生年为起点。' },
+{ id: 'e_pompeii_disaster', year: 79, name: '庞贝古城毁灭', type: 'economy', desc: '维苏威火山爆发将庞贝和赫库兰尼姆两座罗马城市完全掩埋。火山灰完美保存了古罗马的城市生活面貌。' },
+{ id: 'e_roman_empire_split', year: 395, name: '罗马帝国正式分裂', type: 'politics', desc: '狄奥多西一世去世后帝国永久分裂为东西两部分。西罗马于476年灭亡，东罗马（拜占庭）延续至1453年。' },
+{ id: 'e_rome_fall', year: 476, name: '西罗马帝国灭亡', type: 'politics', desc: '日耳曼雇佣军首领奥多亚克废黜最后一位西罗马皇帝，西罗马帝国灭亡。欧洲进入中世纪黑暗时代。' },
 ];
 
 
