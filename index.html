@@ -6,7 +6,7 @@
 <title>中华历史人物图谱</title>
 <meta name="description" content="中华历史人物时间轴 - 交互式三视图历史数据可视化">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=20260503d">
 </head>
 <body>
 
@@ -27,11 +27,7 @@
         <input type="text" id="searchInput" placeholder="搜索人物、事件…" aria-label="搜索人物和事件" />
         <span class="search-icon">🔍</span>
       </div>
-      <div class="view-toggle" role="tablist" aria-label="视图切换">
-        <button class="btn-view active" id="btnTimeline" title="时间轴视图 (1)" aria-label="时间轴视图">⏸</button>
-        <button class="btn-view" id="btnGraph" title="关系图视图 (2)" aria-label="关系图视图">⬡</button>
-        <button class="btn-view" id="btnMap" title="地图视图 (3)" aria-label="地图视图">🗺️</button>
-      </div>
+      <span class="header-hint">滚轮缩放 · 拖拽滚动 · 点击人物查看详情</span>
       <button class="btn-add-person" id="btnAddPerson" title="添加新人物">➕ 添加人物</button>
     </div>
   </header>
@@ -51,99 +47,86 @@
     <button class="filter-btn" data-cat="diplomat">外交家</button>
   </nav>
 
-  <!-- 主视图容器 -->
+  <!-- 主视图容器：三时间轴同屏对比 -->
   <main id="mainContainer">
+    <div id="dualTimelineContainer">
 
-    <!-- 时间轴视图 -->
-    <section id="timelineView" aria-label="时间轴视图">
-      <div id="timelineWrapper">
-        <!-- 缩放控制 -->
-        <div class="zoom-controls">
-          <button id="zoomIn" title="放大 (+)">+</button>
-          <button id="zoomReset" title="重置缩放 (0)">↺</button>
-          <button id="zoomOut" title="缩小 (-)">−</button>
-        </div>
-        <!-- 朝代背景色带 -->
-        <div id="dynastyBands"></div>
-        <!-- 主时间轴 -->
-        <div id="axisLine"></div>
-        <!-- 刻度 -->
-        <div id="axisTicks"></div>
-        <!-- 事件节点（轴上方） -->
-        <div id="eventsAbove"></div>
-        <!-- 事件节点（轴下方） -->
-        <div id="eventsBelow"></div>
-        <!-- 人物条（轴上方） -->
-        <div id="personsAbove"></div>
-        <!-- 人物条（轴下方） -->
-        <div id="personsBelow"></div>
-      </div>
-    </section>
-
-    <!-- 关系图视图 -->
-    <section id="graphView" style="display:none;" aria-label="关系图视图">
-      <canvas id="graphCanvas"></canvas>
-      <div class="graph-controls">
-        <div class="graph-filter-row">
-          <div class="graph-dynasty-select">
-            <label for="graphDynastySelect">🏛️ 朝代：</label>
-            <select id="graphDynastySelect">
-              <option value="all">全部朝代</option>
-            </select>
-          </div>
-          <div class="graph-rel-select">
-            <label for="graphRelType">🔗 关系：</label>
-            <select id="graphRelType">
-              <option value="all">全部关系</option>
-            </select>
+      <!-- 中国史时间轴 -->
+      <div id="chinaBlock" class="timeline-block">
+        <div class="block-header">
+          <span class="block-title">📜 中国史</span>
+          <div class="zoom-controls">
+            <button class="btn-collapse" id="collapseChina" title="折叠/展开">▲</button>
+            <button id="zoomReset" title="重置缩放 (0)">↺</button>
           </div>
         </div>
-        <div class="graph-legend">
-          <span class="legend-item"><span class="legend-dot" style="background:#e74c3c"></span>帝王</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span>将领</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#3498db"></span>文人</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#1abc9c"></span>思想家</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span>科学家</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#e67e22"></span>艺术家</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#7f8c8d"></span>政治家</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#d4a843"></span>圣贤</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#00bcd4"></span>外交家</span>
-        </div>
-        <div class="graph-rel-legend" id="graphRelLegend"></div>
-      </div>
-      <div id="graphInfo">点击人物节点查看详情 · 滚轮缩放 · 拖拽移动 · 悬浮高亮关联</div>
-    </section>
-
-    <!-- 地图视图 -->
-    <section id="mapView" style="display:none;" aria-label="地图视图">
-      <div id="leafletMap"></div>
-      <div class="map-controls">
-        <div class="map-filter-row">
-          <div class="map-dynasty-select">
-            <label for="mapDynastySelect">🏛️ 朝代：</label>
-            <select id="mapDynastySelect">
-              <option value="all">全部朝代</option>
-            </select>
-          </div>
-          <div class="map-year-display">
-            <span id="mapYearLabel">显示全部时期</span>
-            <input type="range" id="mapYearSlider" min="-4500" max="2001" value="-4500" aria-label="年份筛选滑块" />
-          </div>
-        </div>
-        <div class="map-legend">
-          <span class="legend-item"><span class="legend-dot" style="background:#e74c3c"></span>帝王</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span>将领</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#3498db"></span>文人</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#1abc9c"></span>思想家</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#2ecc71"></span>科学家</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#e67e22"></span>艺术家</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#7f8c8d"></span>政治家</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#d4a843"></span>圣贤</span>
-          <span class="legend-item"><span class="legend-dot" style="background:#00bcd4"></span>外交家</span>
+        <div id="timelineWrapper">
+          <div id="dynastyBands"></div>
+          <div id="axisLine"></div>
+          <div id="axisTicks"></div>
+          <div id="eventsAbove"></div>
+          <div id="eventsBelow"></div>
+          <div id="personsAbove"></div>
+          <div id="personsBelow"></div>
         </div>
       </div>
-    </section>
+      <div class="resize-handle" data-above="chinaBlock" data-below="japanBlock"></div>
 
+      <!-- 日本史时间轴 -->
+      <div id="japanBlock" class="timeline-block">
+        <div class="block-header">
+          <span class="block-title">🏯 日本史</span>
+          <button class="btn-collapse" id="collapseJapan" title="折叠/展开">▲</button>
+        </div>
+        <div id="japanTimelineWrapper">
+          <div id="japanDynastyBands"></div>
+          <div id="japanAxisLine"></div>
+          <div id="japanAxisTicks"></div>
+          <div id="japanEventsAbove"></div>
+          <div id="japanEventsBelow"></div>
+          <div id="japanPersonsAbove"></div>
+          <div id="japanPersonsBelow"></div>
+        </div>
+      </div>
+      <div class="resize-handle" data-above="japanBlock" data-below="worldBlock"></div>
+
+      <!-- 世界史时间轴 -->
+      <div id="worldBlock" class="timeline-block">
+        <div class="block-header">
+          <span class="block-title">🌍 世界史</span>
+          <button class="btn-collapse" id="collapseWorld" title="折叠/展开">▲</button>
+        </div>
+        <div id="worldTimelineWrapper">
+          <div id="worldDynastyBands"></div>
+          <div id="worldAxisLine"></div>
+          <div id="worldAxisTicks"></div>
+          <div id="worldEventsAbove"></div>
+          <div id="worldEventsBelow"></div>
+          <div id="worldPersonsAbove"></div>
+          <div id="worldPersonsBelow"></div>
+        </div>
+      </div>
+
+      <div class="resize-handle" data-above="worldBlock" data-below="koreaBlock"></div>
+
+      <!-- 古朝鲜/韩国史时间轴 -->
+      <div id="koreaBlock" class="timeline-block">
+        <div class="block-header">
+          <span class="block-title">🇰🇷 朝鲜史</span>
+          <button class="btn-collapse" id="collapseKorea" title="折叠/展开">▲</button>
+        </div>
+        <div id="koreaTimelineWrapper">
+          <div id="koreaDynastyBands"></div>
+          <div id="koreaAxisLine"></div>
+          <div id="koreaAxisTicks"></div>
+          <div id="koreaEventsAbove"></div>
+          <div id="koreaEventsBelow"></div>
+          <div id="koreaPersonsAbove"></div>
+          <div id="koreaPersonsBelow"></div>
+        </div>
+      </div>
+
+    </div>
   </main>
 
   <!-- 人物详情面板 -->
@@ -312,8 +295,7 @@
   </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="data.js"></script>
-<script src="main.js"></script>
+<script src="data.js?v=20260503d"></script>
+<script src="main.js?v=20260503d"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 // =============================================
 
 // ---- 配置 ----
-const YEAR_START = -4500;
+const YEAR_START = -2697;
 const YEAR_END   = 2025;
 const PX_PER_YEAR_DEFAULT = 0.6;
 let pxPerYear = PX_PER_YEAR_DEFAULT;
@@ -53,9 +53,28 @@ function yearToX(year) {
 function totalWidth() {
   return (YEAR_END - YEAR_START) * pxPerYear + 200;
 }
-function getAxisTop() {
-  const h = document.getElementById('mainContainer').clientHeight;
+function getAxisTopFor(blockId) {
+  const block = document.getElementById(blockId || 'chinaBlock');
+  const h = block ? block.clientHeight - 36 : 400;
   return Math.round(h * AXIS_TOP_RATIO);
+}
+// 通过 spacer 元素驱动wrapper垂直滚动
+function adjustWrapperHeight(wrapperId, personsData, axisTop) {
+  const wrapper = document.getElementById(wrapperId);
+  if (!wrapper || !personsData) return;
+  const rowH = 32;
+  const padding = 40;
+  const maxRows = Math.ceil(personsData.length / 2) + 2;
+  const needed = axisTop + maxRows * rowH + padding + 'px';
+
+  let spacer = wrapper.querySelector('.scroll-spacer');
+  if (!spacer) {
+    spacer = document.createElement('div');
+    spacer.className = 'scroll-spacer';
+    spacer.style.cssText = 'position:relative;width:1px;pointer-events:none;margin:0;padding:0;';
+    wrapper.appendChild(spacer);
+  }
+  spacer.style.height = needed;
 }
 function catClass(cat) { return 'cat-' + (cat || 'politician'); }
 function evtClass(type) { return 'evt-' + (type || 'default'); }
@@ -101,20 +120,176 @@ function formatYear(year) {
 }
 
 // ---- 初始化 ----
+
+function bindEvents() {
+  // 缩放按钮
+  document.getElementById('zoomReset').addEventListener('click', () => {
+    pxPerYear = PX_PER_YEAR_DEFAULT;
+    renderTimeline();
+    renderWorldTimeline();
+  renderKoreaTimeline();
+    renderJapanTimeline();
+    updateStats();
+  });
+
+  // 鼠标滚轮缩放 - 以鼠标位置为中心
+  const scrollTarget = document.getElementById('mainContainer');
+
+  function zoomAtPoint(e) {
+    const rect = scrollTarget.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const factor = e.deltaY < 0 ? 1.1 : 0.9;
+    const newPx = Math.min(Math.max(pxPerYear * factor, 0.2), 5);
+    if (newPx === pxPerYear) return;
+
+    const targetYear = (scrollTarget.scrollLeft + mouseX) / pxPerYear + YEAR_START;
+    pxPerYear = newPx;
+
+    renderTimeline();
+    renderWorldTimeline();
+  renderKoreaTimeline();
+    renderJapanTimeline();
+    updateStats();
+
+    scrollTarget.scrollLeft = (targetYear - YEAR_START) * pxPerYear - mouseX;
+  }
+
+  const container = document.getElementById('dualTimelineContainer');
+  if (container) {
+    container.addEventListener('wheel', (e) => { e.preventDefault(); zoomAtPoint(e); }, { passive: false });
+    document.getElementById('timelineWrapper').addEventListener('wheel', (e) => { e.preventDefault(); zoomAtPoint(e); }, { passive: false });
+    document.getElementById('worldTimelineWrapper').addEventListener('wheel', (e) => { e.preventDefault(); zoomAtPoint(e); }, { passive: false });
+    document.getElementById('japanTimelineWrapper').addEventListener('wheel', (e) => { e.preventDefault(); zoomAtPoint(e); }, { passive: false });
+
+    // 拖拽滚动 - 绑在 mainContainer（实际可滚动容器）
+    scrollTarget.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.pageX - scrollTarget.offsetLeft;
+      scrollLeft = scrollTarget.scrollLeft;
+      scrollTarget.style.cursor = 'grabbing';
+    });
+
+    scrollTarget.addEventListener('mouseleave', () => {
+      isDragging = false;
+      scrollTarget.style.cursor = 'default';
+    });
+
+    scrollTarget.addEventListener('mouseup', () => {
+      isDragging = false;
+      scrollTarget.style.cursor = 'default';
+    });
+
+    scrollTarget.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - scrollTarget.offsetLeft;
+      const walk = (x - startX) * 2;
+      scrollTarget.scrollLeft = scrollLeft - walk;
+    });
+  }
+}
+
+// ---- 拉宽手柄 ----
+function initResizeHandles() {
+  const handles = document.querySelectorAll('.resize-handle');
+  handles.forEach(handle => {
+    let startY, startHeight, aboveBlock;
+    handle.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      const aboveId = handle.dataset.above;
+      aboveBlock = document.getElementById(aboveId);
+      if (!aboveBlock || aboveBlock.classList.contains('collapsed')) return;
+      startY = e.clientY;
+      startHeight = aboveBlock.getBoundingClientRect().height;
+      handle.classList.add('active');
+      document.body.style.cursor = 'row-resize';
+      document.body.style.userSelect = 'none';
+    });
+  });
+  document.addEventListener('mousemove', (e) => {
+    const active = document.querySelector('.resize-handle.active');
+    if (!active) return;
+    const aboveId = active.dataset.above;
+    const aboveBlock = document.getElementById(aboveId);
+    if (!aboveBlock || aboveBlock.classList.contains('collapsed')) return;
+    const delta = e.clientY - window._resizeStartY;
+    const newH = Math.max(100, (window._resizeStartHeight || 300) + delta);
+    aboveBlock.style.flex = 'none';
+    aboveBlock.style.height = newH + 'px';
+  });
+  document.addEventListener('mouseup', () => {
+    const active = document.querySelector('.resize-handle.active');
+    if (active) active.classList.remove('active');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+  });
+  // 存储起始值用全局
+  document.addEventListener('mousedown', (e) => {
+    if (e.target.closest('.resize-handle')) {
+      window._resizeStartY = e.clientY;
+      const aboveId = e.target.closest('.resize-handle').dataset.above;
+      const aboveBlock = document.getElementById(aboveId);
+      window._resizeStartHeight = aboveBlock ? aboveBlock.getBoundingClientRect().height : 300;
+    }
+  }, true);
+}
+
+// ---- 折叠按钮 ----
+function initCollapseButtons() {
+  document.querySelectorAll('.btn-collapse').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const block = btn.closest('.timeline-block');
+      block.classList.toggle('collapsed');
+      // 刷新三轴渲染
+      setTimeout(() => {
+        renderTimeline();
+        renderWorldTimeline();
+  renderKoreaTimeline();
+        renderJapanTimeline();
+      }, 300);
+    });
+  });
+}
+
+// ---- 点击空白处关闭详情面板 ----
+function initClickOutsideClose() {
+  document.addEventListener('click', (e) => {
+    const panel = document.getElementById('detailPanel');
+    if (!panel || panel.classList.contains('hidden')) return;
+    // 检查是否点击在面板内
+    if (panel.contains(e.target)) return;
+    // 检查是否点击在人物行上（会触发 open）
+    if (e.target.closest('.person-row')) return;
+    // 检查是否点击在 button/input 等交互元素
+    if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea')) return;
+    panel.classList.add('hidden');
+    selectedPersonId = null;
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   buildEraTabs();
   buildFilterBtns();
   renderTimeline();
+  renderWorldTimeline();
+  renderKoreaTimeline();
+  renderJapanTimeline();
   bindEvents();
   updateStats();
-  showKeyboardHint();
   initAddPersonModal();
+  initResizeHandles();
+  initCollapseButtons();
+  initClickOutsideClose();
 });
 
 const debouncedResize = debounce(() => {
-  if (currentView === 'timeline') renderTimeline();
-  if (currentView === 'graph') renderGraph();
-  if (currentView === 'map') { if (leafletMap) leafletMap.invalidateSize(); }
+  renderTimeline();
+  renderWorldTimeline();
+  renderKoreaTimeline();
+  renderJapanTimeline();
+  // renderGraph disabled
+// DISABLED:   // map disabled(); }
 }, 150);
 window.addEventListener('resize', debouncedResize);
 
@@ -138,16 +313,6 @@ function updateStats() {
   `;
 }
 
-// ---- 快捷键提示 ----
-function showKeyboardHint() {
-  const hint = document.createElement('div');
-  hint.className = 'keyboard-hint';
-  hint.innerHTML = '<kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> 切换视图 · <kbd>+</kbd><kbd>-</kbd> 缩放 · <kbd>/</kbd> 搜索 · <kbd>Esc</kbd> 关闭面板';
-  document.getElementById('app').appendChild(hint);
-  // 5秒后淡出
-  setTimeout(() => hint.style.opacity = '0.3', 5000);
-}
-
 // ---- Era Tabs ----
 function buildEraTabs() {
   const container = document.getElementById('eraTabs');
@@ -166,7 +331,7 @@ function buildEraTabs() {
 }
 
 function scrollToYear(year) {
-  const view = document.getElementById('timelineView');
+  const view = document.getElementById('dualTimelineContainer');
   const x = yearToX(year) - view.clientWidth / 2;
   view.scrollTo({ left: Math.max(0, x), behavior: 'smooth' });
 }
@@ -180,8 +345,9 @@ function buildFilterBtns() {
       activeCat = btn.dataset.cat;
       applyFilter();
       updateStats();
-      if (currentView === 'graph') { graphNodes = []; renderGraph(); }
-      if (currentView === 'map') updateMapMarkers();
+      renderTimeline();
+      renderWorldTimeline();
+  renderKoreaTimeline();
     });
   });
 }
@@ -197,7 +363,7 @@ function applyFilter() {
 // ---- 渲染时间轴 ----
 function renderTimeline() {
   const wrapper = document.getElementById('timelineWrapper');
-  const axisTop = getAxisTop();
+  const axisTop = getAxisTopFor('chinaBlock');
   const w = totalWidth();
   wrapper.style.width = w + 'px';
 
@@ -206,6 +372,343 @@ function renderTimeline() {
   renderTicks(axisTop, w);
   renderEvents(axisTop);
   renderPersons(axisTop);
+}
+
+
+
+// ---- 世界史时间轴 ----
+function renderWorldTimeline() {
+  if (typeof WORLD_EVENTS === 'undefined') return;
+  const wrapper = document.getElementById('worldTimelineWrapper');
+  if (!wrapper) return;
+  const w = totalWidth();
+  wrapper.style.width = w + 'px';
+  const axisTop = getAxisTopFor('worldBlock');
+
+  // 时代色带
+  const bandsEl = document.getElementById('worldDynastyBands');
+  bandsEl.innerHTML = '';
+  const eras = [
+    { name: '上古文明', start: -2697, end: -500, color: '#8B4513' },
+    { name: '古典时代', start: -500, end: 476, color: '#4a6741' },
+    { name: '中世纪', start: 476, end: 1400, color: '#5a4a6e' },
+    { name: '文艺复兴', start: 1400, end: 1600, color: '#6e4a5a' },
+    { name: '近代', start: 1600, end: 1900, color: '#4a5a6e' },
+    { name: '现代', start: 1900, end: 2025, color: '#2c3e50' },
+  ];
+  eras.forEach(era => {
+    const x1 = yearToX(era.start);
+    const x2 = yearToX(era.end);
+    const band = document.createElement('div');
+    band.className = 'dynasty-band';
+    band.style.cssText = 'left:' + x1 + 'px;width:' + Math.max(x2-x1,2) + 'px;background:' + era.color + ';';
+    bandsEl.appendChild(band);
+    if (x2 - x1 > 40) {
+      const label = document.createElement('div');
+      label.className = 'dynasty-label';
+      label.style.cssText = 'left:' + (x1+(x2-x1)/2) + 'px;transform:translateX(-50%);';
+      label.textContent = era.name;
+      bandsEl.appendChild(label);
+    }
+  });
+
+  // 主轴线
+  const axisEl = document.getElementById('worldAxisLine');
+  if (axisEl) axisEl.style.cssText = 'top:' + axisTop + 'px;left:0;width:' + w + 'px;';
+
+  // 刻度
+  const ticksEl = document.getElementById('worldAxisTicks');
+  if (ticksEl) {
+    ticksEl.innerHTML = '';
+    const majorStep = pxPerYear < 0.3 ? 500 : pxPerYear < 0.8 ? 100 : 50;
+    const minorStep = majorStep / 5;
+    const frag = document.createDocumentFragment();
+    for (let y = Math.ceil(YEAR_START / minorStep) * minorStep; y <= YEAR_END; y += minorStep) {
+      const isMajor = y % majorStep === 0;
+      const x = yearToX(y);
+      const tick = document.createElement('div');
+      tick.className = 'tick-mark' + (isMajor ? ' tick-major' : '');
+      tick.style.cssText = 'left:' + x + 'px;top:' + (axisTop - (isMajor?10:5)) + 'px;';
+      const ln = document.createElement('div');
+      ln.className = 'tick-line';
+      ln.style.height = (isMajor?20:10) + 'px';
+      tick.appendChild(ln);
+      if (isMajor) {
+        const lbl = document.createElement('div');
+        lbl.className = 'tick-label';
+        lbl.textContent = y < 0 ? '前' + (-y) : '' + y;
+        tick.appendChild(lbl);
+      }
+      frag.appendChild(tick);
+    }
+    ticksEl.appendChild(frag);
+  }
+
+  // 事件（上下交替）
+  const aboveEl = document.getElementById('worldEventsAbove');
+  const belowEl = document.getElementById('worldEventsBelow');
+  if (aboveEl) { aboveEl.innerHTML = ''; aboveEl.style.top = '0'; }
+  if (belowEl) { belowEl.innerHTML = ''; belowEl.style.top = axisTop + 'px'; }
+
+  WORLD_EVENTS.forEach((evt, i) => {
+    const x = yearToX(evt.year);
+    const isAbove = i % 2 === 0;
+    const container = isAbove ? aboveEl : belowEl;
+    if (!container) return;
+    const color = evtColor(evt.type);
+    const node = document.createElement('div');
+    node.className = 'event-node ' + (isAbove ? 'above' : 'below');
+    node.style.cssText = 'left:' + x + 'px;' + (isAbove ? 'bottom:0;' : 'top:0;');
+    const dot = document.createElement('div');
+    dot.className = 'event-dot';
+    dot.style.cssText = 'border-color:' + color + ';';
+    const line = document.createElement('div');
+    line.className = 'event-line';
+    line.style.cssText = 'height:' + (30 + (i%5)*15) + 'px;background:' + color + ';';
+    const label = document.createElement('div');
+    label.className = 'event-label';
+    label.textContent = evt.name;
+    node.appendChild(dot);
+    node.appendChild(line);
+    node.appendChild(label);
+    node.addEventListener('mouseenter', (e) => showWorldEventTooltip(evt, e));
+    node.addEventListener('mouseleave', hideEventTooltip);
+    node.addEventListener('mousemove', throttle(moveTooltip, 16));
+    container.appendChild(node);
+  });
+
+  // 人物 - 使用与中国史相同的横条风格
+  if (typeof WORLD_PERSONS !== 'undefined') {
+    const pAbove = document.getElementById('worldPersonsAbove');
+    const pBelow = document.getElementById('worldPersonsBelow');
+    if (pAbove) { pAbove.innerHTML = ''; pAbove.style.top = '0'; }
+    if (pBelow) { pBelow.innerHTML = ''; pBelow.style.top = axisTop + 'px'; }
+
+    const sorted = [...WORLD_PERSONS].sort((a, b) => a.birth - b.birth);
+    const abovePersons = sorted.filter((_, i) => i % 2 === 0);
+    const belowPersons = sorted.filter((_, i) => i % 2 !== 0);
+
+    layoutPersonRows(abovePersons, pAbove, axisTop, true, 'world');
+    layoutPersonRows(belowPersons, pBelow, axisTop, false, 'world');
+    adjustWrapperHeight('worldTimelineWrapper', WORLD_PERSONS, axisTop);
+  }
+}
+// ---- 日本史时间轴 ----
+function renderJapanTimeline() {
+  if (typeof JAPAN_EVENTS === 'undefined') return;
+  const wrapper = document.getElementById('japanTimelineWrapper');
+  if (!wrapper) return;
+  const w = totalWidth();
+  wrapper.style.width = w + 'px';
+  const axisTop = getAxisTopFor('japanBlock');
+
+  // 时代色带
+  const bandsEl = document.getElementById('japanDynastyBands');
+  bandsEl.innerHTML = '';
+  const eras = [
+    { name: '飞鸟时代', start: -2697, end: 710, color: '#8B0000' },
+    { name: '奈良时代', start: 710, end: 794, color: '#6a0dad' },
+    { name: '平安时代', start: 794, end: 1185, color: '#4a0080' },
+    { name: '镰仓幕府', start: 1185, end: 1336, color: '#4a4a4a' },
+    { name: '室町幕府', start: 1336, end: 1573, color: '#3a5a3a' },
+    { name: '战国时代', start: 1467, end: 1603, color: '#5a3a3a' },
+    { name: '江户幕府', start: 1603, end: 1868, color: '#2a2a5a' },
+    { name: '明治以后', start: 1868, end: 2025, color: '#c0392b' },
+  ];
+  eras.forEach(era => {
+    const x1 = yearToX(era.start);
+    const x2 = yearToX(era.end);
+    const band = document.createElement('div');
+    band.className = 'dynasty-band';
+    band.style.cssText = 'left:' + x1 + 'px;width:' + Math.max(x2-x1,2) + 'px;background:' + era.color + ';';
+    bandsEl.appendChild(band);
+    if (x2 - x1 > 40) {
+      const label = document.createElement('div');
+      label.className = 'dynasty-label';
+      label.style.cssText = 'left:' + (x1+(x2-x1)/2) + 'px;transform:translateX(-50%);';
+      label.textContent = era.name;
+      bandsEl.appendChild(label);
+    }
+  });
+
+  // 主轴线
+  const axisEl = document.getElementById('japanAxisLine');
+  if (axisEl) axisEl.style.cssText = 'top:' + axisTop + 'px;left:0;width:' + w + 'px;';
+
+  // 刻度
+  const ticksEl = document.getElementById('japanAxisTicks');
+  if (ticksEl) {
+    ticksEl.innerHTML = '';
+    const majorStep = pxPerYear < 0.3 ? 500 : pxPerYear < 0.8 ? 100 : 50;
+    const minorStep = majorStep / 5;
+    const frag = document.createDocumentFragment();
+    for (let y = Math.ceil(YEAR_START / minorStep) * minorStep; y <= YEAR_END; y += minorStep) {
+      const isMajor = y % majorStep === 0;
+      const x = yearToX(y);
+      const tick = document.createElement('div');
+      tick.className = 'tick-mark' + (isMajor ? ' tick-major' : '');
+      tick.style.cssText = 'left:' + x + 'px;top:' + (axisTop - (isMajor?10:5)) + 'px;';
+      const ln = document.createElement('div');
+      ln.className = 'tick-line';
+      ln.style.height = (isMajor?20:10) + 'px';
+      tick.appendChild(ln);
+      if (isMajor) {
+        const lbl = document.createElement('div');
+        lbl.className = 'tick-label';
+        lbl.textContent = y < 0 ? '前' + (-y) : '' + y;
+        tick.appendChild(lbl);
+      }
+      frag.appendChild(tick);
+    }
+    ticksEl.appendChild(frag);
+  }
+
+  // 事件
+  const aboveEl = document.getElementById('japanEventsAbove');
+  const belowEl = document.getElementById('japanEventsBelow');
+  if (aboveEl) { aboveEl.innerHTML = ''; aboveEl.style.top = '0'; }
+  if (belowEl) { belowEl.innerHTML = ''; belowEl.style.top = axisTop + 'px'; }
+
+  JAPAN_EVENTS.forEach((evt, i) => {
+    const x = yearToX(evt.year);
+    const isAbove = i % 2 === 0;
+    const container = isAbove ? aboveEl : belowEl;
+    if (!container) return;
+    const color = evtColor(evt.type);
+    const node = document.createElement('div');
+    node.className = 'event-node ' + (isAbove ? 'above' : 'below');
+    node.style.cssText = 'left:' + x + 'px;' + (isAbove ? 'bottom:0;' : 'top:0;');
+    const dot = document.createElement('div');
+    dot.className = 'event-dot';
+    dot.style.cssText = 'border-color:' + color + ';';
+    const line = document.createElement('div');
+    line.className = 'event-line';
+    line.style.cssText = 'height:' + (30 + (i%5)*15) + 'px;background:' + color + ';';
+    const label = document.createElement('div');
+    label.className = 'event-label';
+    label.textContent = evt.name;
+    node.appendChild(dot);
+    node.appendChild(line);
+    node.appendChild(label);
+    node.addEventListener('mouseenter', (e) => showWorldEventTooltip(evt, e));
+    node.addEventListener('mouseleave', hideEventTooltip);
+    node.addEventListener('mousemove', throttle(moveTooltip, 16));
+    container.appendChild(node);
+  });
+
+  // 人物 - 使用与中国史相同的横条风格
+  if (typeof JAPAN_PERSONS !== 'undefined') {
+    const pAbove = document.getElementById('japanPersonsAbove');
+    const pBelow = document.getElementById('japanPersonsBelow');
+    if (pAbove) { pAbove.innerHTML = ''; pAbove.style.top = '0'; }
+    if (pBelow) { pBelow.innerHTML = ''; pBelow.style.top = axisTop + 'px'; }
+
+    const sorted = [...JAPAN_PERSONS].sort((a, b) => a.birth - b.birth);
+    const abovePersons = sorted.filter((_, i) => i % 2 === 0);
+    const belowPersons = sorted.filter((_, i) => i % 2 !== 0);
+
+    layoutPersonRows(abovePersons, pAbove, axisTop, true, 'japan');
+    layoutPersonRows(belowPersons, pBelow, axisTop, false, 'japan');
+    adjustWrapperHeight('japanTimelineWrapper', JAPAN_PERSONS, axisTop);
+  }
+}
+// ---- 朝鲜史时间轴 ----
+function renderKoreaTimeline() {
+  if (typeof KOREA_EVENTS === 'undefined') return;
+  const wrapper = document.getElementById('koreaTimelineWrapper');
+  if (!wrapper) return;
+  const w = totalWidth();
+  wrapper.style.width = w + 'px';
+  const axisTop = getAxisTopFor('koreaBlock');
+
+  const bandsEl = document.getElementById('koreaDynastyBands');
+  bandsEl.innerHTML = '';
+  const eras = [
+    { name: '古朝鲜', start: -2697, end: -108, color: '#8B4513' },
+    { name: '三国时代', start: -57, end: 668, color: '#6a0dad' },
+    { name: '统一新罗', start: 668, end: 935, color: '#4a0080' },
+    { name: '高丽王朝', start: 918, end: 1392, color: '#c0392b' },
+    { name: '朝鲜王朝', start: 1392, end: 1910, color: '#2980b9' },
+    { name: '近现代', start: 1910, end: 2025, color: '#27ae60' },
+  ];
+  eras.forEach(era => {
+    const x1 = yearToX(era.start), x2 = yearToX(era.end);
+    const band = document.createElement('div');
+    band.className = 'dynasty-band';
+    band.style.cssText = 'left:' + x1 + 'px;width:' + Math.max(x2-x1,2) + 'px;background:' + era.color + ';';
+    bandsEl.appendChild(band);
+    if (x2 - x1 > 40) {
+      const label = document.createElement('div');
+      label.className = 'dynasty-label';
+      label.style.cssText = 'left:' + (x1+(x2-x1)/2) + 'px;transform:translateX(-50%);';
+      label.textContent = era.name;
+      bandsEl.appendChild(label);
+    }
+  });
+
+  const axisEl = document.getElementById('koreaAxisLine');
+  if (axisEl) axisEl.style.cssText = 'top:' + axisTop + 'px;left:0;width:' + w + 'px;';
+
+  const ticksEl = document.getElementById('koreaAxisTicks');
+  if (ticksEl) {
+    ticksEl.innerHTML = '';
+    const majorStep = pxPerYear < 0.3 ? 500 : pxPerYear < 0.8 ? 100 : 50;
+    const minorStep = majorStep / 5;
+    const frag = document.createDocumentFragment();
+    for (let y = Math.ceil(YEAR_START / minorStep) * minorStep; y <= YEAR_END; y += minorStep) {
+      const isMajor = y % majorStep === 0;
+      const x = yearToX(y);
+      const tick = document.createElement('div');
+      tick.className = 'tick-mark' + (isMajor ? ' tick-major' : '');
+      tick.style.cssText = 'left:' + x + 'px;top:' + (axisTop - (isMajor?10:5)) + 'px;';
+      const ln = document.createElement('div');
+      ln.className = 'tick-line'; ln.style.height = (isMajor?20:10) + 'px';
+      tick.appendChild(ln);
+      if (isMajor) {
+        const lbl = document.createElement('div');
+        lbl.className = 'tick-label';
+        lbl.textContent = y < 0 ? '前' + (-y) : '' + y;
+        tick.appendChild(lbl);
+      }
+      frag.appendChild(tick);
+    }
+    ticksEl.appendChild(frag);
+  }
+
+  // events
+  const aboveEl = document.getElementById('koreaEventsAbove');
+  const belowEl = document.getElementById('koreaEventsBelow');
+  if (aboveEl) { aboveEl.innerHTML = ''; aboveEl.style.top = '0'; }
+  if (belowEl) { belowEl.innerHTML = ''; belowEl.style.top = axisTop + 'px'; }
+  KOREA_EVENTS.forEach((evt, i) => {
+    const x = yearToX(evt.year), isAbove = i % 2 === 0;
+    const container = isAbove ? aboveEl : belowEl;
+    if (!container) return;
+    const color = evtColor(evt.type);
+    const node = document.createElement('div');
+    node.className = 'event-node ' + (isAbove ? 'above' : 'below');
+    node.style.cssText = 'left:' + x + 'px;' + (isAbove ? 'bottom:0;' : 'top:0;');
+    const dot = document.createElement('div'); dot.className = 'event-dot'; dot.style.cssText = 'border-color:' + color + ';';
+    const line = document.createElement('div'); line.className = 'event-line'; line.style.cssText = 'height:' + (30 + (i%5)*15) + 'px;background:' + color + ';';
+    const label = document.createElement('div'); label.className = 'event-label'; label.textContent = evt.name;
+    node.appendChild(dot); node.appendChild(line); node.appendChild(label);
+    node.addEventListener('mouseenter', (e) => showWorldEventTooltip(evt, e));
+    node.addEventListener('mouseleave', hideEventTooltip);
+    node.addEventListener('mousemove', throttle(moveTooltip, 16));
+    container.appendChild(node);
+  });
+
+  // persons
+  if (typeof KOREA_PERSONS !== 'undefined') {
+    const pAbove = document.getElementById('koreaPersonsAbove');
+    const pBelow = document.getElementById('koreaPersonsBelow');
+    if (pAbove) { pAbove.innerHTML = ''; pAbove.style.top = '0'; }
+    if (pBelow) { pBelow.innerHTML = ''; pBelow.style.top = axisTop + 'px'; }
+    const sorted = [...KOREA_PERSONS].sort((a, b) => a.birth - b.birth);
+    layoutPersonRows(sorted.filter((_, i) => i % 2 === 0), pAbove, axisTop, true, 'korea');
+    layoutPersonRows(sorted.filter((_, i) => i % 2 !== 0), pBelow, axisTop, false, 'korea');
+    adjustWrapperHeight('koreaTimelineWrapper', KOREA_PERSONS, axisTop);
+  }
 }
 
 // ---- 朝代色带 ----
@@ -404,9 +907,10 @@ function renderPersons(axisTop) {
 
   layoutPersonRows(abovePersons, above, axisTop, true);
   layoutPersonRows(belowPersons, below, axisTop, false);
+  adjustWrapperHeight('timelineWrapper', PERSONS, axisTop);
 }
 
-function layoutPersonRows(persons, container, axisTop, isAbove) {
+function layoutPersonRows(persons, container, axisTop, isAbove, timelineType) {
   const rows = [];
   const rowHeight = 26;
   const padding = 4;
@@ -431,6 +935,7 @@ function layoutPersonRows(persons, container, axisTop, isAbove) {
     const row = document.createElement('div');
     row.className = 'person-row';
     row.dataset.personId = p.id;
+    row.dataset.timeline = timelineType || 'china';
     row.dataset.cat = p.cat;
     row.style.cssText = `left:${x1}px;top:${topOffset}px;width:${barW}px;`;
 
@@ -456,7 +961,7 @@ function layoutPersonRows(persons, container, axisTop, isAbove) {
     }
 
     row.appendChild(bar);
-    row.addEventListener('click', () => showPersonDetail(p.id));
+    row.addEventListener('click', () => showPersonDetail(p.id, timelineType || 'china'));
 
     fragment.appendChild(row);
   });
@@ -489,8 +994,13 @@ function moveTooltip(e) {
 }
 
 // ---- 人物详情面板 ----
-function showPersonDetail(personId) {
-  const p = PERSONS.find(x => x.id === personId);
+function showPersonDetail(personId, timelineType) {
+  let dataSource;
+  if (timelineType === 'japan') dataSource = JAPAN_PERSONS;
+  else if (timelineType === 'world') dataSource = WORLD_PERSONS;
+  else if (timelineType === 'korea') dataSource = KOREA_PERSONS;
+  else dataSource = PERSONS;
+  const p = dataSource.find(x => x.id === personId);
   if (!p) return;
   selectedPersonId = personId;
 
@@ -740,7 +1250,10 @@ function saveEdit() {
   // 重新渲染面板
   showPersonDetail(p.id);
   // 重新渲染时间轴
-  if (currentView === 'timeline') renderTimeline();
+  renderTimeline();
+  renderWorldTimeline();
+  renderKoreaTimeline();
+  renderJapanTimeline();
   if (currentView === 'map') updateMapMarkers();
   if (currentView === 'graph') { graphNodes = []; renderGraph(); }
   updateStats();
@@ -808,9 +1321,10 @@ document.getElementById('deletePersonConfirm').addEventListener('click', () => {
   selectedPersonId = null;
 
   // 4. 重新渲染所有视图
-  if (currentView === 'timeline') renderTimeline();
-  if (currentView === 'map') updateMapMarkers();
-  if (currentView === 'graph') { graphNodes = []; renderGraph(); }
+  renderTimeline();
+  renderWorldTimeline();
+  renderKoreaTimeline();
+  renderJapanTimeline();
   updateStats();
 
   // 5. 提示
@@ -1151,10 +1665,11 @@ function saveNewPerson() {
   // 关闭弹窗
   closeAddPersonModal();
 
-  // 重新渲染所有视图
-  if (currentView === 'timeline') renderTimeline();
-  if (currentView === 'map') updateMapMarkers();
-  if (currentView === 'graph') { graphNodes = []; renderGraph(); }
+  // 重新渲染时间轴
+  renderTimeline();
+  renderWorldTimeline();
+  renderKoreaTimeline();
+  renderJapanTimeline();
   updateStats();
 
   // 自动打开详情面板
@@ -1265,322 +1780,181 @@ const REL_CATEGORY_COLORS = {
   '其他': '#5a6a7e',
 };
 
-function renderGraph() {
-  const canvas = document.getElementById('graphCanvas');
-  const ctx = canvas.getContext('2d');
-  const w = canvas.parentElement.clientWidth;
-  const h = canvas.parentElement.clientHeight;
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
-  ctx.scale(dpr, dpr);
-
-  // 初始化筛选控件
-  initGraphControls();
-
-  // 获取筛选后的人物
-  let persons = [...PERSONS];
-  if (activeCat !== 'all') persons = persons.filter(p => p.cat === activeCat);
-  if (graphDynastyFilter !== 'all') persons = persons.filter(p => p.dynasty === graphDynastyFilter);
-  if (searchQuery) persons = persons.filter(p => p.name.includes(searchQuery) || (p.desc && p.desc.includes(searchQuery)));
-
-  // 只保留有关系的人物（或独立节点也保留但较小）
-  const personIds = new Set(persons.map(p => p.id));
-
-  // 按朝代分组
-  const dynastyGroups = {};
-  persons.forEach(p => {
-    const dynasty = p.dynasty || '未知';
-    if (!dynastyGroups[dynasty]) dynastyGroups[dynasty] = [];
-    dynastyGroups[dynasty].push(p);
-  });
+// DISABLED: function renderGraph() {
+// DISABLED:   const canvas = document.getElementById('graphCanvas');
+// DISABLED:   const ctx = canvas.getContext('2d');
+// DISABLED:   const w = canvas.parentElement.clientWidth;
+// DISABLED:   const h = canvas.parentElement.clientHeight;
+// DISABLED:   const dpr = window.devicePixelRatio || 1;
+// DISABLED:   canvas.width = w * dpr;
+// DISABLED:   canvas.height = h * dpr;
+// DISABLED:   canvas.style.width = w + 'px';
+// DISABLED:   canvas.style.height = h + 'px';
+// DISABLED:   ctx.scale(dpr, dpr);
+// DISABLED: 
+// DISABLED:   // 初始化筛选控件
+// DISABLED:   initGraphControls();
+// DISABLED: 
+// DISABLED:   // 获取筛选后的人物
+// DISABLED:   let persons = [...PERSONS];
+// DISABLED:   if (activeCat !== 'all') persons = persons.filter(p => p.cat === activeCat);
+// DISABLED:   if (graphDynastyFilter !== 'all') persons = persons.filter(p => p.dynasty === graphDynastyFilter);
+// DISABLED:   if (searchQuery) persons = persons.filter(p => p.name.includes(searchQuery) || (p.desc && p.desc.includes(searchQuery)));
+// DISABLED: 
+// DISABLED:   // 只保留有关系的人物（或独立节点也保留但较小）
+// DISABLED:   const personIds = new Set(persons.map(p => p.id));
+// DISABLED: 
+// DISABLED:   // 按朝代分组
+// DISABLED:   const dynastyGroups = {};
+// DISABLED:   persons.forEach(p => {
+// DISABLED:     const dynasty = p.dynasty || '未知';
+// DISABLED:     if (!dynastyGroups[dynasty]) dynastyGroups[dynasty] = [];
+// DISABLED:     dynastyGroups[dynasty].push(p);
+// DISABLED:   });
 
   // 按朝代在 DYNASTIES 中的顺序排列
-  const dynastyOrder = DYNASTIES.map(d => d.name);
-  const orderedGroups = Object.keys(dynastyGroups).sort((a, b) => {
-    const ia = dynastyOrder.indexOf(a);
-    const ib = dynastyOrder.indexOf(b);
-    return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
-  });
+  // DISABLED: const dynastyOrder = DYNASTIES.map(d => d.name);
+  // DISABLED: const orderedGroups = Object.keys(dynastyGroups).sort((a, b) => {
+    // DISABLED: const ia = dynastyOrder.indexOf(a);
+    // DISABLED: const ib = dynastyOrder.indexOf(b);
+    // DISABLED: return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+  // DISABLED: });
 
   // 计算每个朝代的布局区域
-  const groupCount = orderedGroups.length;
-  const cols = Math.ceil(Math.sqrt(groupCount * 1.5));
-  const rows = Math.ceil(groupCount / cols);
-  const cellW = (w - 80) / cols;
-  const cellH = (h - 80) / rows;
+  // DISABLED: const groupCount = orderedGroups.length;
+  // DISABLED: const cols = Math.ceil(Math.sqrt(groupCount * 1.5));
+  // DISABLED: const rows = Math.ceil(groupCount / cols);
+  // DISABLED: const cellW = (w - 80) / cols;
+  // DISABLED: const cellH = (h - 80) / rows;
 
   // 初始化节点位置 - 按朝代分区
-  graphNodes = [];
-  const dynastyCenters = {};
+  // DISABLED: graphNodes = [];
+  // DISABLED: const dynastyCenters = {};
   
-  orderedGroups.forEach((dynasty, gi) => {
-    const col = gi % cols;
-    const row = Math.floor(gi / cols);
-    const cx = 40 + col * cellW + cellW / 2;
-    const cy = 40 + row * cellH + cellH / 2;
-    dynastyCenters[dynasty] = { cx, cy };
+  // DISABLED: orderedGroups.forEach((dynasty, gi) => {
+    // DISABLED: const col = gi % cols;
+    // DISABLED: const row = Math.floor(gi / cols);
+    // DISABLED: const cx = 40 + col * cellW + cellW / 2;
+    // DISABLED: const cy = 40 + row * cellH + cellH / 2;
+    // DISABLED: dynastyCenters[dynasty] = { cx, cy };
 
-    const groupPersons = dynastyGroups[dynasty];
-    const perRow = Math.ceil(Math.sqrt(groupPersons.length * 1.5));
+    // DISABLED: const groupPersons = dynastyGroups[dynasty];
+    // DISABLED: const perRow = Math.ceil(Math.sqrt(groupPersons.length * 1.5));
     
-    groupPersons.forEach((p, pi) => {
-      const pCol = pi % perRow;
-      const pRow = Math.floor(pi / perRow);
-      const spacing = Math.min(65, (cellW - 40) / perRow);
-      const vSpacing = Math.min(65, (cellH - 40) / Math.ceil(groupPersons.length / perRow));
+    // DISABLED: groupPersons.forEach((p, pi) => {
+      // DISABLED: const pCol = pi % perRow;
+      // DISABLED: const pRow = Math.floor(pi / perRow);
+      // DISABLED: const spacing = Math.min(65, (cellW - 40) / perRow);
+      // DISABLED: const vSpacing = Math.min(65, (cellH - 40) / Math.ceil(groupPersons.length / perRow));
       
-      graphNodes.push({
-        id: p.id,
-        x: cx + (pCol - perRow / 2) * spacing + (Math.random() - 0.5) * 10,
-        y: cy + (pRow - Math.ceil(groupPersons.length / perRow) / 2) * vSpacing + (Math.random() - 0.5) * 10,
-        vx: 0, vy: 0,
-        person: p,
-        dynasty: dynasty,
-      });
-    });
-  });
+      // DISABLED: graphNodes.push({
+        // DISABLED: id: p.id,
+        // DISABLED: x: cx + (pCol - perRow / 2) * spacing + (Math.random() - 0.5) * 10,
+        // DISABLED: y: cy + (pRow - Math.ceil(groupPersons.length / perRow) / 2) * vSpacing + (Math.random() - 0.5) * 10,
+        // DISABLED: vx: 0, vy: 0,
+        // DISABLED: person: p,
+        // DISABLED: dynasty: dynasty,
+      // DISABLED: });
+    // DISABLED: });
+  // DISABLED: });
 
   // 构建边
-  graphEdges = [];
-  persons.forEach(p => {
-    (p.relations || []).forEach(r => {
-      const srcIdx = graphNodes.findIndex(n => n.id === p.id);
-      const tgtIdx = graphNodes.findIndex(n => n.id === r.id);
-      if (srcIdx !== -1 && tgtIdx !== -1) {
-        graphEdges.push({
-          src: srcIdx,
-          tgt: tgtIdx,
-          type: r.type,
-          label: r.label,
-          category: getRelCategory(r.type),
-        });
-      }
-    });
-  });
+  // DISABLED: graphEdges = [];
+  // DISABLED: persons.forEach(p => {
+    // DISABLED: (p.relations || []).forEach(r => {
+      // DISABLED: const srcIdx = graphNodes.findIndex(n => n.id === p.id);
+      // DISABLED: const tgtIdx = graphNodes.findIndex(n => n.id === r.id);
+      // DISABLED: if (srcIdx !== -1 && tgtIdx !== -1) {
+        // DISABLED: graphEdges.push({
+          // DISABLED: src: srcIdx,
+          // DISABLED: tgt: tgtIdx,
+          // DISABLED: type: r.type,
+          // DISABLED: label: r.label,
+          // DISABLED: category: getRelCategory(r.type),
+        // DISABLED: });
+      // DISABLED: }
+    // DISABLED: });
+  // DISABLED: });
 
   // 关系类型筛选
-  if (graphRelTypeFilter !== 'all') {
-    graphEdges = graphEdges.filter(e => e.category === graphRelTypeFilter);
-  }
+  // DISABLED: if (graphRelTypeFilter !== 'all') {
+    // DISABLED: graphEdges = graphEdges.filter(e => e.category === graphRelTypeFilter);
+  // DISABLED: }
 
   // 力导向模拟（轻量级，从分区初始位置出发）
-  if (graphAnim) cancelAnimationFrame(graphAnim);
-  let tick = 0;
+  // DISABLED: if (graphAnim) cancelAnimationFrame(graphAnim);
+  // DISABLED: let tick = 0;
 
-  function step() {
-    const k = 80;
-    const repulsion = 2000;
-    const damping = 0.85;
-    const intraGroupGravity = 0.01; // 同组引力
-    const interGroupRepulsion = 5000; // 跨组斥力
+  // DISABLED: function step() {
+    // DISABLED: const k = 80;
+    // DISABLED: const repulsion = 2000;
+    // DISABLED: const damping = 0.85;
+    // DISABLED: const intraGroupGravity = 0.01; // 同组引力
+    // DISABLED: const interGroupRepulsion = 5000; // 跨组斥力
 
-    graphNodes.forEach(n => { n.vx = 0; n.vy = 0; });
+    // DISABLED: graphNodes.forEach(n => { n.vx = 0; n.vy = 0; });
 
     // 斥力 - 同组节点间
-    for (let i = 0; i < graphNodes.length; i++) {
-      for (let j = i + 1; j < graphNodes.length; j++) {
-        const ni = graphNodes[i], nj = graphNodes[j];
-        let dx = ni.x - nj.x, dy = ni.y - nj.y;
-        const dist = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
+    // DISABLED: for (let i = 0; i < graphNodes.length; i++) {
+      // DISABLED: for (let j = i + 1; j < graphNodes.length; j++) {
+        // DISABLED: const ni = graphNodes[i], nj = graphNodes[j];
+        // DISABLED: let dx = ni.x - nj.x, dy = ni.y - nj.y;
+        // DISABLED: const dist = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
         
         // 跨朝代的斥力更大
-        const force = ni.dynasty !== nj.dynasty ? interGroupRepulsion : repulsion;
-        const f = force / (dist * dist);
-        ni.vx += (dx / dist) * f;
-        ni.vy += (dy / dist) * f;
-        nj.vx -= (dx / dist) * f;
-        nj.vy -= (dy / dist) * f;
-      }
-    }
+        // DISABLED: const force = ni.dynasty !== nj.dynasty ? interGroupRepulsion : repulsion;
+        // DISABLED: const f = force / (dist * dist);
+        // DISABLED: ni.vx += (dx / dist) * f;
+        // DISABLED: ni.vy += (dy / dist) * f;
+        // DISABLED: nj.vx -= (dx / dist) * f;
+        // DISABLED: nj.vy -= (dy / dist) * f;
+      // DISABLED: }
+    // DISABLED: }
 
     // 引力（边）- 同朝代内的边引力更强
-    graphEdges.forEach(e => {
-      const a = graphNodes[e.src], b = graphNodes[e.tgt];
-      if (!a || !b) return;
-      let dx = b.x - a.x, dy = b.y - a.y;
-      const dist = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
-      const strength = a.dynasty === b.dynasty ? 0.08 : 0.02; // 同组更强引力
-      const force = (dist - k) * strength;
-      a.vx += (dx / dist) * force;
-      a.vy += (dy / dist) * force;
-      b.vx -= (dx / dist) * force;
-      b.vy -= (dy / dist) * force;
-    });
+    // DISABLED: graphEdges.forEach(e => {
+      // DISABLED: const a = graphNodes[e.src], b = graphNodes[e.tgt];
+      // DISABLED: if (!a || !b) return;
+      // DISABLED: let dx = b.x - a.x, dy = b.y - a.y;
+      // DISABLED: const dist = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
+      // DISABLED: const strength = a.dynasty === b.dynasty ? 0.08 : 0.02; // 同组更强引力
+      // DISABLED: const force = (dist - k) * strength;
+      // DISABLED: a.vx += (dx / dist) * force;
+      // DISABLED: a.vy += (dy / dist) * force;
+      // DISABLED: b.vx -= (dx / dist) * force;
+      // DISABLED: b.vy -= (dy / dist) * force;
+    // DISABLED: });
 
     // 朝代中心引力 - 保持节点在分区附近
-    graphNodes.forEach(n => {
-      const center = dynastyCenters[n.dynasty];
-      if (center) {
-        n.vx += (center.cx - n.x) * intraGroupGravity;
-        n.vy += (center.cy - n.y) * intraGroupGravity;
-      }
-    });
+    // DISABLED: graphNodes.forEach(n => {
+      // DISABLED: const center = dynastyCenters[n.dynasty];
+      // DISABLED: if (center) {
+        // DISABLED: n.vx += (center.cx - n.x) * intraGroupGravity;
+        // DISABLED: n.vy += (center.cy - n.y) * intraGroupGravity;
+      // DISABLED: }
+    // DISABLED: });
 
     // 全局中心引力（弱）
-    graphNodes.forEach(n => {
-      n.vx += (w / 2 - n.x) * 0.0005;
-      n.vy += (h / 2 - n.y) * 0.0005;
-      n.vx *= damping;
-      n.vy *= damping;
-      n.x = Math.max(40, Math.min(w - 40, n.x + n.vx));
-      n.y = Math.max(40, Math.min(h - 40, n.y + n.vy));
-    });
+    // DISABLED: graphNodes.forEach(n => {
+      // DISABLED: n.vx += (w / 2 - n.x) * 0.0005;
+      // DISABLED: n.vy += (h / 2 - n.y) * 0.0005;
+      // DISABLED: n.vx *= damping;
+      // DISABLED: n.vy *= damping;
+      // DISABLED: n.x = Math.max(40, Math.min(w - 40, n.x + n.vx));
+      // DISABLED: n.y = Math.max(40, Math.min(h - 40, n.y + n.vy));
+    // DISABLED: });
 
-    drawGraphFrame(ctx, w, h);
+    // DISABLED: drawGraphFrame(ctx, w, h);
 
-    tick++;
-    if (tick < 120) graphAnim = requestAnimationFrame(step);
-    else graphAnim = requestAnimationFrame(() => drawGraphFrame(ctx, w, h));
-  }
+    // DISABLED: tick++;
+    // DISABLED: if (tick < 120) graphAnim = requestAnimationFrame(step);
+    // DISABLED: else graphAnim = requestAnimationFrame(() => drawGraphFrame(ctx, w, h));
+  // DISABLED: }
 
-  step();
-  initGraphInteraction();
-}
+  // DISABLED: step();
+  // DISABLED: initGraphInteraction();
 
 // 绘制关系图单帧
-function drawGraphFrame(ctx, w, h) {
-  ctx.clearRect(0, 0, w, h);
-
-  // 绘制朝代分区标签
-  const dynastySet = new Set(graphNodes.map(n => n.dynasty));
-  const drawnLabels = new Set();
-  graphNodes.forEach(n => {
-    if (drawnLabels.has(n.dynasty)) return;
-    drawnLabels.add(n.dynasty);
-    // 计算该朝代所有节点的中心
-    const nodes = graphNodes.filter(gn => gn.dynasty === n.dynasty);
-    if (nodes.length === 0) return;
-    let cx = 0, cy = 0, minY = Infinity;
-    nodes.forEach(nd => { cx += nd.x; cy += nd.y; if (nd.y < minY) minY = nd.y; });
-    cx /= nodes.length; cy /= nodes.length;
-
-    const dynasty = DYNASTIES.find(d => d.name === n.dynasty);
-    const color = dynasty ? dynasty.color : '#5a6a7e';
-
-    ctx.font = 'bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = color + 'aa';
-    ctx.fillText(n.dynasty, cx, Math.min(minY - 25, cy - 40));
-    
-    // 朝代节点数
-    ctx.font = '10px "PingFang SC","Microsoft YaHei",sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,0.25)';
-    ctx.fillText(`${nodes.length}人`, cx, Math.min(minY - 10, cy - 25));
-  });
-
-  // 绘制边 - 使用贝塞尔曲线
-  graphEdges.forEach(e => {
-    const a = graphNodes[e.src], b = graphNodes[e.tgt];
-    if (!a || !b) return;
-    
-    const color = REL_CATEGORY_COLORS[e.category] || REL_TYPE_DEFAULT_COLOR;
-    const isHighlighted = graphHoveredNode && 
-      (graphNodes[e.src].id === graphHoveredNode || graphNodes[e.tgt].id === graphHoveredNode);
-    const isDimmed = graphHoveredNode && !isHighlighted;
-
-    // 计算贝塞尔控制点
-    const midX = (a.x + b.x) / 2;
-    const midY = (a.y + b.y) / 2;
-    const dx = b.x - a.x;
-    const dy = b.y - a.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    // 垂直偏移量，根据距离调整曲线弧度
-    const curvature = 0.15;
-    const cpX = midX - dy * curvature;
-    const cpY = midY + dx * curvature;
-
-    ctx.beginPath();
-    ctx.moveTo(a.x, a.y);
-    ctx.quadraticCurveTo(cpX, cpY, b.x, b.y);
-    
-    if (isHighlighted) {
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 2.5;
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 8;
-    } else if (isDimmed) {
-      ctx.strokeStyle = color + '10';
-      ctx.lineWidth = 0.5;
-      ctx.shadowBlur = 0;
-    } else {
-      ctx.strokeStyle = color + '40';
-      ctx.lineWidth = 1;
-      ctx.shadowBlur = 0;
-    }
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-
-    // 高亮时显示关系标签
-    if (isHighlighted && e.label) {
-      const labelX = cpX;
-      const labelY = cpY - 8;
-      ctx.font = '10px "PingFang SC","Microsoft YaHei",sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillStyle = color;
-      ctx.shadowColor = 'rgba(0,0,0,0.8)';
-      ctx.shadowBlur = 4;
-      ctx.fillText(e.label, labelX, labelY);
-      ctx.shadowBlur = 0;
-    }
-  });
-
-  // 绘制节点
-  graphNodes.forEach(n => {
-    const color = CAT_COLOR[n.person.cat] || '#888';
-    const isHovered = graphHoveredNode === n.id;
-    const isConnected = graphHoveredNode && graphEdges.some(e => 
-      (graphNodes[e.src].id === graphHoveredNode && graphNodes[e.tgt].id === n.id) ||
-      (graphNodes[e.tgt].id === graphHoveredNode && graphNodes[e.src].id === n.id)
-    );
-    const isDimmed = graphHoveredNode && !isHovered && !isConnected;
-    const r = isHovered ? 24 : isConnected ? 22 : 18;
-
-    // 光晕
-    const glowRadius = isHovered ? r * 3 : isConnected ? r * 2.5 : r * 1.8;
-    const grad = ctx.createRadialGradient(n.x, n.y, 2, n.x, n.y, glowRadius);
-    grad.addColorStop(0, isDimmed ? color + '08' : isHovered ? color + '50' : color + '25');
-    grad.addColorStop(1, 'transparent');
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, glowRadius, 0, Math.PI * 2);
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    // 圆
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-    ctx.fillStyle = isDimmed ? color + '30' : color + 'bb';
-    ctx.fill();
-    ctx.strokeStyle = isDimmed ? color + '20' : isHovered ? '#fff' : color;
-    ctx.lineWidth = isHovered ? 2.5 : 1.5;
-    ctx.stroke();
-
-    // emoji
-    ctx.font = `${isHovered ? 16 : 13}px serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = isDimmed ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.95)';
-    ctx.fillText(n.person.emoji || '👤', n.x, n.y);
-
-    // 名字
-    ctx.font = `${isHovered ? 12 : 10}px "PingFang SC","Microsoft YaHei",sans-serif`;
-    ctx.fillStyle = isDimmed ? 'rgba(255,255,255,0.15)' : isHovered ? '#fff' : 'rgba(255,255,255,0.75)';
-    ctx.textBaseline = 'top';
-    ctx.fillText(n.person.name, n.x, n.y + r + 4);
-  });
-
-  // 绘制统计
-  const visibleEdges = graphHoveredNode 
-    ? graphEdges.filter(e => graphNodes[e.src].id === graphHoveredNode || graphNodes[e.tgt].id === graphHoveredNode)
-    : graphEdges;
-  ctx.font = '11px "PingFang SC","Microsoft YaHei",sans-serif';
-  ctx.textAlign = 'right';
-  ctx.fillStyle = 'rgba(255,255,255,0.3)';
-  ctx.textBaseline = 'top';
-  ctx.fillText(`${graphNodes.length}人物 · ${visibleEdges.length}关系`, w - 20, 12);
-}
 
 // 初始化关系图筛选控件
 function initGraphControls() {
@@ -1653,117 +2027,20 @@ function initGraphControls() {
 }
 
 // 关系图交互
-function initGraphInteraction() {
-  if (graphInteractionInited) return;
-  graphInteractionInited = true;
+// ---- 板块切换 ----
+function switchSection(sectionId) {
+  document.querySelectorAll('.main-section').forEach(s => s.style.display = 'none');
+  document.getElementById(sectionId).style.display = '';
+  document.querySelectorAll('.btn-section').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.btn-section[data-section="${sectionId}"]`).classList.add('active');
 
-  const canvas = document.getElementById('graphCanvas');
-
-  // 鼠标移动 - hover 高亮
-  canvas.addEventListener('mousemove', throttle((e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-
-    if (isDraggingGraph) {
-      graphOffset.x = graphDragOffset.x + (e.clientX - graphDragStart.x);
-      graphOffset.y = graphDragOffset.y + (e.clientY - graphDragStart.y);
-      return;
-    }
-
-    let found = null;
-    for (const n of graphNodes) {
-      const dx = mx - n.x, dy = my - n.y;
-      if (dx * dx + dy * dy < 24 * 24) {
-        found = n.id;
-        break;
-      }
-    }
-
-    if (found !== graphHoveredNode) {
-      graphHoveredNode = found;
-      canvas.style.cursor = found ? 'pointer' : 'grab';
-      // 重绘
-      const ctx = canvas.getContext('2d');
-      const dpr = window.devicePixelRatio || 1;
-      ctx.save();
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawGraphFrame(ctx, canvas.clientWidth, canvas.clientHeight);
-      ctx.restore();
-    }
-  }, 16));
-
-  canvas.addEventListener('mouseleave', () => {
-    graphHoveredNode = null;
-    isDraggingGraph = false;
-    const ctx = canvas.getContext('2d');
-    const dpr = window.devicePixelRatio || 1;
-    ctx.save();
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    drawGraphFrame(ctx, canvas.clientWidth, canvas.clientHeight);
-    ctx.restore();
-  });
-
-  // 拖拽
-  canvas.addEventListener('mousedown', (e) => {
-    isDraggingGraph = true;
-    graphDragStart = { x: e.clientX, y: e.clientY };
-    graphDragOffset = { ...graphOffset };
-    canvas.style.cursor = 'grabbing';
-  });
-
-  // 点击
-  canvas.addEventListener('mouseup', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-
-    if (Math.abs(e.clientX - graphDragStart.x) < 5 && Math.abs(e.clientY - graphDragStart.y) < 5) {
-      for (const n of graphNodes) {
-        const dx = mx - n.x, dy = my - n.y;
-        if (dx * dx + dy * dy < 24 * 24) {
-          showPersonDetail(n.id);
-          break;
-        }
-      }
-    }
-    isDraggingGraph = false;
-    canvas.style.cursor = 'grab';
-  });
-
-  // 滚轮缩放
-  canvas.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    const factor = e.deltaY < 0 ? 1.1 : 0.9;
-    graphScale = Math.min(Math.max(graphScale * factor, 0.3), 3);
-    // 简单缩放：重新渲染
-    graphNodes = [];
-    renderGraph();
-  }, { passive: false });
+  if (sectionId === 'timelineSection') { renderTimeline(); }
+  if (sectionId === 'worldSection') { renderWorldTimeline(); }
+  if (sectionId === 'eventSection') { /* 事件详情由点击触发 */ }
+  if (sectionId === 'relationSection') { renderPersonRelations(); }
 }
 
-// ---- 视图切换 ----
-function switchView(view) {
-  currentView = view;
-  document.getElementById('timelineView').style.display = view === 'timeline' ? '' : 'none';
-  document.getElementById('graphView').style.display = view === 'graph' ? '' : 'none';
-  document.getElementById('mapView').style.display = view === 'map' ? '' : 'none';
-
-  document.querySelectorAll('.btn-view').forEach(b => b.classList.remove('active'));
-  document.getElementById(view === 'timeline' ? 'btnTimeline' : view === 'graph' ? 'btnGraph' : 'btnMap').classList.add('active');
-
-  if (view === 'timeline') renderTimeline();
-  if (view === 'graph') { graphNodes = []; graphHoveredNode = null; renderGraph(); }
-  if (view === 'map') {
-    const select = document.getElementById('mapDynastySelect');
-    if (select) { select.value = mapDynastyFilter; }
-    initMapInteraction(); renderMap();
-  }
-}
-
-document.getElementById('btnTimeline').addEventListener('click', () => switchView('timeline'));
-document.getElementById('btnGraph').addEventListener('click', () => switchView('graph'));
-document.getElementById('btnMap').addEventListener('click', () => switchView('map'));
+// 标签页已移除，无需绑定
 
 // ---- 面板关闭 ----
 document.getElementById('panelClose').addEventListener('click', () => {
@@ -1797,7 +2074,7 @@ document.getElementById('zoomReset').addEventListener('click', zoomReset);
 // 鼠标滚轮缩放（以鼠标位置为中心）
 const throttledWheel = throttle((e) => {
   const factor = e.deltaY < 0 ? 1.1 : 1 / 1.1;
-  const view = document.getElementById('timelineView');
+  const view = document.getElementById('dualTimelineContainer');
   const rect = view.getBoundingClientRect();
   const mouseX = e.clientX - rect.left + view.scrollLeft;
   const yearAtMouse = YEAR_START + mouseX / pxPerYear;
@@ -1808,27 +2085,27 @@ const throttledWheel = throttle((e) => {
   updateStats();
 }, 50);
 
-document.getElementById('timelineView').addEventListener('wheel', (e) => {
+document.getElementById('dualTimelineContainer').addEventListener('wheel', (e) => {
   e.preventDefault();
   throttledWheel(e);
 }, { passive: false });
 
 // ---- 拖拽滚动 ----
-const tlView = document.getElementById('timelineView');
-tlView.addEventListener('mousedown', (e) => {
+const container = document.getElementById('dualTimelineContainer');
+container.addEventListener('mousedown', (e) => {
   if (e.target.closest('.person-row, .event-node, .zoom-controls')) return;
   isDragging = true;
   dragStartX = e.clientX;
-  dragScrollX = tlView.scrollLeft;
-  tlView.style.cursor = 'grabbing';
+  dragScrollX = container.scrollLeft;
+  container.style.cursor = 'grabbing';
 });
 document.addEventListener('mousemove', (e) => {
   if (!isDragging) return;
-  tlView.scrollLeft = dragScrollX - (e.clientX - dragStartX);
+  container.scrollLeft = dragScrollX - (e.clientX - dragStartX);
 });
 document.addEventListener('mouseup', () => {
   isDragging = false;
-  tlView.style.cursor = 'grab';
+  container.style.cursor = 'grab';
 });
 
 // ---- 搜索（防抖优化） ----
@@ -1865,7 +2142,6 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
 
 // ---- 键盘快捷键 ----
 document.addEventListener('keydown', (e) => {
-  // 搜索框获得焦点时不处理快捷键
   if (document.activeElement === document.getElementById('searchInput')) {
     if (e.key === 'Escape') {
       document.getElementById('searchInput').blur();
@@ -1875,314 +2151,100 @@ document.addEventListener('keydown', (e) => {
     }
     return;
   }
-
-  switch(e.key) {
-    case '1':
-      switchView('timeline');
-      break;
-    case '2':
-      switchView('graph');
-      break;
-    case '3':
-      switchView('map');
-      break;
-    case '+':
-    case '=':
-      zoomIn();
-      break;
-    case '-':
-      zoomOut();
-      break;
-    case '0':
-      zoomReset();
-      break;
-    case '/':
-      e.preventDefault();
-      document.getElementById('searchInput').focus();
-      break;
-    case 'Escape':
-      document.getElementById('detailPanel').classList.add('hidden');
-      selectedPersonId = null;
-      clearHighlight();
-      if (isEditMode) exitEditMode();
-      break;
+  if (e.key === '/') {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
   }
 });
 
-// ---- 事件绑定 ----
-function bindEvents() {
-  // 筛选按钮已经在 buildFilterBtns 里绑定
+function showWorldEventTooltip(evt, e) {
+  const tip = document.getElementById('eventTooltip');
+  if (!tip) return;
+  const yearStr = evt.year < 0 ? '前' + (-evt.year) + '年' : '' + evt.year + '年';
+  tip.innerHTML =
+    '<div class="tooltip-title">🌍 ' + evt.name + '</div>' +
+    '<div class="tooltip-year" style="color:' + evtColor(evt.type) + '">' + yearStr + '</div>' +
+    '<div class="tooltip-desc">' + evt.desc + '</div>';
+  tip.classList.remove('hidden');
+  moveTooltip(e);
 }
 
-// ---- 页面初始滚动到前500年 ----
-setTimeout(() => {
-  scrollToYear(-500);
-}, 100);
 
 // =============================================
-// 地图视图（Leaflet 真实地图）
+// 板块3：事件详情
 // =============================================
-let leafletMap = null;
-let mapMarkerLayer = null;
-let mapDynastyFilter = 'all';
-let mapYearFilter = -4500;
-let mapInteractionInited = false;
-
-function initLeafletMap() {
-  if (leafletMap) return;
-
-  leafletMap = L.map('leafletMap', {
-    center: [35, 104],
-    zoom: 4,
-    minZoom: 3,
-    maxZoom: 12,
-    zoomControl: false,
-    attributionControl: false,
-  });
-
-  // 深色主题地图瓦片（CartoDB Dark Matter）
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    subdomains: 'abcd',
-    maxZoom: 19,
-  }).addTo(leafletMap);
-
-  // 缩放控件放右上角
-  L.control.zoom({ position: 'topright' }).addTo(leafletMap);
-
-  // 版权信息
-  L.control.attribution({ position: 'bottomright', prefix: '' })
-    .addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>')
-    .addTo(leafletMap);
-
-  // Marker 图层组
-  mapMarkerLayer = L.layerGroup().addTo(leafletMap);
-}
-
-// 自定义 Marker 图标
-function createMarkerIcon(person, clusterSize) {
-  let color;
-  if (mapDynastyFilter !== 'all') {
-    const dynasty = DYNASTIES.find(d => d.name === mapDynastyFilter);
-    color = dynasty ? dynasty.color : getCatColorForMap(person.cat);
-  } else {
-    color = getCatColorForMap(person.cat);
-  }
-
-  const size = clusterSize > 1 ? 40 : 32;
-  const fontSize = clusterSize > 1 ? 14 : 16;
-  const countBadge = clusterSize > 1
-    ? `<div style="position:absolute;top:-4px;right:-4px;background:${color};color:#fff;font-size:10px;font-weight:bold;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #0b0f19;box-shadow:0 0 6px ${color}80;">${clusterSize}</div>`
-    : '';
-
-  return L.divIcon({
-    className: 'custom-marker',
-    html: `
-      <div style="position:relative;width:${size}px;height:${size}px;">
-        <div style="width:${size}px;height:${size}px;border-radius:50%;background:${color}cc;border:2px solid rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;font-size:${fontSize}px;box-shadow:0 0 12px ${color}60,0 2px 8px rgba(0,0,0,0.4);cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;">
-          ${person.emoji || '👤'}
-        </div>
-        ${countBadge}
-      </div>
-    `,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-    popupAnchor: [0, -size / 2 - 4],
+function initTimelineClick() {
+  // 给时间轴上的中国史事件添加点击，用 tooltip 显示详情
+  document.querySelectorAll('.event-dot').forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      const eventId = dot.dataset.eventId;
+      if (!eventId) return;
+      const ev = EVENTS.find(e => e.id === eventId);
+      if (!ev) return;
+      showEventDetailTooltip(ev, e);
+    });
   });
 }
 
-function updateMapMarkers() {
-  if (!leafletMap || !mapMarkerLayer) return;
-  mapMarkerLayer.clearLayers();
+function showEventDetailTooltip(ev, e) {
+  const tip = document.getElementById('eventTooltip');
+  if (!tip) return;
+  const yearStr = ev.year < 0 ? `前${-ev.year}年` : `${ev.year}年`;
+  const worldSame = (typeof WORLD_EVENTS !== 'undefined') ? WORLD_EVENTS.filter(w => Math.abs(w.year - ev.year) < 50) : [];
+  tip.innerHTML = `
+    <div class="tooltip-title">📅 ${ev.name}</div>
+    <div class="tooltip-year">${yearStr}</div>
+    <div class="tooltip-desc">${ev.desc}</div>
+    ${worldSame.length > 0 ? `<div style="margin-top:8px;color:#2ecc71;font-weight:600;">🌍 同期世界史</div>` + worldSame.map(w => `<div style="font-size:12px;color:#aaf;margin:2px 0;">${w.year < 0 ? '前'+(-w.year) : w.year}年 · ${w.name}</div>`).join('') : ''}
+  `;
+  tip.classList.remove('hidden');
+  moveTooltip(e);
+  // 5秒后自动隐藏
+  clearTimeout(showEventDetailTooltip._timer);
+  showEventDetailTooltip._timer = setTimeout(() => tip.classList.add('hidden'), 8000);
+}
 
+// =============================================
+// 板块4：人物关系横向标注
+// =============================================
+function renderPersonRelations() {
+  const container = document.getElementById('relationContentView');
+  if (!container) return;
+
+  // 取当前筛选下的人物
   const filtered = PERSONS.filter(p => {
-    if (!p.location) return false;
     if (activeCat !== 'all' && p.cat !== activeCat) return false;
-    if (mapDynastyFilter !== 'all' && p.dynasty !== mapDynastyFilter) return false;
-    if (searchQuery && !p.name.toLowerCase().includes(searchQuery)) return false;
-    const personMid = (p.birth + p.death) / 2;
-    if (mapYearFilter > -4500 && personMid > mapYearFilter) return false;
-    return true;
+    return p.relations && p.relations.length > 0;
+  }).slice(0, 50);
+
+  let html = '<div style="padding:16px;">';
+  filtered.forEach(p => {
+    if (!p.relations || p.relations.length === 0) return;
+    p.relations.forEach(rel => {
+      const target = PERSONS.find(o => o.id === rel.id);
+      if (!target) return;
+      html += `
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #2a2a3e;">
+          <span style="font-size:20px;">${p.emoji || '👤'}</span>
+          <span style="color:#f39c12;font-weight:600;">${p.name}</span>
+          <span style="color:#7f8c8d;font-size:13px;">${rel.type}</span>
+          <span style="color:#2ecc71;">→</span>
+          <span style="font-size:20px;">${target.emoji || '👤'}</span>
+          <span style="color:#ddd;">${target.name}</span>
+          <span style="color:#7f8c8d;font-size:12px;">${rel.label || ''}</span>
+        </div>`;
+    });
   });
-
-  // 按位置聚合近距离标记
-  const clusters = [];
-  const clusterDist = 0.8; // 经纬度距离阈值，随缩放级别可调
-
-  filtered.forEach(person => {
-    const lat = person.location.lat;
-    const lng = person.location.lng;
-    let addedToCluster = false;
-
-    for (const cluster of clusters) {
-      const dLat = lat - cluster.lat;
-      const dLng = lng - cluster.lng;
-      if (Math.sqrt(dLat * dLat + dLng * dLng) < clusterDist) {
-        cluster.persons.push(person);
-        addedToCluster = true;
-        break;
-      }
-    }
-
-    if (!addedToCluster) {
-      clusters.push({ lat, lng, persons: [person] });
-    }
-  });
-
-  clusters.forEach(cluster => {
-    const mainPerson = cluster.persons[0];
-    const clusterSize = cluster.persons.length;
-
-    // 计算聚合中心
-    let avgLat = 0, avgLng = 0;
-    cluster.persons.forEach(p => { avgLat += p.location.lat; avgLng += p.location.lng; });
-    avgLat /= clusterSize;
-    avgLng /= clusterSize;
-
-    const icon = createMarkerIcon(mainPerson, clusterSize);
-
-    const nameList = clusterSize === 1
-      ? mainPerson.name
-      : cluster.persons.slice(0, 5).map(p => p.name).join('、') + (clusterSize > 5 ? ` 等${clusterSize}人` : '');
-
-    const popupContent = clusterSize === 1
-      ? `<div class="map-popup">
-           <div class="map-popup-name">${mainPerson.emoji} ${mainPerson.name}</div>
-           <div class="map-popup-meta">${mainPerson.dynasty} · ${mainPerson.location.place}</div>
-           <div class="map-popup-meta">${formatYear(mainPerson.birth)} — ${formatYear(mainPerson.death)} · 享年${mainPerson.death - mainPerson.birth}岁</div>
-         </div>`
-      : `<div class="map-popup">
-           <div class="map-popup-name">${mainPerson.emoji} ${nameList}</div>
-           <div class="map-popup-meta">${clusterSize}人位于${mainPerson.location.place}附近</div>
-         </div>`;
-
-    const marker = L.marker([avgLat, avgLng], { icon })
-      .bindPopup(popupContent, {
-        className: 'custom-popup',
-        maxWidth: 260,
-        closeButton: true,
-      });
-
-    // 点击显示详情面板
-    marker.on('click', () => {
-      showPersonDetail(mainPerson.id);
-    });
-
-    // hover 弹出 popup
-    marker.on('mouseover', function() {
-      this.openPopup();
-    });
-    marker.on('mouseout', function() {
-      // 不自动关闭，让用户可以点击 popup
-    });
-
-    mapMarkerLayer.addLayer(marker);
-  });
-
-  // 更新朝代筛选信息
-  updateMapDynastyInfo();
-}
-
-function renderMap() {
-  initLeafletMap();
-  initDynastySelect();
-  initMapControls();
-  updateMapMarkers();
-
-  // 延迟 invalidateSize，确保容器已显示
-  setTimeout(() => {
-    if (leafletMap) leafletMap.invalidateSize();
-  }, 100);
-}
-
-function initMapControls() {
-  const slider = document.getElementById('mapYearSlider');
-  if (slider && !slider.dataset.bound) {
-    slider.dataset.bound = 'true';
-    slider.addEventListener('input', (e) => {
-      mapYearFilter = parseInt(e.target.value);
-      const label = document.getElementById('mapYearLabel');
-      if (mapYearFilter === -4500) {
-        label.textContent = '显示全部时期';
-      } else if (mapYearFilter < 0) {
-        label.textContent = `公元前${-mapYearFilter}年以前`;
-      } else {
-        label.textContent = `公元${mapYearFilter}年以前`;
-      }
-      updateMapMarkers();
-    });
+  html += '</div>';
+  if (filtered.length === 0) {
+    html = '<p style="color:#666;padding:40px;text-align:center;">暂无人物关系数据，请在筛选中选择类别</p>';
   }
+  container.innerHTML = html;
 }
 
-// 初始化朝代选择器
-function initDynastySelect() {
-  const select = document.getElementById('mapDynastySelect');
-  if (!select || select.dataset.inited) return;
-  select.dataset.inited = 'true';
-
-  const dynastyOrder = DYNASTIES.map(d => d.name);
-  const usedDynasties = new Set(PERSONS.map(p => p.dynasty).filter(Boolean));
-  const orderedDynasties = dynastyOrder.filter(d => usedDynasties.has(d));
-  usedDynasties.forEach(d => {
-    if (!orderedDynasties.includes(d)) orderedDynasties.push(d);
-  });
-
-  orderedDynasties.forEach(name => {
-    const opt = document.createElement('option');
-    opt.value = name;
-    opt.textContent = name;
-    select.appendChild(opt);
-  });
-
-  select.addEventListener('change', (e) => {
-    mapDynastyFilter = e.target.value;
-    if (mapDynastyFilter !== 'all') {
-      const dynasty = DYNASTIES.find(d => d.name === mapDynastyFilter);
-      if (dynasty) {
-        const slider = document.getElementById('mapYearSlider');
-        slider.value = dynasty.end;
-        mapYearFilter = dynasty.end;
-        const label = document.getElementById('mapYearLabel');
-        if (dynasty.end < 0) {
-          label.textContent = `公元前${-dynasty.end}年以前`;
-        } else {
-          label.textContent = `公元${dynasty.end}年以前`;
-        }
-      }
-    }
-    updateMapMarkers();
-  });
-}
-
-function initMapInteraction() {
-  // Leaflet 自带交互，无需额外初始化
-  mapInteractionInited = true;
-}
-
-// 更新地图朝代信息提示
-function updateMapDynastyInfo() {
-  // 移除旧的朝代信息控件
-  const oldInfo = document.getElementById('mapDynastyInfo');
-  if (oldInfo) leafletMap.removeControl(oldInfo);
-
-  if (mapDynastyFilter !== 'all') {
-    const dynasty = DYNASTIES.find(d => d.name === mapDynastyFilter);
-    const dynastyColor = dynasty ? dynasty.color : '#d4a843';
-    const filteredCount = PERSONS.filter(p => p.location && p.dynasty === mapDynastyFilter).length;
-
-    const info = L.control({ position: 'topleft' });
-    info.onAdd = function() {
-      const div = L.DomUtil.create('div', 'map-dynasty-info');
-      div.id = 'mapDynastyInfo';
-      div.innerHTML = `
-        <div style="font-weight:bold;font-size:15px;color:${dynastyColor};">🏛️ ${mapDynastyFilter} · ${filteredCount}人</div>
-        ${dynasty ? `<div style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;">${formatYear(dynasty.start)} — ${formatYear(dynasty.end)}</div>` : ''}
-      `;
-      return div;
-    };
-    info.addTo(leafletMap);
-  }
-}
-
-function renderMapFrame() {
-  updateMapMarkers();
-}
+// 在 renderTimeline 后调用 initTimelineClick
+const _origRenderTimeline = renderTimeline;
+renderTimeline = function() {
+  _origRenderTimeline();
+  setTimeout(initTimelineClick, 200);
+};

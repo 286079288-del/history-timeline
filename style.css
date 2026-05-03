@@ -244,27 +244,20 @@ body {
   top: calc(var(--header-h) + var(--filter-h));
   left: 0; right: 0;
   bottom: 0;
-  overflow: hidden;
-}
-
-/* ===== 时间轴视图 ===== */
-#timelineView {
-  width: 100%; height: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
   cursor: grab;
-  position: relative;
 }
-#timelineView:active { cursor: grabbing; }
-#timelineView::-webkit-scrollbar {
+#mainContainer:active { cursor: grabbing; }
+#mainContainer::-webkit-scrollbar {
   height: 6px;
   background: var(--bg2);
 }
-#timelineView::-webkit-scrollbar-thumb {
+#mainContainer::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 3px;
 }
-#timelineView::-webkit-scrollbar-thumb:hover {
+#mainContainer::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
 
@@ -444,7 +437,6 @@ body {
 .evt-default { color: var(--accent); }
 
 /* 人物条 */
-#personsAbove, #personsBelow { position: absolute; left: 0; width: 100%; }
 
 .person-row {
   position: absolute;
@@ -1818,3 +1810,205 @@ body {
   border-color: var(--accent);
   color: var(--accent);
 }
+
+/* ===== 新板块通用 ===== */
+.main-section {
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--border);
+  min-height: 300px;
+}
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent);
+  display: inline-block;
+}
+
+/* 世界史时间轴 */
+#worldTimelineWrapper {
+  position: relative;
+  height: 260px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: 8px;
+  background: var(--bg2);
+}
+#worldTimelineWrapper .dynasty-bands {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+#worldTimelineWrapper .axis-line {
+  position: absolute;
+  top: 50%; left: 0;
+  width: 100%; height: 2px;
+  background: var(--axis);
+}
+#worldEventsAbove, #worldEventsBelow {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: auto;
+}
+#worldEventsAbove { top: 10%; }
+#worldEventsBelow { bottom: 10%; }
+.world-event {
+  position: absolute;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.world-event:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+/* 事件详情 */
+.event-detail-content {
+  color: var(--text);
+  line-height: 1.8;
+}
+.event-hint {
+  color: var(--text3);
+  text-align: center;
+  padding: 40px 0;
+  font-size: 14px;
+}
+
+/* 人物关系 */
+.relation-content {
+  color: var(--text);
+}
+.relation-hint {
+  color: var(--text3);
+  text-align: center;
+  padding: 40px 0;
+  font-size: 14px;
+}
+
+/* 板块切换标签 */
+.section-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 0 16px;
+}
+.btn-section {
+  background: var(--bg3);
+  color: var(--text2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-section:hover {
+  background: var(--bg4);
+  color: var(--text);
+}
+.btn-section.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+
+/* ===== 双时间轴布局 ===== */
+#dualTimelineContainer {
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+  height: 100%;
+}
+
+.timeline-block {
+  flex: 1 1 auto;
+  min-height: 200px;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+/* 高度比例 中国:日本:世界:朝鲜 = 5:3:2:2 */
+#chinaBlock { flex: 5; }
+#japanBlock { flex: 3; }
+#worldBlock { flex: 2; }
+#koreaBlock { flex: 2; }
+.timeline-block:last-child {
+  border-bottom: none;
+}
+
+.block-header {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: rgba(0,0,0,0.25);
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  flex-shrink: 0;
+}
+.block-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.header-hint {
+  font-size: 12px;
+  color: var(--text3);
+  margin-left: auto;
+}
+
+/* 折叠按钮 */
+.btn-collapse {
+  background: none; border: 1px solid var(--border); color: var(--text2);
+  width: 28px; height: 28px; border-radius: 6px; cursor: pointer;
+  font-size: 12px; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; flex-shrink: 0;
+}
+.btn-collapse:hover { background: var(--bg4); color: var(--accent); border-color: var(--accent-dim); }
+.timeline-block.collapsed .btn-collapse { transform: rotate(180deg); }
+.timeline-block.collapsed > :not(.block-header) { display: none !important; }
+.timeline-block.collapsed { flex: 0 0 auto !important; min-height: 0 !important; }
+
+/* 拉宽手柄 */
+.resize-handle {
+  height: 6px; background: var(--border); cursor: row-resize;
+  transition: background 0.2s, height 0.15s; flex-shrink: 0;
+  position: relative; z-index: 10;
+}
+.resize-handle:hover, .resize-handle.active {
+  background: var(--accent); height: 8px;
+}
+.resize-handle::after {
+  content: ''; position: absolute; top: -4px; left: 0; right: 0; bottom: -4px;
+}
+
+#timelineWrapper,
+#japanTimelineWrapper,
+#worldTimelineWrapper,
+#koreaTimelineWrapper {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 36px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#personsAbove, #personsBelow,
+#japanPersonsAbove, #japanPersonsBelow,
+#worldPersonsAbove, #worldPersonsBelow,
+#koreaPersonsAbove, #koreaPersonsBelow { position: absolute; left: 0; width: 100%; }
+
+#japanEventsAbove, #japanEventsBelow,
+#worldEventsAbove, #worldEventsBelow,
+#koreaEventsAbove, #koreaEventsBelow {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+#japanEventsAbove, #worldEventsAbove, #koreaEventsAbove { top: 0; }
+#japanEventsBelow, #worldEventsBelow, #koreaEventsBelow { top: 50%; }

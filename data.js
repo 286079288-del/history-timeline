@@ -2772,6 +2772,53 @@ const PERSONS = [
     events: []
   },
 
+  // === 明（补充文人艺术家） ===
+  {
+    id: 'tang_yin', name: '唐寅（唐伯虎）', birth: 1470, death: 1524,
+    cat: 'artist', dynasty: '明', emoji: '🎨',
+    location: { lat: 31.3, lng: 120.6, place: '苏州府吴县（今江苏苏州）' },
+    desc: '明代著名画家、文学家，"吴中四才子"之一。诗书画三绝，尤以山水人物画著称。因科举舞弊案牵连，绝意仕途，放浪形骸，留下"别人笑我太疯癫，我笑他人看不穿"的千古名句。',
+    achievements: ['吴中四才子', '诗书画三绝', '《秋风纨扇图》'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'xu_xiake', name: '徐霞客', birth: 1587, death: 1641,
+    cat: 'scientist', dynasty: '明', emoji: '🗺️',
+    location: { lat: 31.9, lng: 120.3, place: '江阴（今江苏江阴）' },
+    desc: '明代地理学家、旅行家、文学家。历时30余年游历中国21个省区，写成60万字的《徐霞客游记》，系统考察了中国地理地质，是世界上最早对喀斯特地貌进行科学考察的学者。',
+    achievements: ['《徐霞客游记》', '考察喀斯特地貌', '游历21省'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'wu_chengen', name: '吴承恩', birth: 1500, death: 1582,
+    cat: 'artist', dynasty: '明', emoji: '🐲',
+    location: { lat: 33.6, lng: 119.0, place: '山阳（今江苏淮安）' },
+    desc: '明代小说家，中国四大名著之一《西游记》的作者。将唐僧取经的民间传说整理创作为百回本长篇小说，塑造了孙悟空、猪八戒等不朽形象，被誉为中国神魔小说的巅峰之作。',
+    achievements: ['创作《西游记》', '四大名著之一', '神魔小说巅峰'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'shi_nai_an', name: '施耐庵', birth: 1296, death: 1372,
+    cat: 'artist', dynasty: '明', emoji: '📖',
+    location: { lat: 32.9, lng: 119.8, place: '兴化（今江苏兴化）' },
+    desc: '元末明初小说家，中国四大名著之一《水浒传》的作者。以宋江起义为背景，塑造了108位梁山好汉的形象，是中国文学史上第一部以农民起义为题材的长篇小说。',
+    achievements: ['创作《水浒传》', '四大名著之一', '第一部农民起义题材长篇'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'luo_guanzhong', name: '罗贯中', birth: 1330, death: 1400,
+    cat: 'artist', dynasty: '明', emoji: '⚔️',
+    location: { lat: 30.6, lng: 114.3, place: '太原（一说东原）' },
+    desc: '元末明初小说家，中国四大名著之一《三国演义》的作者。将三国历史通俗化为长篇历史演义，开创了中国历史演义小说的先河，对后世文学影响深远。《水浒传》亦有其参与编撰。',
+    achievements: ['创作《三国演义》', '四大名著之一', '开创历史演义小说'],
+    relations: [],
+    events: []
+  },
+
   // 清
   {
     id: 'nurhachi', name: '努尔哈赤', birth: 1559, death: 1626,
@@ -3413,4 +3460,858 @@ const EVENTS = [
   { id: 'e_taierzhuang', year: 1938, name: '台儿庄大捷', type: 'war', desc: '3-4月，第五战区司令李宗仁指挥中国军队在台儿庄地区与日军激战，歼灭日军精锐万余人。这是抗战以来正面战场取得的首次重大胜利，极大振奋了全国抗战信心。' },
   { id: 'e_baituan_dazhan', year: 1940, name: '百团大战', type: 'war', desc: '8-12月，八路军在彭德怀指挥下出动105个团，对日军发动大规模破袭战，破坏铁路公路、攻克据点，歼灭日伪军2.5万余人。百团大战是抗战中八路军规模最大的战役，振奋了全国人民抗战信心。' },
   { id: 'e_kangzhan_shengli', year: 1945, name: '抗日战争胜利', type: 'politics', desc: '8月15日，日本天皇宣布无条件投降。9月2日，日本正式签署投降书。经过14年艰苦卓绝的抗战，中国人民终于取得了抗日战争的伟大胜利。这是近代以来中华民族反抗外敌入侵第一次取得完全胜利。' },
+];
+
+
+const JAPAN_DYNASTIES = [
+  { name: '飞鸟时代', start: -2697, end: 710, color: '#8B0000' },
+  { name: '奈良时代', start: 710, end: 794, color: '#6a0dad' },
+  { name: '平安时代', start: 794, end: 1185, color: '#4a0080' },
+  { name: '镰仓幕府', start: 1185, end: 1336, color: '#4a4a4a' },
+  { name: '室町幕府', start: 1336, end: 1573, color: '#3a5a3a' },
+  { name: '安土桃山', start: 1573, end: 1603, color: '#5a3a3a' },
+  { name: '江户幕府', start: 1603, end: 1868, color: '#2a2a5a' },
+  { name: '明治以后', start: 1868, end: 2025, color: '#c0392b' },
+];
+
+
+const WORLD_PERSONS = [
+  {
+    id: 'socrates', name: '苏格拉底', birth: -470, death: -399,
+    cat: 'philosopher', emoji: '🏛️',
+    desc: '古希腊哲学家，西方哲学奠基人之一。开创伦理哲学，提出"认识你自己"和"产婆术"教学法，通过对话和提问引导学生发现真理。被雅典以"腐蚀青年"罪名判处死刑，从容饮鸩。',
+    achievements: ['西方哲学奠基', '苏格拉底方法', '伦理哲学开创'],
+    relations: [{ id: 'plato', type: '师生', label: '柏拉图' }],
+    events: []
+  },
+  {
+    id: 'plato', name: '柏拉图', birth: -427, death: -347,
+    cat: 'philosopher', emoji: '🦉',
+    desc: '古希腊哲学家，苏格拉底的学生，亚里士多德的老师。创立雅典学院，提出"理念论"，认为现实世界是理念世界的影子。著有《理想国》《会饮篇》等西方哲学经典。',
+    achievements: ['创立雅典学院', '理念论', '《理想国》'],
+    relations: [{ id: 'socrates', type: '师生', label: '苏格拉底' }, { id: 'aristotle', type: '师生', label: '亚里士多德' }],
+    events: []
+  },
+  {
+    id: 'aristotle', name: '亚里士多德', birth: -384, death: -322,
+    cat: 'philosopher', emoji: '📚',
+    desc: '古希腊哲学家，百科全书式学者。师从柏拉图，后成为亚历山大大帝的老师。研究涵盖逻辑学、形而上学、伦理学、政治学、生物学等几乎一切领域，其思想统治西方学术近两千年。',
+    achievements: ['百科全书式学者', '创立逻辑学', '《形而上学》', '亚历山大之师'],
+    relations: [{ id: 'plato', type: '师生', label: '柏拉图' }, { id: 'alexander', type: '师生', label: '亚历山大大帝' }],
+    events: []
+  },
+  {
+    id: 'alexander', name: '亚历山大大帝', birth: -356, death: -323,
+    cat: 'emperor', emoji: '⚔️',
+    desc: '马其顿国王，世界历史上最伟大的军事统帅之一。20岁即位，在短短13年内建立了横跨欧亚非三大洲的庞大帝国。他将希腊文化传播到东方，开启了希腊化时代。32岁病逝于巴比伦。',
+    achievements: ['建立亚历山大帝国', '征服波斯', '开启希腊化时代'],
+    relations: [{ id: 'aristotle', type: '师生', label: '亚里士多德' }],
+    events: []
+  },
+  {
+    id: 'caesar', name: '凯撒', birth: -100, death: -44,
+    cat: 'emperor', emoji: '🏛️',
+    desc: '罗马共和国末期军事统帅、政治家。征服高卢全境，远征不列颠。与庞培、克拉苏组成前三头同盟，后击败庞培成为终身独裁官。公元前44年被元老院刺杀，其养子屋大维建立罗马帝国。',
+    achievements: ['征服高卢', '前三头同盟', '终身独裁官'],
+    relations: [{ id: 'octavian', type: '养父子', label: '屋大维' }],
+    events: []
+  },
+  {
+    id: 'octavian', name: '屋大维（奥古斯都）', birth: -63, death: 14,
+    cat: 'emperor', emoji: '👑',
+    desc: '罗马帝国开国皇帝，凯撒的养子。击败安东尼和埃及艳后，结束罗马内战，建立元首制。开创"罗马和平"时期，大力发展文化事业。被元老院授予"奥古斯都"尊号。',
+    achievements: ['建立罗马帝国', '罗马和平', '元首制'],
+    relations: [{ id: 'caesar', type: '养父子', label: '凯撒' }],
+    events: []
+  },
+  {
+    id: 'charlemagne', name: '查理曼大帝', birth: 742, death: 814,
+    cat: 'emperor', emoji: '👑',
+    desc: '法兰克王国加洛林王朝国王，查理曼帝国的建立者。征服西欧大部分地区，被教皇加冕为"罗马人的皇帝"。推动加洛林文艺复兴，促进了欧洲文化的复兴。',
+    achievements: ['建立查理曼帝国', '加洛林文艺复兴', '被加冕为皇帝'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'genghis_khan', name: '成吉思汗', birth: 1162, death: 1227,
+    cat: 'emperor', emoji: '🏇',
+    desc: '蒙古帝国建立者，世界历史上最伟大的征服者之一。统一蒙古各部，建立大蒙古国。其后代建立了横跨欧亚大陆的庞大帝国，深刻改变了世界历史格局。其军事战术影响深远。',
+    achievements: ['统一蒙古', '建立蒙古帝国', '征服欧亚'],
+    relations: [],
+    events: ['e_mongol_empire']
+  },
+  {
+    id: 'da_vinci', name: '达·芬奇', birth: 1452, death: 1519,
+    cat: 'artist', emoji: '🎨',
+    desc: '意大利文艺复兴时期最伟大的天才，集画家、雕塑家、建筑师、科学家、发明家于一身。创作了《蒙娜丽莎》《最后的晚餐》等不朽杰作，其科学笔记涵盖了解剖学、工程学、天文学等领域。',
+    achievements: ['《蒙娜丽莎》', '《最后的晚餐》', '文艺复兴三杰', '科学笔记'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'michelangelo', name: '米开朗基罗', birth: 1475, death: 1564,
+    cat: 'artist', emoji: '🗿',
+    desc: '意大利文艺复兴时期伟大的雕塑家、画家、建筑师。创作了大卫雕像、西斯廷教堂天顶画《创世纪》和壁画《最后的审判》，设计了圣彼得大教堂穹顶，被誉为"艺术之神"。',
+    achievements: ['大卫雕像', '西斯廷天顶画', '圣彼得大教堂穹顶', '文艺复兴三杰'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'columbus', name: '哥伦布', birth: 1451, death: 1506,
+    cat: 'diplomat', emoji: '⛵',
+    desc: '意大利航海家。在西班牙王室资助下，于1492年横渡大西洋，发现了美洲新大陆（虽然他本人认为是印度）。这一发现开启了欧洲人大规模殖民美洲的时代，深刻改变了世界历史。',
+    achievements: ['发现美洲新大陆', '四次横渡大西洋'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'copernicus', name: '哥白尼', birth: 1473, death: 1543,
+    cat: 'scientist', emoji: '🌍',
+    desc: '波兰天文学家。提出"日心说"，认为太阳而非地球是宇宙的中心，彻底颠覆了统治欧洲千年之久的地心说。其著作《天体运行论》标志着现代天文学的开端和科学革命的开始。',
+    achievements: ['提出日心说', '《天体运行论》', '科学革命开端'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'galileo', name: '伽利略', birth: 1564, death: 1642,
+    cat: 'scientist', emoji: '🔭',
+    desc: '意大利物理学家、天文学家，现代科学之父。首次用望远镜观测天体，发现木星卫星、太阳黑子。用实验方法证明自由落体定律，奠定了现代物理学的基础。因支持日心说遭到教会审判。',
+    achievements: ['望远镜天文观测', '自由落体定律', '现代科学方法', '现代物理学奠基'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'newton', name: '艾萨克·牛顿', birth: 1643, death: 1727,
+    cat: 'scientist', emoji: '🍎',
+    desc: '英国物理学家、数学家，历史上最伟大的科学家之一。发现万有引力定律和三大运动定律，奠定经典力学；发明微积分；发现光的色散。其《自然哲学的数学原理》是科学史上最重要的著作。',
+    achievements: ['万有引力定律', '三大运动定律', '发明微积分', '《自然哲学的数学原理》'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'darwin', name: '查尔斯·达尔文', birth: 1809, death: 1882,
+    cat: 'scientist', emoji: '🧬',
+    desc: '英国博物学家，进化论的奠基人。随小猎犬号环球考察五年，收集大量标本后提出自然选择学说。其《物种起源》一书彻底改变了人类对生命起源和演化过程的认识。',
+    achievements: ['提出进化论', '《物种起源》', '自然选择学说', '小猎犬号环球考察'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'napoleon', name: '拿破仑·波拿巴', birth: 1769, death: 1821,
+    cat: 'emperor', emoji: '🎖️',
+    desc: '法国军事家、政治家，法兰西第一帝国皇帝。法国大革命后崛起，以卓越军事才能征服欧洲大部分地区。颁布《拿破仑法典》影响深远。最终在滑铁卢战败，被流放至圣赫勒拿岛。',
+    achievements: ['建立法兰西第一帝国', '《拿破仑法典》', '征服欧洲', '军事天才'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'washington', name: '乔治·华盛顿', birth: 1732, death: 1799,
+    cat: 'politician', emoji: '🇺🇸',
+    desc: '美国开国元勋，首任总统。领导大陆军取得美国独立战争的胜利，主持制定美国宪法，奠定了美国民主政治的基础。拒绝第三次连任，树立了总统任期制的传统。',
+    achievements: ['领导独立战争', '美国首任总统', '主持制宪', '树立任期制传统'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'lincoln', name: '亚伯拉罕·林肯', birth: 1809, death: 1865,
+    cat: 'politician', emoji: '🏛️',
+    desc: '美国第16任总统。领导北方取得南北战争的胜利，废除奴隶制，维护了美国联邦的统一。发表著名的葛底斯堡演说，提出"民有、民治、民享"的民主理念。内战结束后遇刺身亡。',
+    achievements: ['废除奴隶制', '维护联邦统一', '葛底斯堡演说', '民有民治民享'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'marx', name: '卡尔·马克思', birth: 1818, death: 1883,
+    cat: 'philosopher', emoji: '📕',
+    desc: '德国哲学家、经济学家，马克思主义创始人。与恩格斯共同发表《共产党宣言》，撰写了《资本论》，系统阐述了历史唯物主义和剩余价值理论，深刻影响了20世纪世界政治格局。',
+    achievements: ['《共产党宣言》', '《资本论》', '历史唯物主义', '剩余价值理论'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'einstein', name: '阿尔伯特·爱因斯坦', birth: 1879, death: 1955,
+    cat: 'scientist', emoji: '⚛️',
+    desc: '德裔美国物理学家，20世纪最伟大的科学家。提出狭义相对论和广义相对论，发现光电效应定律获诺贝尔奖。其质能方程 E=mc² 改变了人类对宇宙的认识。',
+    achievements: ['相对论', 'E=mc²', '光电效应诺贝尔奖', '20世纪最伟大科学家'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'lenin', name: '弗拉基米尔·列宁', birth: 1870, death: 1924,
+    cat: 'politician', emoji: '✊',
+    desc: '俄国革命家，苏联创立者。领导十月革命推翻临时政府，建立世界上第一个社会主义国家。发展了马克思主义理论（列宁主义），推行新经济政策，奠定了苏联的政治基础。',
+    achievements: ['领导十月革命', '建立苏联', '列宁主义', '新经济政策'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'churchill', name: '温斯顿·丘吉尔', birth: 1874, death: 1965,
+    cat: 'politician', emoji: '🎩',
+    desc: '英国首相，二战时期最伟大的领导人之一。在纳粹德国横扫欧洲之际，以"我们永不投降"的钢铁意志率领英国顽强抵抗，与罗斯福、斯大林共同领导反法西斯同盟取得最终胜利。获诺贝尔文学奖。',
+    achievements: ['领导英国二战', '反法西斯同盟', '钢铁意志', '诺贝尔文学奖'],
+    relations: [{ id: 'fdr', type: '盟友', label: '罗斯福' }],
+    events: ['e_un_founded']
+  },
+  {
+    id: 'gandhi', name: '圣雄甘地', birth: 1869, death: 1948,
+    cat: 'philosopher', emoji: '🕊️',
+    desc: '印度民族解放运动领袖，非暴力不合作运动的倡导者。领导印度人民以和平方式反抗英国殖民统治，最终使印度在1947年获得独立。其非暴力哲学影响了马丁·路德·金和曼德拉等人。',
+    achievements: ['非暴力不合作', '领导印度独立', '非暴力哲学', '民族精神领袖'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'mandela', name: '纳尔逊·曼德拉', birth: 1918, death: 2013,
+    cat: 'politician', emoji: '✊🏿',
+    desc: '南非反种族隔离革命家，南非首位黑人总统。被囚禁27年仍坚持信念，出狱后以宽容和和解的精神领导南非结束种族隔离制度，获得诺贝尔和平奖。被誉为"南非之父"。',
+    achievements: ['结束种族隔离', '南非首位黑人总统', '诺贝尔和平奖', '囚禁27年不改信念'],
+    relations: [],
+    events: []
+  },
+  // === 补充世界人物 ===
+  {
+    id: 'marco_polo', name: '马可·波罗', birth: 1254, death: 1324,
+    cat: 'diplomat', emoji: '🗺️',
+    desc: '意大利旅行家。17岁沿丝绸之路前往中国，在元朝任职17年。《马可·波罗游记》激发了欧洲对东方的向往，间接推动了地理大发现。',
+    achievements: ['《马可·波罗游记》', '开辟东西方交流'],
+    relations: [],
+    events: ['e_mongol_empire']
+  },
+  {
+    id: 'shakespeare', name: '威廉·莎士比亚', birth: 1564, death: 1616,
+    cat: 'artist', emoji: '🎭',
+    desc: '英国文学史上最杰出的戏剧家。创作37部戏剧和154首十四行诗，代表作《哈姆雷特》《罗密欧与朱丽叶》《麦克白》等深刻探索人性，影响世界文学数百年。',
+    achievements: ['《哈姆雷特》', '37部戏剧', '154首十四行诗', '世界文学巨匠'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'mozart', name: '莫扎特', birth: 1756, death: 1791,
+    cat: 'artist', emoji: '🎼',
+    desc: '奥地利作曲家，西方音乐史上最伟大的天才之一。4岁作曲，短暂一生创作600多部作品，包括歌剧《费加罗的婚礼》《魔笛》及41部交响曲，将古典音乐推向巅峰。',
+    achievements: ['600多部作品', '《费加罗的婚礼》', '《魔笛》', '41部交响曲'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'beethoven', name: '贝多芬', birth: 1770, death: 1827,
+    cat: 'artist', emoji: '🎵',
+    desc: '德国作曲家，古典与浪漫的桥梁。中年失聪后仍创作《第九交响曲》《命运交响曲》等杰作。"我要扼住命运的咽喉"是其不屈精神的写照。',
+    achievements: ['《第九交响曲》', '《命运交响曲》', '失聪后创作', '古典浪漫桥梁'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'marie_curie', name: '居里夫人', birth: 1867, death: 1934,
+    cat: 'scientist', emoji: '⚗️',
+    desc: '波兰裔法国物理学家、化学家，放射性研究先驱。发现钋和镭，首位诺贝尔奖女性得主，唯一在两个不同科学领域获诺贝尔奖的人。',
+    achievements: ['发现钋和镭', '两次诺贝尔奖', '放射性研究先驱'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'picasso', name: '毕加索', birth: 1881, death: 1973,
+    cat: 'artist', emoji: '🖌️',
+    desc: '西班牙画家，20世纪最有影响力的艺术家。立体主义创始人，代表作《格尔尼卡》是反战艺术象征。一生创作逾2万件作品。',
+    achievements: ['立体主义创始人', '《格尔尼卡》', '2万件作品', '20世纪艺术巨匠'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'fdr', name: '富兰克林·罗斯福', birth: 1882, death: 1945,
+    cat: 'politician', emoji: '🇺🇸',
+    desc: '美国第32任总统，唯一连任四届的总统。推行新政带领美国走出大萧条，领导美国参与二战，推动联合国成立。',
+    achievements: ['新政改革', '领导二战', '唯一四任总统', '推动联合国'],
+    relations: [{ id: 'churchill', type: '盟友', label: '丘吉尔' }],
+    events: ['e_un_founded']
+  },
+  {
+    id: 'turing', name: '艾伦·图灵', birth: 1912, death: 1954,
+    cat: 'scientist', emoji: '💻',
+    desc: '英国数学家，计算机科学之父。提出图灵机概念，二战破解Enigma密码，提出图灵测试定义AI标准。因同性恋身份被迫害，41岁去世。',
+    achievements: ['图灵机', '破解Enigma', '图灵测试', '计算机科学之父'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'mlk', name: '马丁·路德·金', birth: 1929, death: 1968,
+    cat: 'philosopher', emoji: '✊🏿',
+    desc: '美国民权运动领袖。领导巴士抵制运动，发表"我有一个梦想"演讲，推动1964年《民权法案》。1968年被暗杀，获诺贝尔和平奖。',
+    achievements: ['民权运动领袖', '"我有一个梦想"', '诺贝尔和平奖', '推动民权法案'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'van_gogh', name: '梵高', birth: 1853, death: 1890,
+    cat: 'artist', emoji: '🌻',
+    desc: '荷兰后印象派画家。一生贫困，创作了《星夜》《向日葵》等世界名画。生前只卖出一幅画，去世后被誉为现代艺术最伟大画家之一。',
+    achievements: ['《星夜》', '《向日葵》', '后印象派大师', '表现主义先驱'],
+    relations: [],
+    events: []
+  },
+
+{
+    id: 'archimedes', name: '阿基米德', birth: -287, death: -212,
+    cat: 'scientist', emoji: '🔬',
+    desc: '古希腊最伟大的数学家、物理学家。发现浮力定律（阿基米德原理）和杠杆原理，计算圆周率，发明多种战争机械。在罗马攻破叙拉古时被士兵杀害，临终遗言"不要破坏我的圆"。',
+    achievements: ['浮力定律', '杠杆原理', '圆周率计算'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'cleopatra', name: '克娄巴特拉七世', birth: -69, death: -30,
+    cat: 'emperor', emoji: '👑',
+    desc: '古埃及托勒密王朝末代女王，以智慧和魅力著称。先后与凯撒和马克·安东尼结盟，试图维持埃及独立。安东尼战败后，以毒蛇自杀，埃及并入罗马帝国。',
+    achievements: ['最后一位埃及法老', '外交谋略'],
+    relations: [{ id: 'caesar', type: '情人', label: '凯撒' }],
+    events: []
+  },
+
+  {
+    id: 'constantine', name: '君士坦丁大帝', birth: 272, death: 337,
+    cat: 'emperor', emoji: '🏛️',
+    desc: '罗马帝国皇帝，重新统一罗马帝国。颁布《米兰敕令》承认基督教合法，迁都拜占庭（后改名君士坦丁堡），奠定了基督教成为罗马国教和东罗马帝国千年基业。',
+    achievements: ['米兰敕令', '迁都君士坦丁堡', '统一罗马帝国'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'elizabeth_i', name: '伊丽莎白一世', birth: 1533, death: 1603,
+    cat: 'emperor', emoji: '👸',
+    desc: '英国都铎王朝最后一位君主，开创伊丽莎白时代。击败西班牙无敌舰队，确立英国海上霸权；支持莎士比亚等文艺巨匠。终身未婚，被称为童贞女王。',
+    achievements: ['击败无敌舰队', '海上霸权', '伊丽莎白时代'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'voltaire', name: '伏尔泰', birth: 1694, death: 1778,
+    cat: 'philosopher', emoji: '📝',
+    desc: '法国启蒙运动领袖，作家、哲学家。倡导言论自由、宗教宽容、理性主义，抨击教会和专制制度。代表作《哲学通信》《老实人》，名言——我不同意你的观点，但我誓死捍卫你说话的权利——代表启蒙精神。',
+    achievements: ['启蒙运动领袖', '《老实人》', '言论自由倡导'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'rousseau', name: '让-雅克·卢梭', birth: 1712, death: 1778,
+    cat: 'philosopher', emoji: '📖',
+    desc: '法国启蒙思想家、哲学家。提出社会契约论和主权在民思想，深刻影响了法国大革命和现代民主政治。代表作《社会契约论》《忏悔录》，其回归自然理念开创浪漫主义。',
+    achievements: ['社会契约论', '主权在民', '法国大革命思想先驱'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'adam_smith', name: '亚当·斯密', birth: 1723, death: 1790,
+    cat: 'philosopher', emoji: '📈',
+    desc: '苏格兰经济学家、哲学家，古典经济学之父。代表作《国富论》系统阐述自由市场经济理论，提出看不见的手的著名比喻，奠定了现代经济学的基础。',
+    achievements: ['《国富论》', '看不见的手', '现代经济学之父'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'peter_great', name: '彼得大帝', birth: 1672, death: 1725,
+    cat: 'emperor', emoji: '🛡️',
+    desc: '俄国沙皇，俄罗斯帝国奠基人。微服私访西欧学习先进技术，推行全面西化改革：建立海军、改革军制、迁都圣彼得堡。将落后的俄国带入欧洲强国之列。',
+    achievements: ['西化改革', '建立海军', '迁都圣彼得堡'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'bismarck', name: '奥托·冯·俾斯麦', birth: 1815, death: 1898,
+    cat: 'politician', emoji: '🔮',
+    desc: '德意志帝国首任宰相，被称为铁血宰相。通过三次王朝战争统一德意志，建立了欧洲大陆最强大的国家。推行社会保险制度，开创现代福利国家先河。',
+    achievements: ['统一德意志', '铁血政策', '现代福利制度'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'tolstoy', name: '列夫·托尔斯泰', birth: 1828, death: 1910,
+    cat: 'artist', emoji: '📚',
+    desc: '俄国文学巨匠，世界文学史上最伟大的小说家之一。代表作《战争与和平》《安娜·卡列尼娜》《复活》以宏大叙事和深刻人性描写著称。晚年倡导托尔斯泰主义——不以暴力抗恶。',
+    achievements: ['《战争与和平》', '《安娜·卡列尼娜》', '《复活》'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'tesla', name: '尼古拉·特斯拉', birth: 1856, death: 1943,
+    cat: 'scientist', emoji: '⚡',
+    desc: '塞尔维亚裔美国发明家、电气工程师。发明交流电系统，奠定了现代电力工业的基础。拥有700多项专利，包括无线电、遥控技术、特斯拉线圈等。一生贫困但才华横溢，死后被誉为被遗忘的天才。',
+    achievements: ['交流电系统', '特斯拉线圈', '无线电先驱', '700多项专利'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'chaplin', name: '查理·卓别林', birth: 1889, death: 1977,
+    cat: 'artist', emoji: '🎬',
+    desc: '英国喜剧大师、电影导演。创造了流浪汉夏尔洛的经典银幕形象。代表作《淘金记》《城市之光》《摩登时代》《大独裁者》，以幽默讽刺社会现实，被誉为电影史上最伟大的喜剧天才。',
+    achievements: ['流浪汉夏尔洛', '《摩登时代》', '《大独裁者》', '默片喜剧巅峰'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'hemingway', name: '欧内斯特·海明威', birth: 1899, death: 1961,
+    cat: 'artist', emoji: '✍️',
+    desc: '美国作家，迷惘的一代代表人物。以简洁有力的冰山理论写作风格著称。代表作《老人与海》获诺贝尔文学奖，《太阳照常升起》《永别了，武器》记录战争创伤。',
+    achievements: ['诺贝尔文学奖', '《老人与海》', '冰山理论', '迷惘的一代'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'hawking', name: '斯蒂芬·霍金', birth: 1942, death: 2018,
+    cat: 'scientist', emoji: '🌌',
+    desc: '英国理论物理学家。21岁患渐冻症，在轮椅上完成毕生研究。提出黑洞辐射理论（霍金辐射），著《时间简史》全球畅销，将深奥的宇宙学普及给大众。',
+    achievements: ['霍金辐射', '《时间简史》', '黑洞理论', '科普巨人'],
+    relations: [],
+    events: []
+  },
+
+  {
+    id: 'jobs', name: '史蒂夫·乔布斯', birth: 1955, death: 2011,
+    cat: 'inventor', emoji: '📱',
+    desc: '美国企业家，苹果公司联合创始人。先后推出Mac电脑、iPod、iPhone、iPad等革命性产品，重新定义了个人电脑、音乐、手机和出版行业。Stay Hungry, Stay Foolish激励了无数人。',
+    achievements: ['创立苹果公司', 'iPhone', 'Mac', '颠覆四大行业'],
+    relations: [],
+    events: []
+  },
+
+// === 古代文明 ===
+  { id: 'hammurabi', name: '汉谟拉比', birth: -1810, death: -1750, cat: 'emperor', emoji: '📜', desc: '古巴比伦王国第六代国王。颁布《汉谟拉比法典》，是世界上现存最早的成文法典之一，以"以眼还眼"闻名。', achievements: ['汉谟拉比法典', '统一两河流域'], relations: [], events: [] },
+  { id: 'ramesses_ii', name: '拉美西斯二世', birth: -1303, death: -1213, cat: 'emperor', emoji: '🏛️', desc: '古埃及新王国时期最伟大的法老。在位67年，修建阿布辛贝神庙，与赫梯帝国签订人类最早的和平条约。', achievements: ['阿布辛贝神庙', '最早和平条约', '在位67年'], relations: [], events: [] },
+  { id: 'pericles', name: '伯里克利', birth: -495, death: -429, cat: 'politician', emoji: '🏛️', desc: '雅典黄金时代的领导者。推行民主改革，建造帕特农神庙，雅典在其治下成为希腊最强大的城邦。', achievements: ['雅典民主顶峰', '建造帕特农神庙', '黄金时代'], relations: [], events: [] },
+  { id: 'hippocrates', name: '希波克拉底', birth: -460, death: -370, cat: 'scientist', emoji: '⚕️', desc: '古希腊医学之父。将医学从巫术分离，建立以观察和诊断为基础的医学体系。其"希波克拉底誓言"至今仍是医生道德准则。', achievements: ['医学之父', '希波克拉底誓言', '医学科学化'], relations: [], events: [] },
+  { id: 'euclid', name: '欧几里得', birth: -330, death: -275, cat: 'scientist', emoji: '🔺', desc: '古希腊数学家，几何学之父。所著《几何原本》系统总结了古典几何学知识，是科学史上最影响深远的著作之一。', achievements: ['《几何原本》', '几何学之父', '公理化方法'], relations: [], events: [] },
+  { id: 'cicero', name: '西塞罗', birth: -106, death: -43, cat: 'politician', emoji: '📜', desc: '罗马共和国末期的政治家、演说家、哲学家。拉丁文学的巅峰代表，其著作影响了整个西方政治思想史。', achievements: ['拉丁文学巅峰', '演说大师', '共和精神'], relations: [], events: [] },
+  { id: 'nero', name: '尼禄', birth: 37, death: 68, cat: 'emperor', emoji: '🔥', desc: '罗马帝国第五位皇帝。以暴虐和奢华闻名，传说在罗马大火时弹琴作乐。死后罗马陷入内战（四帝之年）。', achievements: ['罗马大火', '暴君典型'], relations: [], events: [] },
+  { id: 'marcus_aurelius', name: '马可·奥勒留', birth: 121, death: 180, cat: 'philosopher', emoji: '🧘', desc: '罗马帝国皇帝，斯多葛派哲学家。著有《沉思录》，在戎马倥偬中以哲学修养心灵，被视为"哲学家皇帝"的典范。', achievements: ['《沉思录》', '斯多葛哲学', '哲学家皇帝'], relations: [], events: [] },
+
+// === 中古 ===
+  { id: 'augustine', name: '圣奥古斯丁', birth: 354, death: 430, cat: 'philosopher', emoji: '✝️', desc: '基督教神学家，教会博士。著《上帝之城》《忏悔录》，建立了基督教神学体系，深刻影响了整个中世纪西方思想。', achievements: ['《上帝之城》', '《忏悔录》', '基督教神学奠基'], relations: [], events: [] },
+  { id: 'justinian', name: '查士丁尼大帝', birth: 482, death: 565, cat: 'emperor', emoji: '⚖️', desc: '东罗马（拜占庭）皇帝。编撰《查士丁尼法典》，成为现代民法的基础。建造圣索菲亚大教堂，一度恢复罗马帝国疆域。', achievements: ['查士丁尼法典', '圣索菲亚大教堂', '民法基础'], relations: [], events: [] },
+  { id: 'muhammad', name: '穆罕默德', birth: 570, death: 632, cat: 'philosopher', emoji: '☪️', desc: '伊斯兰教创始人。在阿拉伯半岛创立伊斯兰教，统一阿拉伯各部落。《古兰经》为其所传达的启示，深刻影响了世界文明。', achievements: ['创立伊斯兰教', '统一阿拉伯', '《古兰经》'], relations: [], events: [] },
+  { id: 'william_conqueror', name: '征服者威廉', birth: 1028, death: 1087, cat: 'emperor', emoji: '⚔️', desc: '诺曼底公爵，英格兰国王。1066年哈斯廷斯之战征服英格兰，建立诺曼王朝。改变了英国的语言、文化和政治制度。', achievements: ['征服英格兰', '哈斯廷斯之战', '诺曼王朝'], relations: [], events: [] },
+  { id: 'saladin', name: '萨拉丁', birth: 1137, death: 1193, cat: 'military', emoji: '⚔️', desc: '埃及和叙利亚苏丹，阿尤布王朝创立者。1187年收复耶路撒冷，以宽容和骑士精神著称，连敌人狮心王理查也对其敬重。', achievements: ['收复耶路撒冷', '哈丁战役', '骑士精神典范'], relations: [], events: [] },
+  { id: 'thomas_aquinas', name: '托马斯·阿奎那', birth: 1225, death: 1274, cat: 'philosopher', emoji: '📖', desc: '中世纪最伟大的神学家和哲学家。著《神学大全》，将亚里士多德哲学与基督教神学结合，建立经院哲学体系。', achievements: ['《神学大全》', '经院哲学顶峰'], relations: [], events: [] },
+  { id: 'joan_of_arc', name: '圣女贞德', birth: 1412, death: 1431, cat: 'military', emoji: '🛡️', desc: '法国民族英雄。自称受上帝启示，领导法军在百年战争中击败英军，解奥尔良之围。后被捕并被宗教法庭处以火刑，19岁殉难。', achievements: ['解奥尔良之围', '法国民族英雄', '圣女'], relations: [], events: [] },
+  { id: 'medici_lorenzo', name: '洛伦佐·德·美第奇', birth: 1449, death: 1492, cat: 'politician', emoji: '🎭', desc: '佛罗伦萨的实际统治者，文艺复兴最伟大的赞助人。资助了波提切利、达芬奇、米开朗基罗等众多艺术家，被尊为"豪华者洛伦佐"。', achievements: ['文艺复兴赞助人', '豪华者洛伦佐', '佛罗伦萨黄金时代'], relations: [], events: [] },
+  { id: 'suleiman', name: '苏莱曼大帝', birth: 1494, death: 1566, cat: 'emperor', emoji: '🕌', desc: '奥斯曼帝国第十位苏丹。在位46年，帝国疆域达到顶峰。颁布法典，被誉为立法者，建筑大师锡南为其建造了壮丽的苏莱曼清真寺。', achievements: ['奥斯曼帝国鼎盛', '立法者', '黄金时代'], relations: [], events: ['e_constantinople_fall'] },
+
+// === 近代早期 ===
+  { id: 'machiavelli', name: '马基雅维利', birth: 1469, death: 1527, cat: 'politician', emoji: '🦊', desc: '意大利政治哲学家。著《君主论》，提出政治即权力斗争的现实主义观点，被尊为现代政治学之父。"马基雅维利主义"成为权术代名词。', achievements: ['《君主论》', '现代政治学之父'], relations: [], events: [] },
+  { id: 'descartes', name: '笛卡尔', birth: 1596, death: 1650, cat: 'philosopher', emoji: '🤔', desc: '法国哲学家、数学家，近代哲学之父。提出"我思故我在"，创立解析几何，将代数和几何统一。笛卡尔坐标系至今是数学基础。', achievements: ['我思故我在', '解析几何', '近代哲学之父'], relations: [], events: [] },
+  { id: 'louis_xiv', name: '路易十四', birth: 1638, death: 1715, cat: 'emperor', emoji: '👑', desc: '法国波旁王朝国王，太阳王。在位72年，建造凡尔赛宫，建立绝对君主制。"朕即国家"是其统治哲学。', achievements: ['太阳王', '凡尔赛宫', '在位72年', '绝对君主制'], relations: [], events: [] },
+  { id: 'leibniz', name: '莱布尼茨', birth: 1646, death: 1716, cat: 'scientist', emoji: '∫', desc: '德国哲学家、数学家。独立于牛顿发明微积分，提出二进制。其"单子论"哲学体系博大精深。', achievements: ['微积分', '二进制', '单子论'], relations: [], events: [] },
+  { id: 'kant', name: '伊曼努尔·康德', birth: 1724, death: 1804, cat: 'philosopher', emoji: '⏰', desc: '德国哲学家，启蒙时代最伟大的思想家之一。著《纯粹理性批判》，提出认识论的哥白尼革命，其道德律令"头顶星空，心中道德"震撼人心。', achievements: ['《纯粹理性批判》', '哥白尼革命', '道德律令'], relations: [], events: [] },
+  { id: 'catherine_great', name: '叶卡捷琳娜大帝', birth: 1729, death: 1796, cat: 'emperor', emoji: '👑', desc: '俄国女皇，俄罗斯帝国黄金时代统治者。扩张疆域至黑海，推进启蒙改革，与伏尔泰通信论道，收藏大量艺术品。', achievements: ['俄罗斯扩张', '启蒙改革', '女皇'], relations: [], events: [] },
+  { id: 'maria_theresa', name: '玛丽亚·特蕾莎', birth: 1717, death: 1780, cat: 'emperor', emoji: '👑', desc: '奥地利女大公，哈布斯堡王朝唯一女性统治者。推行开明专制改革，奥地利在她的治下成为欧洲强国。生了16个子女（包括玛丽·安托瓦内特）。', achievements: ['奥地利女大公', '开明专制', '16个子女'], relations: [], events: [] },
+  { id: 'goethe', name: '歌德', birth: 1749, death: 1832, cat: 'artist', emoji: '📖', desc: '德国文学巨匠，狂飙突进运动代表。诗剧《浮士德》被誉为德语文学巅峰，耗费60年完成。其《少年维特之烦恼》掀起全欧浪漫热潮。', achievements: ['《浮士德》', '《少年维特之烦恼》', '德国文学巅峰'], relations: [], events: [] },
+
+// === 19世纪 ===
+  { id: 'simon_bolivar', name: '西蒙·玻利瓦尔', birth: 1783, death: 1830, cat: 'military', emoji: '🗡️', desc: '拉丁美洲独立运动领袖，解放者。领导委内瑞拉、哥伦比亚等多国摆脱西班牙统治独立，梦想建立统一的美洲共和国。', achievements: ['解放南美', '大哥伦比亚', '解放者'], relations: [], events: [] },
+  { id: 'victoria_queen', name: '维多利亚女王', birth: 1819, death: 1901, cat: 'emperor', emoji: '👑', desc: '英国女王，在位63年。"日不落帝国"在其治下达到鼎盛。维多利亚时代是英国工业革命、科学进步和文化繁荣的黄金时期。', achievements: ['日不落帝国', '在位63年', '维多利亚时代'], relations: [], events: [] },
+  { id: 'charles_dickens', name: '查尔斯·狄更斯', birth: 1812, death: 1870, cat: 'artist', emoji: '📚', desc: '英国维多利亚时代最伟大的小说家。代表作《雾都孤儿》《双城记》《圣诞颂歌》，以写实主义描绘底层人民的苦难。', achievements: ['《雾都孤儿》', '《双城记》', '写实主义大师'], relations: [], events: [] },
+  { id: 'hugo', name: '维克多·雨果', birth: 1802, death: 1885, cat: 'artist', emoji: '📖', desc: '法国浪漫主义文学领袖。著《巴黎圣母院》《悲惨世界》《九三年》，以宏大叙事探索正义、人性和社会变革。流亡19年不改初心。', achievements: ['《悲惨世界》', '《巴黎圣母院》', '浪漫主义领袖'], relations: [], events: [] },
+  { id: 'pasteur', name: '路易·巴斯德', birth: 1822, death: 1895, cat: 'scientist', emoji: '🧫', desc: '法国微生物学家、化学家。创立微生物学说，发明巴氏杀菌法，研制狂犬病疫苗。其贡献奠定了现代微生物学和免疫学的基础。', achievements: ['微生物学说', '巴氏杀菌法', '狂犬病疫苗'], relations: [], events: [] },
+  { id: 'dostoevsky', name: '陀思妥耶夫斯基', birth: 1821, death: 1881, cat: 'artist', emoji: '🖋️', desc: '俄国文学巨匠。代表《罪与罚》《卡拉马佐夫兄弟》《白痴》，深入探索人性黑暗与救赎。尼采称其为"唯一对我有启发的心理学家"。', achievements: ['《罪与罚》', '《卡拉马佐夫兄弟》', '心理小说先驱'], relations: [], events: [] },
+  { id: 'nietzsche', name: '弗里德里希·尼采', birth: 1844, death: 1900, cat: 'philosopher', emoji: '💥', desc: '德国哲学家。宣告"上帝已死"，提出超人哲学和权力意志。《查拉图斯特拉如是说》以诗意的语言彻底颠覆传统道德。', achievements: ['上帝已死', '超人哲学', '《查拉图斯特拉》'], relations: [], events: [] },
+  { id: 'edison', name: '托马斯·爱迪生', birth: 1847, death: 1931, cat: 'inventor', emoji: '💡', desc: '美国发明家，一生拥有1093项专利。发明电灯、留声机、电影摄影机，建立世界第一个工业研究实验室，被誉为"门洛帕克的巫师"。', achievements: ['电灯', '留声机', '1093项专利', '工业实验室'], relations: [], events: [] },
+  { id: 'bell', name: '亚历山大·贝尔', birth: 1847, death: 1922, cat: 'inventor', emoji: '📞', desc: '苏格兰裔美国发明家。获得电话发明专利，开创了现代通讯时代。还发明了光电电话和铁肺等。建立贝尔实验室。', achievements: ['发明电话', '贝尔实验室', '现代通讯先驱'], relations: [], events: [] },
+  { id: 'freud', name: '西格蒙德·弗洛伊德', birth: 1856, death: 1939, cat: 'scientist', emoji: '🛋️', desc: '奥地利神经学家，精神分析学派创始人。提出潜意识和性本能理论，著《梦的解析》，彻底改变了人类对自身的认识。', achievements: ['精神分析学', '《梦的解析》', '潜意识理论'], relations: [], events: [] },
+  { id: 'wright_brothers', name: '莱特兄弟', birth: 1871, death: 1948, cat: 'inventor', emoji: '✈️', desc: '美国航空先驱。1903年12月17日成功试飞人类第一架有动力飞机，飞行12秒36米。从此人类进入了飞行时代。', achievements: ['第一架飞机', '飞行先驱', '改变交通'], relations: [], events: [] },
+
+// === 20世纪至今 ===
+  { id: 'ford', name: '亨利·福特', birth: 1863, death: 1947, cat: 'inventor', emoji: '🚗', desc: '美国企业家，福特汽车创始人。发明流水线生产法，大幅降低汽车价格，使汽车走进千家万户。其"每天5美元工资"改革影响深远。', achievements: ['流水线生产', 'T型车', '5美元工资'], relations: [], events: [] },
+  { id: 'orwell', name: '乔治·奥威尔', birth: 1903, death: 1950, cat: 'artist', emoji: '👁️', desc: '英国作家。著《1984》《动物庄园》，以寓言形式深刻揭露极权主义的危害。"老大哥在看着你"成为反极权的经典符号。', achievements: ['《1984》', '《动物庄园》', '反极权经典'], relations: [], events: [] },
+  { id: 'crick_watson', name: '沃森与克里克', birth: 1928, death: 2025, cat: 'scientist', emoji: '🧬', desc: '詹姆斯·沃森与弗朗西斯·克里克1953年发现DNA双螺旋结构，揭开了生命遗传密码之谜。是20世纪生物学最重大的发现。', achievements: ['DNA双螺旋', '遗传密码', '诺贝尔奖'], relations: [], events: [] },
+  { id: 'lennon', name: '约翰·列侬', birth: 1940, death: 1980, cat: 'artist', emoji: '🎸', desc: '英国音乐家，甲壳虫乐队（披头士）灵魂人物。以《Imagine》《Yesterday》等经典歌曲改变了现代流行音乐，倡导和平与爱。', achievements: ['甲壳虫乐队', '《Imagine》', '流行音乐革命'], relations: [], events: [] },
+  { id: 'gates', name: '比尔·盖茨', birth: 1955, death: 2025, cat: 'inventor', emoji: '💻', desc: '美国企业家，微软公司创始人。将个人电脑操作系统普及全球，改变了人类工作和生活方式。后全力投入全球健康和气候慈善事业。', achievements: ['微软创始人', 'PC革命', '全球慈善'], relations: [], events: [] },
+];
+
+
+const WORLD_EVENTS = [
+  { id: 'e_roman_split', year: 395, name: '罗马帝国分裂', type: 'politics', desc: '罗马皇帝狄奥多西一世去世，帝国正式分裂为西罗马和东罗马（拜占庭），分别由两个儿子统治。西罗马于476年灭亡。' },
+  { id: 'e_mongol_empire', year: 1206, name: '蒙古帝国建立', type: 'politics', desc: '铁木真统一蒙古各部，在斡难河被推举为成吉思汗，建立蒙古帝国。此后蒙古铁骑建立人类历史上最大的陆地帝国。' },
+  { id: 'e_renaissance', year: 1400, name: '文艺复兴运动', type: 'culture', desc: '14-17世纪发源于意大利的思想文化运动，强调人文主义。达·芬奇、米开朗基罗等巨匠涌现，推动了欧洲从中世纪向近代的过渡。' },
+  { id: 'e_columbus_new_world', year: 1492, name: '哥伦布发现新大陆', type: 'politics', desc: '哥伦布在西班牙王室资助下横渡大西洋，发现美洲大陆，开启了欧洲殖民美洲的时代。' },
+  { id: 'e_protestant', year: 1517, name: '宗教改革', type: 'culture', desc: '马丁·路德发表《九十五条论纲》，质疑教皇出售赎罪券，引发宗教改革运动。基督教分裂为天主教和新教，深刻影响欧洲政治格局。' },
+  { id: 'e_glorious_revolution', year: 1688, name: '英国光荣革命', type: 'politics', desc: '英国议会推翻詹姆斯二世，迎立威廉三世和玛丽二世，通过《权利法案》，确立君主立宪制，成为世界宪政民主的里程碑。' },
+  { id: 'e_industrial_rev', year: 1760, name: '工业革命', type: 'economy', desc: '始于英国的技术革新和社会变革，以蒸汽机、纺织机械发明为标志。工厂制取代手工工场，人类从农业文明进入工业文明。' },
+  { id: 'e_us_independence', year: 1776, name: '美国独立', type: 'politics', desc: '北美十三州发表《独立宣言》，经过独立战争脱离英国统治，建立美利坚合众国，成为第一个以民主共和为原则的现代国家。' },
+  { id: 'e_french_revolution', year: 1789, name: '法国大革命', type: 'politics', desc: '法国人民攻占巴士底狱，推翻君主专制。发表《人权宣言》，提出"自由、平等、博爱"，经历雅各宾恐怖统治后最终走向共和。' },
+  { id: 'e_napoleon_wars', year: 1803, name: '拿破仑战争', type: 'war', desc: '拿破仑率法军与反法同盟进行长达12年的战争，横扫欧洲。1815年滑铁卢战败后流放，欧洲重归君主制秩序（维也纳体系）。' },
+  { id: 'e_civil_war', year: 1861, name: '美国南北战争', type: 'war', desc: '北方工业州与南方蓄奴州之间为奴隶制和联邦统一而战。林肯领导北方获胜，废除奴隶制，维护了美国联邦的统一。' },
+  { id: 'e_ww1', year: 1914, name: '第一次世界大战', type: 'war', desc: '以萨拉热窝事件为导火索，同盟国与协约国全面开战。卷入30余国，伤亡3000万人。战后奥匈帝国等解体，凡尔赛体系形成。' },
+  { id: 'e_russian_revolution', year: 1917, name: '俄国十月革命', type: 'politics', desc: '列宁领导布尔什维克党推翻临时政府，建立世界上第一个社会主义国家。深刻改变了20世纪世界政治格局，开启冷战时代。' },
+  { id: 'e_ww2', year: 1939, name: '第二次世界大战', type: 'war', desc: '纳粹德国入侵波兰引发全球大战，轴心国与同盟国全面对抗。战争波及60余国，伤亡超7000万人。战后形成美苏两极格局，联合国成立。' },
+  { id: 'e_un_founded', year: 1945, name: '联合国成立', type: 'politics', desc: '二战结束后51国在旧金山签署《联合国宪章》，联合国正式成立。旨在维护国际和平与安全，总部设纽约，现有193个成员国。' },
+  { id: 'e_cold_war', year: 1947, name: '冷战开始', type: 'politics', desc: '美苏两大阵营对峙，虽未直接开战，但在全球范围内进行代理人战争、军备竞赛和意识形态竞争，持续近半个世纪。' },
+  { id: 'e_moon_landing', year: 1969, name: '人类登月', type: 'science', desc: '美国阿波罗11号登月成功，阿姆斯特朗在月球留下人类第一个足迹，实现人类千年的登月梦想。' },
+  { id: 'e_berlin_wall', year: 1989, name: '柏林墙倒塌', type: 'politics', desc: '分隔东西柏林长达28年的柏林墙被推倒，象征冷战结束和德国统一。此后东欧剧变，苏联解体。' },
+  { id: 'e_internet', year: 1990, name: '万维网诞生', type: 'science', desc: '蒂姆·伯纳斯-李发明万维网（WWW），彻底改变了人类获取信息和交流的方式，开启了信息时代。' },
+  { id: 'e_911', year: 2001, name: '911恐怖袭击', type: 'war', desc: '基地组织劫持民航客机撞击纽约世贸中心双子塔和五角大楼，造成近3000人死亡。此后美国发动全球反恐战争。' },
+
+{ id: 'e_black_death', year: 1347, name: '黑死病大流行', type: 'economy', desc: '鼠疫席卷欧洲，约2500万人死亡（占欧洲人口三分之一）。深刻改变了欧洲社会结构，劳动力短缺加速了封建制度瓦解，推动了社会变革。' },
+  { id: 'e_constantinople_fall', year: 1453, name: '君士坦丁堡陷落', type: 'war', desc: '奥斯曼帝国苏丹穆罕默德二世攻陷君士坦丁堡，东罗马帝国（拜占庭）灭亡。大量希腊学者携带古籍西逃，促进了意大利文艺复兴。' },
+  { id: 'e_enlightenment', year: 1700, name: '启蒙运动', type: 'culture', desc: '18世纪欧洲思想解放运动。伏尔泰、卢梭、孟德斯鸠等思想家倡导理性、自由、平等，批判专制和教会权威，为法国大革命和美国独立提供了思想基础。' },
+  { id: 'e_us_constitution', year: 1787, name: '美国宪法制定', type: 'politics', desc: '美国制宪会议在费城召开，制定世界上第一部成文宪法，确立三权分立和联邦制原则，成为现代民主宪政的典范。' },
+  { id: 'e_communist_manifesto', year: 1848, name: '《共产党宣言》发表', type: 'politics', desc: '马克思和恩格斯发表《共产党宣言》，系统阐述了共产主义理论，提出全世界无产者联合起来的口号，深刻影响了世界历史进程。' },
+  { id: 'e_darwin_evolution', year: 1859, name: '进化论发表', type: 'science', desc: '达尔文出版《物种起源》，提出以自然选择为核心的进化论，彻底改变了人类对生命起源和演化过程的认识。' },
+  { id: 'e_great_depression', year: 1929, name: '世界经济大萧条', type: 'economy', desc: '纽约股市崩盘引发全球性经济危机，持续近十年。银行倒闭、工厂停工、大规模失业遍及全世界，促使各国加强经济干预。' },
+  { id: 'e_marshall_plan', year: 1948, name: '马歇尔计划实施', type: 'economy', desc: '美国对战后欧洲提供大规模经济援助，总额约130亿美元。帮助西欧迅速复兴经济，同时遏制苏联影响力扩张。' },
+  { id: 'e_genome', year: 2000, name: '人类基因组草图完成', type: 'science', desc: '美英日中德法六国科学家合作完成人类基因组测序草图，标志着生命科学研究进入了基因组时代。' },
+
+{ id: 'e_pyramid_giza', year: -2560, name: '吉萨大金字塔建成', type: 'culture', desc: '古埃及第四王朝法老胡夫在吉萨建造了埃及最大的金字塔，高146米，动用10万劳工耗时20年。是世界七大奇迹中唯一仍存在的。' },
+  { id: 'e_battle_troy', year: -1184, name: '特洛伊战争（传说）', type: 'war', desc: '希腊联军以木马计攻陷特洛伊城。荷马史诗《伊利亚特》和《奥德赛》以此为背景，是西方文学的源头。' },
+  { id: 'e_first_olympics', year: -776, name: '第一届古代奥运会', type: 'culture', desc: '在希腊奥林匹亚举行第一届古代奥运会，最初仅有短跑一项比赛。此后每四年举办一次，延续近1200年。' },
+  { id: 'e_rome_founded', year: -753, name: '罗马建城（传说）', type: 'politics', desc: '据传说，罗慕路斯和雷穆斯兄弟建立罗马城。罗慕路斯成为第一任国王，罗马日后发展为世界最强大帝国之一。' },
+  { id: 'e_battle_marathon', year: -490, name: '马拉松战役', type: 'war', desc: '雅典以少胜多击败波斯帝国入侵。士兵菲迪皮德斯从马拉松跑到雅典报捷后力竭而亡，马拉松长跑由此得名。' },
+  { id: 'e_peloponnesian_war', year: -431, name: '伯罗奔尼撒战争', type: 'war', desc: '雅典与斯巴达两大希腊城邦的全面战争，持续27年。以雅典战败告终，古典希腊文明从此衰落。' },
+  { id: 'e_gaugamela', year: -331, name: '高加米拉战役', type: 'war', desc: '亚历山大大帝以4万兵力大败波斯帝国20万大军，灭亡波斯。是古代世界最经典的以少胜多战役之一。' },
+  { id: 'e_hannibal', year: -218, name: '汉尼拔翻越阿尔卑斯山', type: 'war', desc: '迦太基统帅汉尼拔率军和大象翻越阿尔卑斯山奇袭罗马，发起第二次布匿战争，以坎尼围歼战震惊世界。' },
+  { id: 'e_carthage_fall', year: -146, name: '迦太基灭亡', type: 'war', desc: '罗马在第三次布匿战争中彻底摧毁迦太基城，城中居民被屠或为奴。罗马从此确立了在地中海的绝对霸权。' },
+  { id: 'e_spartacus', year: -73, name: '斯巴达克斯起义', type: 'war', desc: '角斗士斯巴达克斯率领奴隶起义，队伍壮大至12万人，震撼罗马共和国。起义被克拉苏镇压，6000人沿路被钉十字架。' },
+  { id: 'e_pompeii', year: 79, name: '维苏威火山埋没庞贝', type: 'economy', desc: '维苏威火山爆发，将庞贝和赫库兰尼姆两座罗马城市完全埋没在火山灰下，保存了完整的古罗马生活场景。' },
+  { id: 'e_huns_invasion', year: 451, name: '沙隆会战', type: 'war', desc: '匈奴王阿提拉与西罗马-西哥特联军在法国沙隆会战。双方伤亡惨重，阿提拉退却，匈奴帝国自此衰落。' },
+  { id: 'e_islam_rise', year: 622, name: '伊斯兰教创立', type: 'culture', desc: '穆罕默德从麦加迁徙到麦地那（希吉来），伊斯兰教纪元开始。此后阿拉伯人在伊斯兰旗帜下迅速崛起。' },
+  { id: 'e_charlemagne_crowned', year: 800, name: '查理曼加冕', type: 'politics', desc: '教皇利奥三世在罗马为查理曼加冕为罗马皇帝。标志着西欧从黑暗时代走出，神圣罗马帝国由此奠基。' },
+  { id: 'e_viking_raids', year: 793, name: '维京时代开始', type: 'war', desc: '北欧维京人开始大规模劫掠欧洲沿海。此后三百年间维京人入侵、贸易和殖民遍布欧洲，建立了诺曼底、基辅罗斯等政权。' },
+  { id: 'e_first_crusade', year: 1096, name: '第一次十字军东征', type: 'war', desc: '教皇乌尔班二世号召十字军远征耶路撒冷。1099年攻陷圣城，建立耶路撒冷王国等十字军国家。' },
+  { id: 'e_magna_carta', year: 1215, name: '大宪章签署', type: 'politics', desc: '英国贵族迫使约翰王签署大宪章，限制王权，保障贵族自由。成为后世宪政民主的重要渊源。' },
+  { id: 'e_hundred_years_war', year: 1337, name: '百年战争爆发', type: 'war', desc: '英法为争夺法国王位爆发长达116年的战争。最终法国获胜，民族意识觉醒。圣女贞德在此战中成为传奇。' },
+  { id: 'e_gutenberg', year: 1440, name: '古滕堡发明印刷机', type: 'science', desc: '德国人古滕堡发明活字印刷术，首次大批量印刷《圣经》。知识传播速度暴增，推动了宗教改革和文艺复兴。' },
+  { id: 'e_spanish_armada', year: 1588, name: '无敌舰队覆灭', type: 'war', desc: '西班牙无敌舰队远征英国遭遇惨败，130艘战船仅剩67艘回国。英国取代西班牙成为海上霸主。' },
+  { id: 'e_30_years_war', year: 1618, name: '三十年战争', type: 'war', desc: '欧洲天主教与新教国家的大规模宗教战争。以《威斯特伐利亚和约》结束，确立了现代主权国家体系。' },
+  { id: 'e_manhattan_project', year: 1945, name: '原子弹研制成功', type: 'science', desc: '美国曼哈顿计划成功研制原子弹并首次核试验（三位一体）。核武器时代诞生，深刻改变了战争和国际政治。' },
+  { id: 'e_india_independence', year: 1947, name: '印度独立与印巴分治', type: 'politics', desc: '英国退出印度，印度和巴基斯坦分别独立。甘地的非暴力斗争最终实现目标，但分治造成百万死伤的人道灾难。' },
+  { id: 'e_prc_founded', year: 1949, name: '中华人民共和国成立', type: 'politics', desc: '毛泽东在天安门城楼上宣告中华人民共和国成立。结束了百年动乱，中国进入了新的历史阶段。' },
+  { id: 'e_eu_founded', year: 1993, name: '欧盟正式成立', type: 'politics', desc: '《马斯特里赫特条约》生效，欧洲联盟正式成立。单一市场和欧元统一了欧洲经济，实现了几百年来欧洲统一的理想。' },
+  { id: 'e_911', year: 2001, name: '911恐怖袭击', type: 'war', desc: '基地组织劫持客机撞击纽约世贸中心和五角大楼，近3000人死亡。此后美国发动全球反恐战争，深刻影响21世纪国际格局。' },
+  { id: 'e_covid', year: 2020, name: '新冠疫情全球大流行', type: 'economy', desc: '新冠病毒COVID-19席卷全球，造成数百万人死亡，世界经济遭受重创。深刻改变了人类的生活方式和工作模式。' },
+];
+
+
+const JAPAN_PERSONS = [
+  { id: 'shotoku_taishi', name: '圣德太子', birth: 574, death: 622, cat: 'politician', emoji: '👑', desc: '日本飞鸟时代政治家。推行"冠位十二阶"和"宪法十七条"，派遣遣隋使学习中国制度，奠定日本中央集权基础。创建法隆寺。', achievements: ['制定十七条宪法', '派遣遣隋使', '推广佛教', '创建法隆寺'], relations: [], events: ['e_taika_reform'] },
+  { id: 'naka_no_oe', name: '中大兄皇子', birth: 626, death: 671, cat: 'emperor', emoji: '👑', desc: '日本飞鸟时代皇族，后来的天智天皇。联合中臣镰足发动乙巳之变消灭苏我氏，推行大化改新，仿唐朝建立中央集权制度。迁都近江。', achievements: ['推行大化改新', '消灭苏我氏', '建立中央集权'], relations: [], events: ['e_taika_reform'] },
+  { id: 'kukai', name: '空海', birth: 774, death: 835, cat: 'philosopher', emoji: '🕉️', desc: '日本平安时代高僧，真言宗创始人。随遣唐使入唐学密宗，回国在高野山开创真言宗道场。对日本宗教、书法影响深远。被尊为弘法大师。', achievements: ['创立真言宗', '入唐求法', '开创高野山', '书法大师'], relations: [], events: [] },
+  { id: 'murasaki_shikibu', name: '紫式部', birth: 973, death: 1014, cat: 'artist', emoji: '📖', desc: '日本平安时代女作家，世界文学史上最早的长篇小说《源氏物语》作者。以贵族光源氏的生活为中心，描绘平安时代宫廷生活，被誉为日本文学的巅峰。', achievements: ['《源氏物语》', '世界最早长篇小说', '日本文学巅峰'], relations: [], events: [] },
+  { id: 'taira_kiyomori', name: '平清盛', birth: 1118, death: 1181, cat: 'military', emoji: '⚔️', desc: '日本平安时代末期武将，平氏政权建立者。在保元、平治之乱中击败源氏，成为第一位以武士身份掌握朝廷实权的人物，开创武士政权时代。', achievements: ['建立平氏政权', '武士掌权先驱'], relations: [{ id: 'minamoto_yoritomo', type: '敌对', label: '源赖朝' }], events: [] },
+  { id: 'minamoto_yoritomo', name: '源赖朝', birth: 1147, death: 1199, cat: 'military', emoji: '⚔️', desc: '日本镰仓幕府开创者，第一代征夷大将军。源平合战中击败平氏，建立日本历史上第一个武家政权镰仓幕府，开启了近700年的幕府统治时代。', achievements: ['建立镰仓幕府', '首代征夷大将军', '开武家政权'], relations: [{ id: 'taira_kiyomori', type: '敌对', label: '平清盛' }, { id: 'minamoto_yoshitsune', type: '兄弟', label: '源义经' }], events: [] },
+  { id: 'minamoto_yoshitsune', name: '源义经', birth: 1159, death: 1189, cat: 'military', emoji: '⚔️', desc: '日本平安末期传奇武将。源平合战中屡建奇功，一之谷、屋岛、坛之浦三战奠定源氏胜利。后遭兄赖朝猜忌，逃亡奥州后被迫自杀，成为悲剧英雄象征。', achievements: ['源平合战名将', '一之谷奇袭', '坛之浦决战'], relations: [{ id: 'minamoto_yoritomo', type: '兄弟', label: '源赖朝' }], events: [] },
+  { id: 'hojo_masako', name: '北条政子', birth: 1157, death: 1225, cat: 'politician', emoji: '👩‍💼', desc: '源赖朝之妻，"尼将军"。丈夫死后削发为尼但执掌幕府大权。承久之乱中发表演说号召武士团结，稳固了武家政权。', achievements: ['执掌幕府', '平定承久之乱', '尼将军'], relations: [{ id: 'minamoto_yoritomo', type: '夫妻', label: '源赖朝' }], events: [] },
+  { id: 'hojo_tokimune', name: '北条时宗', birth: 1251, death: 1284, cat: 'military', emoji: '⚔️', desc: '镰仓幕府第8代执权。两次击退元朝（蒙古）的入侵（文永、弘安之役），以"神风"（台风）相助挫败了当时世界最强大的元朝军队，保卫了日本独立。', achievements: ['击退元军入侵', '文永之役', '弘安之役', '保卫日本独立'], relations: [], events: [] },
+  { id: 'ashikaga_takauji', name: '足利尊氏', birth: 1305, death: 1358, cat: 'military', emoji: '⚔️', desc: '室町幕府初代将军。推翻镰仓幕府后与后醍醐天皇决裂，另立天皇，开创南北朝时代。制定《建武式目》确立室町体制。', achievements: ['建立室町幕府', '开创南北朝'], relations: [], events: ['e_onin_war'] },
+  { id: 'oda_nobunaga', name: '织田信长', birth: 1534, death: 1582, cat: 'military', emoji: '🔥', desc: '日本战国时代最著名的霸主。以"天下布武"为口号，在桶狭间之战中以少胜多击败今川义元，用铁炮队改革战术。统一近畿地区，即将统一全国时遭部下明智光秀叛变，死于本能寺。', achievements: ['天下布武', '桶狭间之战', '铁炮战术改革', '近畿统一'], relations: [{ id: 'toyotomi_hideyoshi', type: '主从', label: '丰臣秀吉' }, { id: 'tokugawa_ieyasu', type: '同盟', label: '德川家康' }], events: [] },
+  { id: 'toyotomi_hideyoshi', name: '丰臣秀吉', birth: 1537, death: 1598, cat: 'military', emoji: '🏯', desc: '日本战国时代著名大名。从织田信长的马夫成长为统一日本的关白。修筑大阪城，推行太阁检地和刀狩令，两次入侵朝鲜（文禄庆长之役）均以失败告终。', achievements: ['统一日本', '修筑大阪城', '太阁检地', '刀狩令'], relations: [{ id: 'oda_nobunaga', type: '主从', label: '织田信长' }, { id: 'tokugawa_ieyasu', type: '对手', label: '德川家康' }], events: [] },
+  { id: 'tokugawa_ieyasu', name: '德川家康', birth: 1543, death: 1616, cat: 'emperor', emoji: '🏯', desc: '江户幕府开创者。关原之战击败丰臣势力，建立江户幕府，开创了长达260年的太平盛世。推行幕藩体制和锁国政策，奠定日本近世社会基础。', achievements: ['建立江户幕府', '关原之战', '幕藩体制', '260年太平盛世'], relations: [{ id: 'oda_nobunaga', type: '同盟', label: '织田信长' }, { id: 'toyotomi_hideyoshi', type: '对手', label: '丰臣秀吉' }], events: [] },
+  { id: 'sen_no_rikyu', name: '千利休', birth: 1522, death: 1591, cat: 'artist', emoji: '🍵', desc: '日本茶道集大成者，"侘寂"美学代表人物。先后侍奉信长和秀吉，将茶道提升为综合艺术。因触怒秀吉被赐切腹。', achievements: ['茶道集大成', '侘寂美学', '千家流茶道'], relations: [{ id: 'toyotomi_hideyoshi', type: '主从', label: '丰臣秀吉' }], events: [] },
+  { id: 'miyamoto_musashi', name: '宫本武藏', birth: 1584, death: 1645, cat: 'military', emoji: '⚔️', desc: '日本江户时代初期的剑术家、兵法家，创立"二天一流"剑术。经历60余次决斗未尝一败，晚年隐居著《五轮书》，阐述兵法与人生哲学。', achievements: ['二天一流', '《五轮书》', '不败剑豪'], relations: [], events: [] },
+  { id: 'saigo_takamori', name: '西乡隆盛', birth: 1828, death: 1877, cat: 'military', emoji: '✊', desc: '日本幕末至明治初期的政治家、军事家，"维新三杰"之一。领导倒幕运动推翻江户幕府，推动明治维新。后因征韩论与政府决裂，领导西南战争失败，切腹自尽。', achievements: ['维新三杰', '领导倒幕', '推动明治维新'], relations: [{ id: 'meiji_emperor', type: '君臣', label: '明治天皇' }], events: ['e_meiji_restoration'] },
+  { id: 'meiji_emperor', name: '明治天皇', birth: 1852, death: 1912, cat: 'emperor', emoji: '👑', desc: '日本第122代天皇。在位期间推行明治维新，全面学习西方科学技术和制度，使日本从一个封闭的封建国家转变为近代工业强国，史称"明治维新"。', achievements: ['明治维新', '富国强兵', '日本近代化'], relations: [{ id: 'saigo_takamori', type: '君臣', label: '西乡隆盛' }], events: ['e_meiji_restoration'] },
+  { id: 'fukuzawa_yukichi', name: '福泽谕吉', birth: 1835, death: 1901, cat: 'philosopher', emoji: '💡', desc: '日本明治时代启蒙思想家、教育家，庆应义塾大学创始人。著《劝学篇》提倡"天不生人上之人"的平等理念，主张"脱亚入欧"，推动日本近代化。头像印于1万日元纸币。', achievements: ['庆应义塾大学', '《劝学篇》', '脱亚入欧', '近代启蒙'], relations: [], events: ['e_meiji_restoration'] },
+  { id: 'sakamoto_ryoma', name: '坂本龙马', birth: 1836, death: 1867, cat: 'politician', emoji: '🧑‍🎓', desc: '日本幕末志士。促成萨长同盟，提出"船中八策"成为明治维新蓝图。33岁被暗杀于京都。', achievements: ['促成萨长同盟', '船中八策'], relations: [], events: ['e_meiji_restoration'] },
+  { id: 'ito_hirobumi', name: '伊藤博文', birth: 1841, death: 1909, cat: 'politician', emoji: '🏛️', desc: '日本首任内阁总理大臣。主导制定《大日本帝国宪法》，建立内阁制度。四次出任首相，推动现代化。在哈尔滨被朝鲜志士安重根刺杀。', achievements: ['首任内阁总理', '制定帝国宪法', '推动现代化'], relations: [{ id: 'meiji_emperor', type: '君臣', label: '明治天皇' }], events: ['e_meiji_restoration'] },
+  { id: 'natsume_soseki', name: '夏目漱石', birth: 1867, death: 1916, cat: 'artist', emoji: '✍️', desc: '日本近代文学巨匠，"国民大作家"。代表作《我是猫》《心》剖析近代知识分子精神困境。头像曾印于1000日元纸币。', achievements: ['国民大作家', '《我是猫》', '《心》', '近代文学奠基'], relations: [], events: [] },
+
+{ id: 'ganjin', name: '鉴真', birth: 688, death: 763, cat: 'philosopher', emoji: '🛤️',
+    desc: '唐代高僧，六次东渡日本，双目失明后终于抵达。在奈良建立唐招提寺，为日本传授戒律和唐代文化，被日本人民尊为日本律宗始祖。',
+    achievements: ['六次东渡', '创建唐招提寺', '日本律宗始祖'], relations: [], events: [] },
+
+  { id: 'saicho', name: '最澄', birth: 767, death: 822, cat: 'philosopher', emoji: '🕊️',
+    desc: '日本天台宗创始人。随遣唐使入唐，在天台山学习天台教义。回国后在比叡山建立延历寺，开创日本天台宗，与空海并称为日本佛教两大基石。',
+    achievements: ['创立天台宗', '延历寺', '日本佛教基石'], relations: [], events: [] },
+
+  { id: 'sugawara_michizane', name: '菅原道真', birth: 845, death: 903, cat: 'scholar', emoji: '📜',
+    desc: '日本平安时代学者、政治家。学问渊博，官至右大臣。因遭诬陷被贬九州，去世后被尊为天满大神（学问之神），每年考试季考生们纷纷祈福。',
+    achievements: ['学问之神', '遣唐使建议', '右大臣'], relations: [], events: [] },
+
+  { id: 'sei_shonagon', name: '清少纳言', birth: 966, death: 1025, cat: 'artist', emoji: '📓',
+    desc: '日本平安时代女作家。仕奉中宫定子皇后，著有随笔文学杰作《枕草子》，与紫式部的《源氏物语》并称为日本古典文学双璧。',
+    achievements: ['《枕草子》', '平安文学双璧'], relations: [], events: [] },
+
+  { id: 'taira_masakado', name: '平将门', birth: 903, death: 940, cat: 'military', emoji: '🗡️',
+    desc: '日本平安中期武士，自称新皇。在关东发动叛乱，占领坂东八国，是日本历史上第一个公开叛乱的武士。被讨伐后头颅被显示，传说其首级飞回家乡。',
+    achievements: ['第一个叛乱武士', '占领坂东'], relations: [], events: [] },
+
+  { id: 'sesshu', name: '雪舟', birth: 1420, death: 1506, cat: 'artist', emoji: '🌨️',
+    desc: '日本室町时代水墨画大师。随遣明使入明朝，学习中国南宋水墨画技法。回国后融会贯通，创立日本水墨画流派，代表作《秋冬山水图》被列为国宝。',
+    achievements: ['日本水墨画宗师', '《秋冬山水图》', '入明学画'], relations: [], events: [] },
+
+  { id: 'takeda_shingen', name: '武田信玄', birth: 1521, death: 1573, cat: 'military', emoji: '🐉',
+    desc: '日本战国时代名将，甲斐国大名，甲斐之虎。以精锐骑兵队威震东日本，川中岛合战与上杉谦信五度对峙不分上下。风林火山军旗为战国最强标志之一。',
+    achievements: ['甲斐之虎', '骑兵精锐', '川中岛合战'],
+    relations: [{ id: 'uesugi_kenshin', type: '宿敌', label: '上杉谦信' }], events: [] },
+
+  { id: 'uesugi_kenshin', name: '上杉谦信', birth: 1530, death: 1578, cat: 'military', emoji: '🐉',
+    desc: '日本战国时代名将，越后国大名，越后之龙。自称战神毗沙门天转世，以正义和仁义著称。川中岛合战与武田信玄势均力敌，是最受尊敬的战国大名。',
+    achievements: ['越后之龙', '战神毗沙门天', '川中岛合战'],
+    relations: [{ id: 'takeda_shingen', type: '宿敌', label: '武田信玄' }], events: [] },
+
+  { id: 'matsuo_basho', name: '松尾芭蕉', birth: 1644, death: 1694, cat: 'artist', emoji: '🌸',
+    desc: '日本江户时代俳人，被尊为俳圣。将俳句从游戏文学提升为严肃的艺术形式。代表作——古池——青蛙跳入水声——传颂世界，《奥之细道》是俳句经典。',
+    achievements: ['俳圣', '《奥之细道》', '俳句艺术化'], relations: [], events: [] },
+
+  { id: 'motoori_norinaga', name: '本居宣长', birth: 1730, death: 1801, cat: 'scholar', emoji: '📗',
+    desc: '日本江户时代国学大师。花费四十年钻研《古事记》，著《古事记传》。强调日本文化的独特性，提出物哀美学理论，是日本民族主义思想的源头。',
+    achievements: ['《古事记传》', '国学大师', '物哀美学'], relations: [], events: [] },
+
+  { id: 'hokusai', name: '葛饰北斋', birth: 1760, death: 1849, cat: 'artist', emoji: '🌊',
+    desc: '日本江户时代浮世绘大师。代表作《富岳三十六景》中的《神奈川冲浪里》是世界最著名的日本艺术作品，深刻影响了梵高、莫奈等印象派大师。',
+    achievements: ['《富岳三十六景》', '浮世绘顶峰', '影响印象派'], relations: [], events: [] },
+
+  { id: 'akutagawa', name: '芥川龙之介', birth: 1892, death: 1927, cat: 'artist', emoji: '📚',
+    desc: '日本大正时代作家，日本短篇小说之王。代表作《罗生门》《鼻子》《地狱变》等，以冷峻的笔触揭示人性的黑暗。日本最高文学奖以其名字命名。',
+    achievements: ['《罗生门》', '芥川奖', '短篇小说之王'], relations: [], events: [] },
+
+  { id: 'kurosawa', name: '黑泽明', birth: 1910, death: 1998, cat: 'artist', emoji: '🎥',
+    desc: '日本电影导演，世界电影史上最伟大的导演之一。代表作《罗生门》《七武士》《乱》《影武者》，将日本文化推向世界。获奥斯卡终身成就奖。',
+    achievements: ['《七武士》', '《罗生门》', '奥斯卡终身成就奖'], relations: [], events: [] },
+
+  { id: 'kawabata', name: '川端康成', birth: 1899, death: 1972, cat: 'artist', emoji: '🏆',
+    desc: '日本作家，首位获得诺贝尔文学奖的日本人。代表作《雪国》《千只鹤》《伊豆的舞女》，以精美美学和日本传统文化享誉世界。',
+    achievements: ['诺贝尔文学奖', '《雪国》', '《千只鹤》'], relations: [], events: [] },
+
+// === 古坟·飞鸟 ===
+  { id: 'jimmu', name: '神武天皇', birth: -711, death: -585, cat: 'emperor', emoji: '👑', desc: '日本神话中第一代天皇，据《日本书纪》记载于公元前660年即位，被视为日本建国之祖。', achievements: ['日本建国之祖', '第一代天皇'], relations: [], events: [] },
+  { id: 'haniwa', name: '卑弥呼', birth: 170, death: 248, cat: 'emperor', emoji: '🔮', desc: '日本弥生时代邪马台国女王。以巫术统治三十余国，曾遣使至魏，受封亲魏倭王。是日本最早有文字记载的统治者。', achievements: ['邪马台国女王', '遣使至魏', '亲魏倭王'], relations: [], events: [] },
+  { id: 'yuryaku', name: '雄略天皇', birth: 418, death: 479, cat: 'emperor', emoji: '👑', desc: '日本第21代天皇。积极推动与中国南朝的外交，引入大陆先进技术和文化。留下多首和歌，被认为是《万叶集》最早的和歌作者之一。', achievements: ['对宋外交', '引入大陆文化', '最早和歌作者'], relations: [], events: [] },
+  { id: 'soga_iruka', name: '苏我入鹿', birth: 610, death: 645, cat: 'politician', emoji: '🏛️', desc: '飞鸟时代权臣。继承父业垄断朝政，排挤圣德太子之子山背大兄王。在乙巳之变中被中大兄皇子刺杀，苏我氏势力覆灭。', achievements: ['垄断朝政', '苏我氏最后的掌权者'], relations: [], events: ['e_taika_reform'] },
+  { id: 'nakatomi_katamari', name: '中臣镰足', birth: 614, death: 669, cat: 'politician', emoji: '🏛️', desc: '飞鸟时代政治家。与中大兄皇子联合发动乙巳之变，消灭苏我氏后主导大化改新。被赐姓藤原，是日本最显赫贵族藤原氏之祖。', achievements: ['发动乙巳之变', '大化改新', '藤原氏始祖'], relations: [], events: ['e_taika_reform'] },
+  { id: 'emperor_tenmu', name: '天武天皇', birth: 631, death: 686, cat: 'emperor', emoji: '👑', desc: '日本第40代天皇。壬申之乱中击败大友皇子即位。推行律令制度，下令编撰《古事记》，确立天皇为神的权威。', achievements: ['壬申之乱胜利', '颁布律令', '编撰古事记'], relations: [], events: ['e_jinshin_war'] },
+  { id: 'jito_tenno', name: '持统天皇', birth: 645, death: 703, cat: 'emperor', emoji: '👑', desc: '日本第41代天皇，天武天皇之妻。继承丈夫事业，完成《大宝律令》的制定，迁都藤原京，是日本最早的正规都城。', achievements: ['完成大宝律令', '迁都藤原京'], relations: [], events: [] },
+
+// === 奈良 ===
+  { id: 'gyoki', name: '行基', birth: 668, death: 749, cat: 'philosopher', emoji: '🙏', desc: '奈良时代高僧。走遍日本各地修桥铺路、开垦农田、救济贫民，被尊为行基菩萨。为建造东大寺大佛奔走募化，被任命为大僧正。', achievements: ['社会救济', '东大寺大佛', '大僧正'], relations: [], events: ['e_nara_daibutsu'] },
+  { id: 'emperor_shomu', name: '圣武天皇', birth: 701, death: 756, cat: 'emperor', emoji: '👑', desc: '日本第45代天皇。笃信佛教，下令各国建国分寺，铸造奈良东大寺大佛。建立正仓院收藏珍宝，是日本天平文化的鼎盛时期。', achievements: ['建立国分寺', '东大寺大佛', '正仓院'], relations: [], events: ['e_nara_daibutsu'] },
+  { id: 'otomo_yakamochi', name: '大伴家持', birth: 718, death: 785, cat: 'artist', emoji: '📜', desc: '奈良时代歌人，《万叶集》主要编者。收录了约4500首和歌，涵盖从天皇到庶民的各阶层作品，是日本最古老的和歌总集。', achievements: ['编纂万叶集', '4500首和歌'], relations: [], events: [] },
+  { id: 'abe_nakamaro', name: '阿倍仲麻吕', birth: 698, death: 770, cat: 'scholar', emoji: '🎓', desc: '奈良时代遣唐留学生。19岁入唐，考中进士，在唐朝为官数十年，与李白、王维等交往。最终未能返回日本，客死长安。', achievements: ['入唐为官', '结交李白王维', '遣唐留学生典范'], relations: [], events: [] },
+
+// === 平安 ===
+  { id: 'fujiwara_michinaga', name: '藤原道长', birth: 966, death: 1028, cat: 'politician', emoji: '🏛️', desc: '平安时代最有权势的藤原氏摄关。三个女儿分别成为皇后，外孙接连成为天皇。自称"此世即我世，如满月无缺"。', achievements: ['摄关政治顶峰', '望月之歌', '藤原氏极盛'], relations: [], events: [] },
+  { id: 'minamoto_yorimitsu', name: '源赖光', birth: 948, death: 1021, cat: 'military', emoji: '⚔️', desc: '平安中期武将。以退治妖怪的传说闻名，率赖光四天王消灭酒吞童子、土蜘蛛等。是源氏武士团崛起的关键人物。', achievements: ['退治酒吞童子', '赖光四天王', '源氏武士团'], relations: [], events: [] },
+  { id: 'taira_tadamori', name: '平忠盛', birth: 1096, death: 1153, cat: 'military', emoji: '⚔️', desc: '平安后期武将。首次以武士身份被允许上殿觐见天皇，开创了武士进入朝廷核心的先例。其子平清盛更是建立了平氏政权。', achievements: ['武士上殿', '平氏崛起奠基'], relations: [], events: [] },
+  { id: 'emperor_goshirakawa', name: '后白河天皇', birth: 1127, death: 1192, cat: 'emperor', emoji: '👑', desc: '日本第77代天皇。退位后以上皇身份掌控朝政，编撰《梁尘秘抄》。在保元、平治之乱中利用武士力量，间接推动了武士政权的兴起。', achievements: ['《梁尘秘抄》', '保元平治之乱'], relations: [], events: [] },
+  { id: 'kamo_chomei', name: '鸭长明', birth: 1155, death: 1216, cat: 'artist', emoji: '🏚️', desc: '平安末期至镰仓初期的随笔家、歌人。因失意出家隐居，著《方丈记》，以优美文笔记述人生无常与自然灾害，是日本隐逸文学代表作。', achievements: ['《方丈记》', '隐逸文学', '随笔经典'], relations: [], events: [] },
+
+// === 镰仓 ===
+  { id: 'minamoto_sanetomo', name: '源实朝', birth: 1192, death: 1219, cat: 'emperor', emoji: '👑', desc: '镰仓幕府第三代将军。酷爱和歌，师从藤原定家，著有《金槐和歌集》。后被其侄公晓刺杀，源氏将军世系断绝。', achievements: ['金槐和歌集', '源氏末代将军'], relations: [], events: [] },
+  { id: 'hojo_yasutoki', name: '北条泰时', birth: 1183, death: 1242, cat: 'politician', emoji: '⚖️', desc: '镰仓幕府第三代执权。制定《御成败式目》（贞永式目），是日本第一部武家法典，奠定了武家社会的基本法律框架。', achievements: ['制定御成败式目', '第一部武家法典'], relations: [], events: [] },
+  { id: 'shinran', name: '亲鸾', birth: 1173, death: 1263, cat: 'philosopher', emoji: '🙏', desc: '镰仓时代僧侣，净土真宗创始人。主张"恶人正机说"——越是罪人越需要阿弥陀佛的救赎。其思想深刻影响了日本佛教的平民化。', achievements: ['创立净土真宗', '恶人正机说', '佛教平民化'], relations: [], events: [] },
+  { id: 'dogen', name: '道元', birth: 1200, death: 1253, cat: 'philosopher', emoji: '🧘', desc: '镰仓时代僧侣，日本曹洞宗创始人。入宋学习禅宗后回国，在永平寺开山。著《正法眼藏》，是日本禅宗最重要的哲学著作。', achievements: ['创立曹洞宗', '《正法眼藏》', '永平寺开山'], relations: [], events: [] },
+  { id: 'nichiren', name: '日莲', birth: 1222, death: 1282, cat: 'philosopher', emoji: '☀️', desc: '镰仓时代僧侣，日莲宗（法华宗）创始人。主张"南无妙法莲华经"的唱题修行，激烈批判其他佛教宗派，多次遭流放而信念不改。', achievements: ['创立日莲宗', '唱题修行'], relations: [], events: [] },
+
+// === 室町 ===
+  { id: 'ashikaga_yoshimitsu', name: '足利义满', birth: 1358, death: 1408, cat: 'emperor', emoji: '🏯', desc: '室町幕府第三代将军。建造金阁寺，统一南北朝，受明朝封为日本国王开展勘合贸易。其奢华的北山文化标志着室町鼎盛。', achievements: ['建造金阁寺', '统一南北朝', '勘合贸易', '北山文化'], relations: [], events: ['e_nanboku_union'] },
+  { id: 'ashikaga_yoshimasa', name: '足利义政', birth: 1436, death: 1490, cat: 'emperor', emoji: '🏯', desc: '室町幕府第八代将军。建造银阁寺，开创东山文化（茶道、花道、能乐等）。但无力平息应仁之乱，幕府权威从此崩溃。', achievements: ['建造银阁寺', '东山文化', '银阁寺'], relations: [], events: ['e_onin_war'] },
+  { id: 'zeami', name: '世阿弥', birth: 1363, death: 1443, cat: 'artist', emoji: '🎭', desc: '日本能乐集大成者。将能乐提升为高度艺术化的综合表演艺术，著《风姿花传》，提出"幽玄""物真似"等美学理论，影响日本艺术深远。', achievements: ['能乐集大成', '《风姿花传》', '幽玄美学'], relations: [], events: [] },
+
+// === 战国·安土桃山 ===
+  { id: 'hojo_soun', name: '北条早云', birth: 1432, death: 1519, cat: 'military', emoji: '⚔️', desc: '战国时代先驱。从一介浪人起家，夺取伊豆和相模，成为战国大名。以优秀的民政和税制改革著称，被后人尊为"战国大名第一人"。', achievements: ['战国大名先驱', '伊豆相模攻略', '民政改革'], relations: [], events: [] },
+  { id: 'imagawa_yoshimoto', name: '今川义元', birth: 1519, death: 1560, cat: 'military', emoji: '⚔️', desc: '战国大名，骏河、远江、三河三国守护。以强大的军事力量图谋上洛，在桶狭间遭遇织田信长奇袭身亡，改变了战国格局。', achievements: ['骏远三三国守护', '图谋上洛'], relations: [{ id: 'oda_nobunaga', type: '敌对', label: '织田信长' }], events: [] },
+  { id: 'sanada_yukimura', name: '真田幸村', birth: 1567, death: 1615, cat: 'military', emoji: '⚔️', desc: '安土桃山时代武将，被誉为"日本第一兵"。大阪夏之阵中率少数兵力突入德川家康本阵，差点斩杀家康。其勇猛传为佳话。', achievements: ['日本第一兵', '大阪夏之阵', '突入家康本阵'], relations: [], events: [] },
+  { id: 'date_masamune', name: '伊达政宗', birth: 1567, death: 1636, cat: 'military', emoji: '🌙', desc: '战国至江户初期大名，仙台藩始祖。因独眼被称为"独眼龙"。在关原之战支持德川家康，奠定了仙台62万石的基业。', achievements: ['独眼龙', '仙台藩始祖', '62万石大名'], relations: [], events: ['e_sekigahara'] },
+  { id: 'ishida_mitsunari', name: '石田三成', birth: 1560, death: 1600, cat: 'politician', emoji: '🏛️', desc: '安土桃山时代武将。丰臣秀吉心腹，秀吉死后领导西军在关原之战对抗德川家康。战败被斩首，但忠义之名流芳后世。', achievements: ['丰臣政权核心', '关原西军总大将', '忠义典范'], relations: [{ id: 'tokugawa_ieyasu', type: '敌对', label: '德川家康' }], events: ['e_sekigahara'] },
+
+// === 江户 ===
+  { id: 'tokugawa_iemitsu', name: '德川家光', birth: 1604, death: 1651, cat: 'emperor', emoji: '🏯', desc: '江户幕府第三代将军。确立参勤交代制度，完善幕府体制，彻底完成锁国。名君稳住了德川260年的基业。', achievements: ['参勤交代', '完善幕府', '彻底锁国'], relations: [], events: ['e_sakoku'] },
+  { id: 'arai_hakuseki', name: '新井白石', birth: 1657, death: 1725, cat: 'scholar', emoji: '📚', desc: '江户中期儒学者、政治家。辅佐第六代将军德川家宣，推行正德之治。著《西洋纪闻》《藩翰谱》等，是日本最博学的儒者之一。', achievements: ['正德之治', '《西洋纪闻》', '博学儒者'], relations: [], events: [] },
+  { id: 'yoshimune', name: '德川吉宗', birth: 1684, death: 1751, cat: 'emperor', emoji: '🏯', desc: '江户幕府第八代将军。推行享保改革，重建幕府财政，奖励实学，解除洋书禁令（除基督教相关），被誉为江户中兴之祖。', achievements: ['享保改革', '重建财政', '解除洋书禁令', '江户中兴之祖'], relations: [], events: [] },
+  { id: 'ogata_korin', name: '尾形光琳', birth: 1658, death: 1716, cat: 'artist', emoji: '🎨', desc: '江户中期画家，琳派集大成者。代表作《红白梅图屏风》《燕子花图屏风》以大胆的构图和装饰性风格著称，对后世日本美术影响深远。', achievements: ['琳派集大成', '《红白梅图》', '装饰美术'], relations: [], events: [] },
+  { id: 'chikamatsu', name: '近松门左卫门', birth: 1653, death: 1725, cat: 'artist', emoji: '🎭', desc: '江户时代最伟大的净琉璃和歌舞伎剧本作家。创作了100多部作品，《曾根崎心中》《国性爷合战》等以深刻的人性描写被誉为"日本的莎士比亚"。', achievements: ['100多部剧本', '《曾根崎心中》', '日本的莎士比亚'], relations: [], events: [] },
+  { id: 'yosa_buson', name: '与谢芜村', birth: 1716, death: 1784, cat: 'artist', emoji: '🖌️', desc: '江户中期俳人与画家。诗画双绝，其俳句与芭蕉齐名（芭蕉为"俳圣"，芜村为"俳仙"），同时是日本南画（文人画）的代表画家。', achievements: ['俳仙', '南画代表', '诗画双绝'], relations: [], events: [] },
+  { id: 'kobayashi_issa', name: '小林一茶', birth: 1763, death: 1828, cat: 'artist', emoji: '🕯️', desc: '江户后期俳人。一生坎坷，作品以朴素真挚的情感打动人心。俳句名作"露の世は露の世ながらさりながら"道尽人生无奈。', achievements: ['俳句大家', '朴素真挚'], relations: [], events: [] },
+  { id: 'ninomiya_sontoku', name: '二宫尊德', birth: 1787, death: 1856, cat: 'philosopher', emoji: '📖', desc: '江户后期农政家、思想家。以"报德思想"著称，提倡勤俭、勤劳和互助，成功复兴了600多个贫困村庄。其精神影响了日本近代道德教育。', achievements: ['报德思想', '复兴600村庄', '勤俭互助'], relations: [], events: [] },
+  { id: 'yoshida_shoin', name: '吉田松阴', birth: 1830, death: 1859, cat: 'philosopher', emoji: '🔥', desc: '江户末期思想家、教育家。开办松下村塾，培养了木户孝允、伊藤博文等维新核心人物。因策划倒幕被处死，但其思想点燃了明治维新。', achievements: ['松下村塾', '培养维新志士', '倒幕思想先驱'], relations: [{ id: 'ito_hirobumi', type: '师生', label: '伊藤博文' }], events: ['e_meiji_restoration'] },
+
+// === 现代 ===
+  { id: 'noguchi_hideyo', name: '野口英世', birth: 1876, death: 1928, cat: 'scientist', emoji: '🔬', desc: '日本细菌学家。出身贫寒，左手烧伤，以惊人毅力成为世界级科学家。发现梅毒螺旋体，研究黄热病时在非洲感染去世。头像印于1000日元纸币。', achievements: ['发现梅毒螺旋体', '黄热病研究', '千元纸币头像'], relations: [], events: [] },
+  { id: 'mishima_yukio', name: '三岛由纪夫', birth: 1925, death: 1970, cat: 'artist', emoji: '✍️', desc: '日本战后文学巨匠。代表作《金阁寺》《潮骚》《丰饶之海》四部曲。追求美学与武士道精神，1970年在自卫队驻地切腹殉道，震惊世界。', achievements: ['《金阁寺》', '《丰饶之海》', '诺贝尔奖提名'], relations: [], events: [] },
+  { id: 'tezuka_osamu', name: '手冢治虫', birth: 1928, death: 1989, cat: 'artist', emoji: '🤖', desc: '日本漫画家、动画制作人，“漫画之神”。创作了《铁臂阿童木》《火鸟》《怪医黑杰克》等700部作品，奠定了现代日本漫画和动画的基础。', achievements: ['漫画之神', '《铁臂阿童木》', '700部作品'], relations: [], events: [] },
+  { id: 'oda_eiichiro', name: '大江健三郎', birth: 1935, death: 2023, cat: 'artist', emoji: '📕', desc: '日本作家，第二位获得诺贝尔文学奖的日本人。作品以战后日本的创伤和人性的挣扎为主题，代表作《个人的体验》《万延元年的足球队》。', achievements: ['诺贝尔文学奖', '《个人的体验》'], relations: [], events: [] },
+  { id: 'suzuki_ichiro', name: '铃木一朗', birth: 1973, death: 2025, cat: 'scientist', emoji: '⚾', desc: '日本棒球运动员，MLB单赛季安打纪录保持者(262支)。以独特的钟摆打法征服美日棒球界，是亚洲运动员在世界体育界的标杆。', achievements: ['MLB安打纪录', '钟摆打法', '亚洲体育标杆'], relations: [], events: [] },
+  { id: 'miyazaki_hayao', name: '宫崎骏', birth: 1941, death: 2025, cat: 'artist', emoji: '🐉', desc: '日本动画导演，吉卜力工作室创始人。执导《千与千寻》《龙猫》《幽灵公主》《天空之城》等动画经典，获奥斯卡终身成就奖。', achievements: ['《千与千寻》', '吉卜力工作室', '奥斯卡终身成就奖'], relations: [], events: [] },
+];
+
+
+const JAPAN_EVENTS = [
+  { id: 'e_taika_reform', year: 645, name: '大化改新', type: 'politics', desc: '中大兄皇子联合中臣镰足消灭苏我氏后推行改革，仿唐建立中央集权，实行班田收授法。标志着日本从奴隶制向封建制转变。', dynasty: '飞鸟' },
+  { id: 'e_jinshin_war', year: 672, name: '壬申之乱', type: 'war', desc: '古代日本最大内乱。大海人皇子（天武天皇）击败大友皇子夺取皇位，确立天皇权威，推动律令制国家完善。', dynasty: '飞鸟' },
+  { id: 'e_nara_period', year: 710, name: '迁都平城京', type: 'politics', desc: '日本迁都平城京（今奈良），标志奈良时代开始。仿唐长安城建造，大规模吸收唐代文化、制度。', dynasty: '奈良' },
+  { id: 'e_heian_period', year: 794, name: '迁都平安京', type: 'politics', desc: '桓武天皇迁都平安京（今京都），标志平安时代开始。国风文化兴起，假名文学繁荣。', dynasty: '平安' },
+  { id: 'e_tale_genji', year: 1008, name: '《源氏物语》成书', type: 'culture', desc: '紫式部创作《源氏物语》，被认为是世界文学史上最早的长篇小说，描绘平安时代贵族生活，成为日本文学最高杰作。', dynasty: '平安' },
+  { id: 'e_genpei_war', year: 1180, name: '源平合战', type: 'war', desc: '源氏与平氏两大武士集团决战，经一之谷、屋岛、坛之浦三大战役，源赖朝最终消灭平氏，建立镰仓幕府。', dynasty: '平安' },
+  { id: 'e_kamakura_shogunate', year: 1192, name: '镰仓幕府建立', type: 'politics', desc: '源赖朝被任命为征夷大将军，在镰仓建立日本第一个武家政权。开创了近700年的幕府统治时代。', dynasty: '镰仓' },
+  { id: 'e_mongol_invasion', year: 1274, name: '元日战争（文永之役）', type: 'war', desc: '忽必烈派遣元朝军队跨海进攻日本，北条时宗领导抵抗，元军因台风损失惨重而撤退。7年后再次入侵（弘安之役），再次以失败告终。', dynasty: '镰仓' },
+  { id: 'e_onin_war', year: 1467, name: '应仁之乱', type: 'war', desc: '细川胜元与山名宗全因将军继承问题爆发内战，京都化为焦土。幕府权威崩溃，日本进入战国时代。', dynasty: '室町' },
+  { id: 'e_sengoku', year: 1467, name: '战国时代开始', type: 'war', desc: '应仁之乱后各地大名割据混战，长达百年。织田信长、丰臣秀吉、德川家康等诸侯崛起，最终统一日本。', dynasty: '战国' },
+  { id: 'e_nobunaga_unify', year: 1573, name: '织田信长统一近畿', type: 'politics', desc: '织田信长驱逐室町幕府末代将军，控制近畿地区。推行乐市乐座、兵农分离等改革，"天下布武"即将成功。', dynasty: '安土桃山' },
+  { id: 'e_honnoji', year: 1582, name: '本能寺之变', type: 'war', desc: '织田信长在京都本能寺遭部下明智光秀叛变，自焚身亡。羽柴秀吉（丰臣秀吉）迅速回师击败光秀，继承信长统一事业。', dynasty: '安土桃山' },
+  { id: 'e_sekigahara', year: 1600, name: '关原之战', type: 'war', desc: '德川家康与石田三成（丰臣系）决战。一日之内东军大胜，德川家康奠定统一天下的基础，开启江户幕府时代。', dynasty: '安土桃山' },
+  { id: 'e_edo_shogunate', year: 1603, name: '江户幕府建立', type: 'politics', desc: '德川家康被任命为征夷大将军，在江户（今东京）开设幕府。推行幕藩体制和锁国政策，开创260年的太平盛世。', dynasty: '江户' },
+  { id: 'e_sakoku', year: 1639, name: '锁国完成', type: 'politics', desc: '江户幕府禁止葡萄牙船只来航，彻底完成锁国体制。仅允许荷兰、中国在长崎贸易，日本与世界隔绝200余年。', dynasty: '江户' },
+  { id: 'e_black_ships', year: 1853, name: '黑船来航', type: 'politics', desc: '美国佩里准将率黑色蒸汽军舰驶入江户湾，以武力要求日本开国。次年签订神奈川条约，结束锁国。', dynasty: '江户' },
+  { id: 'e_meiji_restoration', year: 1868, name: '明治维新', type: 'politics', desc: '倒幕派推翻江户幕府，拥戴明治天皇建立新政府。推行"富国强兵""殖产兴业""文明开化"，日本迅速近代化。', dynasty: '明治' },
+  { id: 'e_sino_jp_war', year: 1894, name: '甲午中日战争', type: 'war', desc: '日本与清朝就朝鲜半岛控制权爆发战争，清军大败。签订《马关条约》，割让台湾及澎湖列岛，赔款2亿两白银。', dynasty: '明治' },
+  { id: 'e_russo_jp_war', year: 1904, name: '日俄战争', type: 'war', desc: '日本与俄国争夺东北亚利益而战，日军击败俄国，成为近代史上亚洲国家首次战胜欧洲列强，震惊世界。', dynasty: '明治' },
+  { id: 'e_pearl_harbor', year: 1941, name: '偷袭珍珠港', type: 'war', desc: '日本海军偷袭美国珍珠港，太平洋战争爆发，二战全面升级。最终以1945年日本投降、广岛长崎原子弹爆炸告终。', dynasty: '昭和' },
+  { id: 'e_jp_surrender', year: 1945, name: '日本投降', type: 'politics', desc: '日本接受《波茨坦公告》，天皇宣布无条件投降，二战结束。美军占领日本，推行民主化和非军事化改革。', dynasty: '昭和' },
+
+{ id: 'e_battle_baekgang', year: 663, name: '白村江之战', type: 'war', desc: '唐朝与新罗联军在白村江（今韩国锦江）击败日本与百济联军，是中日历史上首次大规模军事冲突。日本惨败后退守本土，全面学习唐朝制度。', dynasty: '飞鸟' },
+  { id: 'e_nara_daibutsu', year: 752, name: '奈良大佛开眼', type: 'culture', desc: '东大寺卢舍那大佛（奈良大佛）举行开眼供养仪式，是日本佛教文化鼎盛的象征。大佛高约15米，是日本最大的青铜佛像。', dynasty: '奈良' },
+  { id: 'e_masakado_rebellion', year: 940, name: '平将门之乱', type: 'war', desc: '平将门在关东发动叛乱，自称新皇。朝廷派遣藤原忠文讨伐，将门战死。这是日本历史上第一个公开反叛朝廷的武士。', dynasty: '平安' },
+  { id: 'e_nanboku_union', year: 1392, name: '南北朝统一', type: 'politics', desc: '室町幕府第三代将军足利义满促成南朝与北朝和解，结束了长达56年的南北朝分裂局面。义满受封为日本国王，与明朝建立勘合贸易。', dynasty: '室町' },
+  { id: 'e_shimabara', year: 1637, name: '岛原之乱', type: 'war', desc: '九州岛原和天草地区基督徒和农民联合起义，反抗幕府高压和重税。起义被镇压后，德川幕府彻底禁止基督教，锁国政策进一步强化。', dynasty: '江户' },
+  { id: 'e_abolish_domains', year: 1871, name: '废藩置县', type: 'politics', desc: '明治政府废除全国的藩，设立县，将地方权力收归中央。这标志着日本从封建制度彻底转向中央集权的近代国家体制。', dynasty: '明治' },
+  { id: 'e_tokyo_olympic', year: 1964, name: '东京奥运会', type: 'culture', desc: '亚洲首次举办奥运会，标志日本战后经济奇迹的巅峰。东海道新干线在奥运会前通车，日本向世界展示了其现代化成就。', dynasty: '昭和' },
+  { id: 'e_bubble_burst', year: 1990, name: '泡沫经济崩溃', type: 'economy', desc: '日本股市和房地产泡沫破裂，日经指数暴跌，银行坏账堆积如山。日本经济陷入长期低迷的失去的三十年。', dynasty: '平成' },
+
+{ id: 'e_jimmu_ascension', year: -660, name: '神武天皇即位', type: 'politics', desc: '据《日本书纪》记载，神武天皇在大和橿原宫即位，被视为日本建国之始。', dynasty: '神话' },
+  { id: 'e_himiko_mission', year: 239, name: '卑弥呼遣使至魏', type: 'politics', desc: '邪马台国女王卑弥呼派遣使节至曹魏，被授予亲魏倭王称号和金印。是中日官方交流的最早记录。', dynasty: '弥生' },
+  { id: 'e_buddhism_japan', year: 538, name: '佛教传入日本', type: 'culture', desc: '百济圣王派遣使节向日本钦明天皇赠送佛像和佛经。佛教由此传入日本，深刻改变了日本文化。', dynasty: '飞鸟' },
+  { id: 'e_heijo_kyo', year: 710, name: '平城京迁都', type: 'politics', desc: '元明天皇迁都平城京（奈良），仿唐长安城规划建造。标志着奈良时代的开始，日本大规模吸收唐文化。', dynasty: '奈良' },
+  { id: 'e_kokin_wakashu', year: 905, name: '《古今和歌集》编成', type: 'culture', desc: '醍醐天皇敕令纪贯之等编纂日本第一部敕撰和歌集，标志和歌成为一种正式的宫廷文学体裁。', dynasty: '平安' },
+  { id: 'e_taira_no_masakado', year: 940, name: '平将门之乱', type: 'war', desc: '平将门在关东自称新皇，反叛朝廷。藤原忠文奉命讨伐，将门战死。是首个公开叛乱的武士。', dynasty: '平安' },
+  { id: 'e_heiji_rebellion', year: 1160, name: '平治之乱', type: 'war', desc: '源义朝与平清盛两大武士集团在京都激战。平氏获胜，源义朝被杀，源赖朝被流放。', dynasty: '平安' },
+  { id: 'e_heike_monogatari', year: 1230, name: '《平家物语》成书', type: 'culture', desc: '记述源平合战的军记物语问世。以"诸行无常"开篇，琵琶法师传唱，成为日本最具影响力的文学经典之一。', dynasty: '镰仓' },
+  { id: 'e_mongol_invasion2', year: 1281, name: '元军第二次入侵(弘安之役)', type: 'war', desc: '忽必烈再度派遣14万大军东征日本。北条时宗领导抵抗，元军遭遇台风惨败，日本称神风佑国。', dynasty: '镰仓' },
+  { id: 'e_kemmu_restoration', year: 1333, name: '建武新政', type: 'politics', desc: '后醍醐天皇推翻镰仓幕府，恢复天皇亲政。但新政偏袒贵族，迅速失去武士支持，三年后崩溃。', dynasty: '镰仓' },
+  { id: 'e_kinkakuji', year: 1397, name: '金阁寺建成', type: 'culture', desc: '足利义满在京都北山建造金阁寺（鹿苑寺），全身贴以金箔，北山文化的象征。', dynasty: '室町' },
+  { id: 'e_ginkakuji', year: 1490, name: '银阁寺建成', type: 'culture', desc: '足利义政在京都东山建造银阁寺（慈照寺），东山文化的象征，虽未贴银箔但美学价值极高。', dynasty: '室町' },
+  { id: 'e_nobunaga_kyoto', year: 1568, name: '织田信长上洛', type: 'politics', desc: '织田信长拥立足利义昭进京，掌握中央政权。开始"天下布武"的统一大业。', dynasty: '安土桃山' },
+  { id: 'e_nagashino', year: 1575, name: '长篠之战', type: 'war', desc: '织田信长与德川家康联军用铁炮三段击战术大败武田胜赖骑兵，宣告骑兵时代的终结，铁炮时代来临。', dynasty: '安土桃山' },
+  { id: 'e_azuchi_castle', year: 1579, name: '安土城竣工', type: 'culture', desc: '织田信长在琵琶湖畔建造七层安土城。融合城堡与宫殿功能，是日本城郭建筑史上的里程碑。', dynasty: '安土桃山' },
+  { id: 'e_taiko_kenchi', year: 1591, name: '太阁检地实施', type: 'economy', desc: '丰臣秀吉在全国范围实行土地丈量，统一度量标准，确定年贡额。奠定了近世幕藩体制的经济基础。', dynasty: '安土桃山' },
+  { id: 'e_tokugawa_iemitsu_sankin', year: 1635, name: '参勤交代制度化', type: 'politics', desc: '德川家光将参勤交代定为全国大名必须履行的义务。既削弱大名财力，又促进各地交通和文化交流。', dynasty: '江户' },
+  { id: 'e_genroku', year: 1688, name: '元禄文化繁荣', type: 'culture', desc: '以大阪和京都为中心的城市文化繁荣期。井原西鹤的浮世草子、近松门左卫门的戏剧、松尾芭蕉的俳句达到顶峰。', dynasty: '江户' },
+  { id: 'e_kyoho_reform', year: 1721, name: '享保改革', type: 'economy', desc: '第八代将军德川吉宗推行财政改革：开源节流、振兴农业、奖励实学。成功重建了濒临破产的幕府财政。', dynasty: '江户' },
+  { id: 'e_tenmei_famine', year: 1783, name: '天明大饥荒', type: 'economy', desc: '日本史上最严重的饥荒之一。火山灰遮天，全国歉收，饿殍遍野。幕府统治力严重削弱，为后来的倒幕埋下伏笔。', dynasty: '江户' },
+  { id: 'e_kansei_reform', year: 1790, name: '宽政改革', type: 'politics', desc: '松平定信推行紧缩改革，禁奢侈、抑商业、重整农业。同时禁异学，确立朱子学为官方意识形态。', dynasty: '江户' },
+  { id: 'e_nagasaki_studies', year: 1774, name: '《解体新书》出版', type: 'science', desc: '杉田玄白和前野良泽将荷兰解剖学著作译成日文出版，标志着日本兰学（西学）的开端。', dynasty: '江户' },
+  { id: 'e_tempo_reform', year: 1841, name: '天保改革', type: 'politics', desc: '水野忠邦推行的最后一次幕府改革。解散垄断行会、限制奢侈，但触动多方利益而失败，幕府威信进一步下降。', dynasty: '江户' },
+  { id: 'e_boshin_war', year: 1868, name: '戊辰战争', type: 'war', desc: '明治新政府军与会津等旧幕府势力之间的内战。经鸟羽伏见之战、上野战争等，新政府取得全面胜利。', dynasty: '明治' },
+  { id: 'e_iwakura_mission', year: 1871, name: '岩仓使节团出访', type: 'politics', desc: '以岩仓具视为首的大规模使节团考察欧美12国，历时近两年。回国后以欧美经验推动日本的全面近代化。', dynasty: '明治' },
+  { id: 'e_land_tax_reform', year: 1873, name: '地租改正', type: 'economy', desc: '明治政府改革土地制度，确立私有产权，以货币定额纳税。为工业化提供了稳定的财政收入基础。', dynasty: '明治' },
+  { id: 'e_constitution_japan', year: 1889, name: '大日本帝国宪法颁布', type: 'politics', desc: '伊藤博文主导制定，以普鲁士宪法为蓝本。确立天皇主权和国民权利，日本成为亚洲首个立宪国家。', dynasty: '明治' },
+  { id: 'e_mukden', year: 1931, name: '满洲事变(九一八)', type: 'war', desc: '关东军在沈阳附近炸毁南满铁路，以此为借口占领东北全境，建立伪满洲国。日本开始全面侵华。', dynasty: '昭和' },
+  { id: 'e_jp_ww2_end', year: 1945, name: '广岛长崎原子弹爆炸', type: 'war', desc: '美国在广岛和长崎投下原子弹，死伤数十万平民。苏联对日宣战，日本天皇宣布无条件投降。', dynasty: '昭和' },
+  { id: 'e_jp_recovery', year: 1955, name: '经济高速增长开始', type: 'economy', desc: '日本从战败中迅速复兴，进入"神武景气"时期。到1968年成为世界第二大经济体，创造了战后经济奇迹。', dynasty: '昭和' },
+  { id: 'e_jp_san Francisco', year: 1951, name: '旧金山和约', type: 'politics', desc: '日本与美国等48国签订和约，正式结束二战状态，恢复国家主权。同时签订美日安保条约。', dynasty: '昭和' },
+];
+
+const KOREA_PERSONS = [
+{ id: 'dangun', name: '檀君', birth: -2333, death: -2240, cat: 'sage', emoji: '🐻', desc: '朝鲜民族始祖。据《三国遗事》记载，天神桓因之子桓雄下凡，与化为女人的熊结合，生下檀君。檀君于公元前2333年建立古朝鲜（檀君朝鲜）。', achievements: ['建立古朝鲜', '朝鲜民族始祖'], relations: [], events: [] },
+{ id: 'gija', name: '箕子', birth: -1100, death: -1000, cat: 'sage', emoji: '👑', desc: '商朝宗室，纣王叔父。商亡后率五千人东走朝鲜，建立箕子朝鲜。传播中原先进农业技术和礼乐文化，朝鲜第一次大规模受中华文明影响。', achievements: ['建立箕子朝鲜', '传播中华文明'], relations: [], events: [] },
+{ id: 'wiman', name: '卫满', birth: -200, death: -150, cat: 'military', emoji: '⚔️', desc: '燕人出身的古朝鲜将领。率千余人进入朝鲜，推翻箕子朝鲜末代王准，建立卫满朝鲜。积极扩张领土，控制朝鲜半岛北部。', achievements: ['建立卫满朝鲜', '扩张领土'], relations: [], events: [] },
+{ id: 'jumong', name: '朱蒙（东明圣王）', birth: -58, death: -19, cat: 'emperor', emoji: '👑', desc: '高句丽建国始祖。出自扶余国，因遭迫害南逃至卒本（今辽宁桓仁），建立高句丽。传说为天帝之子与河伯女所生，善射被誉为神射手。', achievements: ['建立高句丽', '神射手'], relations: [], events: ['e_goguryeo_founded'] },
+{ id: 'yuri_king', name: '琉璃王', birth: -38, death: 18, cat: 'emperor', emoji: '👑', desc: '高句丽第二代王，朱蒙之子。继承父业巩固政权，迁都国内城。留下著名诗歌《黄鸟歌》，是朝鲜最古老的抒情诗之一。', achievements: ['继承高句丽', '《黄鸟歌》'], relations: [{ id: 'jumong', type: '父子', label: '朱蒙' }], events: [] },
+{ id: 'taejo_goguryeo', name: '太祖王', birth: 47, death: 165, cat: 'emperor', emoji: '👑', desc: '高句丽第六代王。在位93年，将高句丽从一个部落联盟发展为中央集权国家。积极对外扩张，征服东沃沮等周边部落。', achievements: ['中央集权化', '在位93年', '扩张领土'], relations: [], events: [] },
+{ id: 'sansang_king', name: '山上王', birth: 170, death: 227, cat: 'emperor', emoji: '👑', desc: '高句丽第十代王。因兄发歧之乱而即位，迁都丸都城。抵御东汉辽东太守公孙康的进攻，维护了高句丽的独立。', achievements: ['迁都丸都城', '抵御公孙康'], relations: [], events: [] },
+{ id: 'dongcheon_king', name: '东川王', birth: 209, death: 248, cat: 'emperor', emoji: '👑', desc: '高句丽第十一代王。遭曹魏大将毌丘俭进攻，丸都城被毁。率残部退入沃沮，最终收复失地。深刻体会到中原王朝的强大。', achievements: ['抵御魏军', '收复失地'], relations: [], events: ['e_weigoguryeo_war'] },
+{ id: 'michon_king', name: '美川王', birth: 300, death: 331, cat: 'emperor', emoji: '👑', desc: '高句丽第十五代王。主动出击西晋，攻占乐浪郡和带方郡，彻底结束了汉朝在朝鲜半岛400多年的郡县统治。', achievements: ['攻占乐浪郡', '结束汉郡统治'], relations: [], events: [] },
+{ id: 'gogukwon_king', name: '故国原王', birth: 320, death: 371, cat: 'emperor', emoji: '👑', desc: '高句丽第十六代王。遭前燕慕容皝进攻，丸都城再次被毁，被迫称臣纳贡。后与百济战争中阵亡，高句丽一度陷入危机。', achievements: ['艰难守国'], relations: [], events: [] },
+{ id: 'sosurim_king', name: '小兽林王', birth: 350, death: 384, cat: 'emperor', emoji: '👑', desc: '高句丽第十七代王。推行全面改革：颁布律令、设立太学、引入佛教。为高句丽的强盛奠定了制度和思想基础。', achievements: ['颁布律令', '设立太学', '引入佛教'], relations: [], events: ['e_buddhism_goguryeo'] },
+{ id: 'gwanggaeto', name: '广开土大王', birth: 374, death: 413, cat: 'emperor', emoji: '🗡️', desc: '高句丽第十九代王。朝鲜历史上最伟大的君主之一。南征百济、新罗，北驱契丹，将高句丽疆域扩张至史上最大。其功绩刻于广开土大王碑。', achievements: ['南征百济新罗', '北驱契丹', '疆域鼎盛', '广开土大王碑'], relations: [], events: [] },
+{ id: 'jangsu_king', name: '长寿王', birth: 394, death: 491, cat: 'emperor', emoji: '👑', desc: '高句丽第二十代王，广开土大王之子。在位79年，迁都平壤。推行对南北朝（中国）的均衡外交，与中原各国保持和平，国力持续强盛。', achievements: ['迁都平壤', '在位79年', '均衡外交'], relations: [{ id: 'gwanggaeto', type: '父子', label: '广开土大王' }], events: [] },
+{ id: 'munja_king', name: '文咨明王', birth: 450, death: 519, cat: 'emperor', emoji: '👑', desc: '高句丽第二十一代王。长寿王之孙。继承祖父的强国政策，继续发展高句丽。佛教在其治下进一步繁荣。', achievements: ['继承强国', '佛教繁荣'], relations: [], events: [] },
+{ id: 'yeongyang_king', name: '婴阳王', birth: 560, death: 618, cat: 'emperor', emoji: '👑', desc: '高句丽第二十六代王。隋炀帝三征高句丽，婴阳王在乙支文德辅佐下成功抵御，导致隋朝国力大损而亡。', achievements: ['抵御隋炀帝三征'], relations: [], events: ['e_sui_goguryeo_war'] },
+{ id: 'yeon_gaesomun', name: '渊盖苏文', birth: 603, death: 666, cat: 'military', emoji: '⚔️', desc: '高句丽末期权臣。发动政变杀死荣留王，立宝藏王。两次大败唐太宗亲征（安市城之战），被誉为高句丽的守护神。其死后高句丽迅速崩溃。', achievements: ['击败唐太宗', '安市城之战', '高句丽守护神'], relations: [], events: ['e_tang_goguryeo_war'] },
+{ id: 'onjo_king', name: '温祚王', birth: -18, death: 28, cat: 'emperor', emoji: '👑', desc: '百济建国始祖。朱蒙之子，因受排挤南逃至汉江流域，建立百济国。定都慰礼城（今首尔），是百济近700年基业的开创者。', achievements: ['建立百济'], relations: [{ id: 'jumong', type: '父子', label: '朱蒙（高句丽始祖）' }], events: [] },
+{ id: 'goi_king', name: '古尔王', birth: 190, death: 286, cat: 'emperor', emoji: '👑', desc: '百济第八代王。制定16官等制度，颁布律令，确立中央集权统治体制。积极与带方郡和倭国开展外交。', achievements: ['制定官制', '中央集权'], relations: [], events: [] },
+{ id: 'geunchogo_king', name: '近肖古王', birth: 320, death: 375, cat: 'emperor', emoji: '👑', desc: '百济第十三��王，百济最伟大的君主之一。击败高句丽故国原王并将其阵斩，扩张疆域至顶峰。积极与中国东晋和倭国发展外交贸易。', achievements: ['击败高句丽', '疆域鼎盛', '对东晋倭国外交'], relations: [], events: [] },
+{ id: 'munju_king', name: '文周王', birth: 450, death: 477, cat: 'emperor', emoji: '👑', desc: '百济第二十二代王。因高句丽南侵威逼汉城，被迫迁都熊津（今公州）。百济国力开始衰落。', achievements: ['迁都熊津'], relations: [], events: [] },
+{ id: 'seong_king', name: '圣王', birth: 490, death: 554, cat: 'emperor', emoji: '👑', desc: '百济第二十六代王。迁都泗沘（今扶余），短暂中兴百济。积极向倭国传播佛教和先进文化。与新罗交战中阵亡。', achievements: ['百济中兴', '向倭国传播佛教'], relations: [], events: ['e_buddhism_japan'] },
+{ id: 'mu_king', name: '武王', birth: 580, death: 641, cat: 'emperor', emoji: '👑', desc: '百济第三十代王。建造弥勒寺，是百济最大的寺院。与新罗频繁交战，互有胜负。其王妃是著名的善花公主。', achievements: ['建造弥勒寺'], relations: [], events: [] },
+{ id: 'uija_king', name: '义慈王', birth: 599, death: 660, cat: 'emperor', emoji: '👑', desc: '百济末代王。初期积极对唐外交，后联合高句丽攻新罗。唐与新罗联军攻灭百济，义慈王被俘至洛阳。百济灭亡。', achievements: ['百济末代王'], relations: [], events: ['e_baekje_fall'] },
+{ id: 'gyebaek', name: '阶伯', birth: 600, death: 660, cat: 'military', emoji: '⚔️', desc: '百济末期名将。百济灭亡前，率五千死士在黄山伐迎战新罗五万大军。战前杀妻儿以绝后顾，全军壮烈战死，被誉为百济最后的忠诚。', achievements: ['黄山伐之战', '百济最后的忠诚'], relations: [], events: ['e_baekje_fall'] },
+{ id: 'hyeokgeose', name: '赫居世居西干', birth: -69, death: 4, cat: 'emperor', emoji: '🥚', desc: '新罗建国始祖。据传从一匹白马留下的紫卵中诞生，13岁被推举为王。建立新罗（徐罗伐），是朝鲜三国中存在最久的王朝。', achievements: ['建立新罗'], relations: [], events: [] },
+{ id: 'naemul_king', name: '奈勿王', birth: 350, death: 402, cat: 'emperor', emoji: '👑', desc: '新罗第十七代王。确立金氏世袭王位制度。面对高句丽南侵，遣使向东晋求援，开启了新罗与中国的正式外交关系。', achievements: ['世袭王位制', '对东晋外交'], relations: [], events: [] },
+{ id: 'beopheung_king', name: '法兴王', birth: 500, death: 540, cat: 'emperor', emoji: '👑', desc: '新罗第二十三代王。正式承认佛教为国教，颁布律令，确立骨品制度。新罗开始走向强大。', achievements: ['佛教国教化', '骨品制度', '颁布律令'], relations: [], events: [] },
+{ id: 'jinheung_king', name: '真兴王', birth: 534, death: 576, cat: 'emperor', emoji: '👑', desc: '新罗第二十四代王，最伟大的新罗君主之一。组建青年精英团体"花郎道"。大幅扩张领土，北至咸兴，西至汉江。留下多处巡狩碑。', achievements: ['创立花郎道', '大幅扩张', '巡狩碑'], relations: [], events: [] },
+{ id: 'seondeok_queen', name: '善德女王', birth: 600, death: 647, cat: 'emperor', emoji: '👑', desc: '新罗第二十七代王，朝鲜半岛第一位女性君主。建造瞻星台（亚洲现存最古老的天文台），与唐建立联盟对抗高句丽和百济。', achievements: ['第一位女王', '建造瞻星台', '唐罗联盟'], relations: [], events: [] },
+{ id: 'muyeol_king', name: '武烈王（金春秋）', birth: 604, death: 661, cat: 'emperor', emoji: '👑', desc: '新罗第二十九代王。积极与唐朝结盟，为统一三国奠定外交基础。其子文武王最终完成统一大业。', achievements: ['唐罗联盟', '统一三国奠基'], relations: [], events: [] },
+{ id: 'kim_yushin', name: '金庾信', birth: 595, death: 673, cat: 'military', emoji: '⚔️', desc: '新罗名将，统一三国的最大功臣。15岁加入花郎道，后在罗唐联军中屡建奇功，指挥灭亡百济和高句丽的战役。被追封为兴武大王。', achievements: ['统一三国功臣', '灭亡百济', '灭亡高句丽'], relations: [], events: ['e_baekje_fall', 'e_goguryeo_fall'] },
+{ id: 'munmu_king', name: '文武王', birth: 626, death: 681, cat: 'emperor', emoji: '👑', desc: '新罗第三十代王，完成朝鲜半岛统一。灭百济和高句丽后，驱逐唐朝势力，建立统一新罗。死后遗言火化于东海，化龙守护国家。', achievements: ['统一三国', '驱逐唐军', '统一新罗'], relations: [{ id: 'kim_yushin', type: '君臣', label: '金庾信' }], events: ['e_silla_unify'] },
+{ id: 'sinmun_king', name: '神文王', birth: 654, death: 692, cat: 'emperor', emoji: '👑', desc: '统一新罗第二代王。平定金钦突叛乱，巩固中央集权。设立国学，推广儒学教育。', achievements: ['巩固统一', '设立国学'], relations: [], events: [] },
+{ id: 'gyeongdeok_king', name: '景德王', birth: 720, death: 765, cat: 'emperor', emoji: '👑', desc: '统一新罗的鼎盛时期。建造佛国寺和石窟庵（世界文化遗产），是统一新罗佛教艺术的巅峰之作。', achievements: ['佛国寺', '石窟庵', '佛教艺术巅峰'], relations: [], events: [] },
+{ id: 'dae_joyeong', name: '大祚荣', birth: 660, death: 719, cat: 'emperor', emoji: '🐎', desc: '渤海国建国始祖。原为高句丽遗民，率众东走，在天门岭大败唐朝追兵后建立渤海国。被唐朝封为渤海郡王。', achievements: ['建立渤海国', '天门岭大捷'], relations: [], events: ['e_balhae_founded'] },
+{ id: 'mun_wang', name: '文王（大钦茂）', birth: 720, death: 794, cat: 'emperor', emoji: '👑', desc: '渤海第三代王。在位56年，励精图治，仿唐制度建立渤海官僚体系。多次遣使入唐学习，使渤海成为海东盛国。', achievements: ['海东盛国', '仿唐建制', '遣使入唐'], relations: [], events: [] },
+{ id: 'wang_geon', name: '王建（太祖）', birth: 877, death: 943, cat: 'emperor', emoji: '👑', desc: '高丽王朝开国君主。原为后高句丽大将，918年发动政变建立高丽。935年接受新罗归降，936年灭后百济，重新统一朝鲜半岛。定都开城。', achievements: ['建立高丽', '统一后三国', '定都开城'], relations: [], events: ['e_goryeo_founded'] },
+{ id: 'gwangjong', name: '光宗', birth: 925, death: 975, cat: 'emperor', emoji: '👑', desc: '高丽第四代王。推行奴婢按检法和科举制度，削弱地方豪族势力，加强中央集权。自称皇帝，与宋朝并立。', achievements: ['实行科举', '奴婢按检法', '加强中央集权'], relations: [], events: [] },
+{ id: 'seongjong', name: '成宗', birth: 961, death: 997, cat: 'emperor', emoji: '👑', desc: '高丽第六代王。接受宋朝册封，全面推行儒学官僚体制。命崔承老上《时务二十八条》，奠定了高丽王朝200年的文治基础。', achievements: ['儒学官僚制', '文治基础'], relations: [], events: [] },
+{ id: 'hyeonjong', name: '显宗', birth: 992, death: 1031, cat: 'emperor', emoji: '👑', desc: '高丽第八代王。契丹（辽）三次入侵高丽，显宗成功击退。避难期间主持雕刻《高丽大藏经》初版，为世界佛教经典之宝。', achievements: ['击退契丹', '高丽大藏经'], relations: [], events: [] },
+{ id: 'yoon_gwan', name: '尹瓘', birth: 1040, death: 1111, cat: 'military', emoji: '⚔️', desc: '高丽名将。率17万大军北伐女真，在东北建九城。虽最终归还九城，但展现了高丽的军事能力。', achievements: ['北伐女真', '建九城'], relations: [], events: [] },
+{ id: 'uicheon', name: '义天', birth: 1055, death: 1101, cat: 'philosopher', emoji: '🙏', desc: '高丽文宗之子，天台宗高僧。入宋求法，遍访名山古刹。回国后创立高丽天台宗，编撰《续一切经音义》，推动高丽佛教发展。', achievements: ['创立天台宗', '入宋求法', '续一切经音义'], relations: [], events: [] },
+{ id: 'myocheong', name: '妙清', birth: 1090, death: 1135, cat: 'philosopher', emoji: '🔮', desc: '高丽僧侣。主张迁都西京（平壤）和称帝建元，与金富轼等保守派发生冲突。起兵反叛（妙清之乱），兵败被杀。', achievements: ['迁都运动', '妙清之乱'], relations: [], events: [] },
+{ id: 'kim_busik', name: '金富轼', birth: 1075, death: 1151, cat: 'scholar', emoji: '📚', desc: '高丽儒学家、历史学家。平定妙清之乱后主持编撰《三国史记》，是朝鲜现存最古老的史书，记录了三国时代至统一新罗的历史。', achievements: ['编撰三国史记', '平定妙清之乱'], relations: [], events: [] },
+{ id: 'lee_gyubo', name: '李奎报', birth: 1168, death: 1241, cat: 'scholar', emoji: '📝', desc: '高丽文学大家。以《东明王篇》著称，长篇叙事诗叙述朱蒙建国故事。在蒙古入侵中写下大量爱国诗篇。其文集《东国李相国集》为高丽文学最高成就。', achievements: ['东明王篇', '爱国诗篇', '高丽文学巅峰'], relations: [], events: [] },
+{ id: 'choi_young', name: '崔莹', birth: 1316, death: 1388, cat: 'military', emoji: '⚔️', desc: '高丽末期名将。多次击退倭寇入侵，又远征收复辽东部分领土。反对李成桂废王自立，兵败被杀，是高丽最后的忠臣。', achievements: ['击退倭寇', '高丽最后的忠臣'], relations: [], events: [] },
+{ id: 'jeong_mongju', name: '郑梦周', birth: 1337, death: 1392, cat: 'scholar', emoji: '🎓', desc: '高丽末期大儒，理学大家。坚守对高丽王室的忠诚，反对李成桂篡位。在善竹桥被刺杀，血溅桥石，成为朝鲜儒学史上忠节的象征。', achievements: ['高丽忠节', '性理学传播', '善竹桥'], relations: [], events: ['e_joseon_founded'] },
+{ id: 'taejo_joseon', name: '李成桂（太祖）', birth: 1335, death: 1408, cat: 'emperor', emoji: '👑', desc: '朝鲜王朝开国君主。原为高丽大将，威化岛回军后掌握实权。1392年受推举建立朝鲜王朝，定都汉阳（今首尔），开创了延续500多年的李氏朝鲜。', achievements: ['建立朝鲜王朝', '威化岛回军', '定都汉阳'], relations: [], events: ['e_joseon_founded'] },
+{ id: 'taejong', name: '太宗（李芳远）', birth: 1367, death: 1422, cat: 'emperor', emoji: '👑', desc: '朝鲜第三代王。通过两次王子之乱消灭政敌，巩固王权。废除私兵，加强中央集权。为其子世宗大王铺平了道路。', achievements: ['巩固王权', '废除私兵', '中央集权'], relations: [], events: [] },
+{ id: 'sejong', name: '世宗大王', birth: 1397, death: 1450, cat: 'emperor', emoji: '📜', desc: '朝鲜第四代王，朝鲜历史上最伟大的君主。创制训民正音（韩文），使平民也能读书写字。发展科技农业，编纂《东国通鉴》《农事直说》，建立集贤殿。', achievements: ['创制训民正音', '集贤殿', '《东国通鉴》', '科技农业'], relations: [], events: ['e_hangul_created'] },
+{ id: 'jang_yeongsil', name: '蒋英实', birth: 1390, death: 1450, cat: 'scientist', emoji: '⏱️', desc: '朝鲜世宗时代最伟大的发明家。出身奴婢，以才华受世宗重用。发明浑天仪、测雨器、日晷等众多科学仪器，其中测雨器比欧洲早200多年。', achievements: ['浑天仪', '测雨器', '日晷'], relations: [], events: [] },
+{ id: 'sin_sukju', name: '申叔舟', birth: 1417, death: 1475, cat: 'scholar', emoji: '📖', desc: '朝鲜世宗至世祖时期的大学者。参与创制训民正音，编撰《东国通鉴》《国朝五礼仪》。精通汉语、女真语和日语，是朝鲜最杰出的语言学家之一。', achievements: ['参与创制训民正音', '外交语言天才'], relations: [], events: [] },
+{ id: 'sejo', name: '世祖', birth: 1417, death: 1468, cat: 'emperor', emoji: '👑', desc: '朝鲜第七代王。发动癸酉靖难夺取侄子端宗的王位，成为篡位者。但其治下编纂《经国大典》，完善朝鲜法度，经济文化均有发展。', achievements: ['编撰经国大典', '完善法度'], relations: [], events: [] },
+{ id: 'seongjong_joseon', name: '成宗', birth: 1457, death: 1495, cat: 'emperor', emoji: '👑', desc: '朝鲜第九代王。完成并颁布《经国大典》，确立朝鲜基本法典。编纂《东国舆地胜览》等地理志，朝鲜文治达到顶峰。', achievements: ['颁布经国大典', '东国舆地胜览'], relations: [], events: [] },
+{ id: 'jo_gwangjo', name: '赵光祖', birth: 1482, death: 1519, cat: 'philosopher', emoji: '💡', desc: '朝鲜中宗时代的性理学者和政治改革家。追求至治主义的理想政治，推行激进的改革（乡约、贤良科）。因触动勋旧派利益遭己卯士祸，被赐死。', achievements: ['至治主义', '己卯士祸'], relations: [], events: [] },
+{ id: 'yi_hwang', name: '李滉（退溪）', birth: 1501, death: 1570, cat: 'philosopher', emoji: '🎓', desc: '朝鲜最伟大的性理学家之一，岭南学派的宗师。发展朱熹性理学，著《圣学十图》，其学说深刻影响了朝鲜社会数百年。韩元千元纸币上印有其头像。', achievements: ['退溪学派', '《圣学十图》', '岭南学派宗师'], relations: [], events: [] },
+{ id: 'yi_i', name: '李珥（栗谷）', birth: 1536, death: 1584, cat: 'philosopher', emoji: '🎓', desc: '朝鲜性理学大家，畿湖学派创始人。主张"理气一元论"，与李滉的"理气二元论"形成朝鲜儒学两大流派。提出10万养兵论预见倭乱。韩元五千元纸币印有其头像。', achievements: ['栗谷学派', '理气一元论', '10万养兵论'], relations: [], events: [] },
+{ id: 'yi_sunshin', name: '李舜臣', birth: 1545, death: 1598, cat: 'military', emoji: '⚓', desc: '朝鲜水军名将。发明龟船，在壬辰倭乱中率12艘战船在鸣梁海峡大败133艘日本战船。露梁海战中壮烈殉国，遗言"战方急，勿言我死"。被视为朝鲜民族英雄第一人。', achievements: ['发明龟船', '鸣梁大捷', '露梁殉国'], relations: [], events: ['e_imjin_war'] },
+{ id: 'heo_jun', name: '许浚', birth: 1539, death: 1615, cat: 'scientist', emoji: '🩺', desc: '朝鲜御医，编纂《东医宝鉴》。汇集东亚传统医学精华，是朝鲜医学史上最伟大的著作。2009年被列入联合国教科文组织世界记忆遗产。', achievements: ['编纂东医宝鉴', '朝鲜医学集大成'], relations: [], events: [] },
+{ id: 'gwanghaegun', name: '光海君', birth: 1575, death: 1641, cat: 'emperor', emoji: '👑', desc: '朝鲜第十五代王。在壬辰倭乱后推行中立外交（明朝与后金之间），重建战后经济。后被仁祖反正推翻，流放至死。其务实外交被称为朝鲜最明智的君主。', achievements: ['中立外交', '战后重建'], relations: [], events: ['e_imjin_war'] },
+{ id: 'heo_nanseolheon', name: '许兰雪轩', birth: 1563, death: 1589, cat: 'artist', emoji: '✍️', desc: '朝鲜女诗人。许浚之妹，自幼聪慧。其诗歌忧国忧民，充满人文关怀。27岁早逝。其诗作传入中国，受到明朝文人高度评价。', achievements: ['女诗人', '诗歌传入中国'], relations: [], events: [] },
+{ id: 'kim_jeongho', name: '金正浩', birth: 1804, death: 1866, cat: 'scientist', emoji: '🗺️', desc: '朝鲜地理学家。耗费27年走遍全国，绘制《大东舆地图》，是朝鲜最精确详尽的全国地图。因泄露国家机密被囚致死，但其爱国精神永存。', achievements: ['大东舆地图', '27年实地测绘'], relations: [], events: [] },
+{ id: 'jeong_yakyong', name: '丁若镛（茶山）', birth: 1762, death: 1836, cat: 'scholar', emoji: '📚', desc: '朝鲜后期实学派集大成者。著作500余卷涵盖经学、政治、经济、科技、医学等各领域。设计举重机和华城。其"为民之学"的实学精神影响深远。', achievements: ['实学集大成', '500余卷著作', '举重机设计'], relations: [], events: [] },
+{ id: 'heungseon', name: '兴宣大院君', birth: 1820, death: 1898, cat: 'politician', emoji: '🏛️', desc: '朝鲜末期摄政。推行闭关锁国政策，镇压天主教（丙寅迫害）。抗击法国（丙寅洋扰）和美国（辛未洋扰）的入侵，其锁国政策使朝鲜被称为隐士王国。', achievements: ['抗击法国入侵', '抗击美国入侵', '锁国政策'], relations: [], events: [] },
+{ id: 'gojong', name: '高宗', birth: 1852, death: 1919, cat: 'emperor', emoji: '👑', desc: '朝鲜末代国王、大韩帝国首任皇帝。在列强夹缝中艰难维持独立，最终于1910年被日本吞并。1919年逝世，引发三一独立运动。', achievements: ['大韩帝国皇帝', '抗争日本吞并'], relations: [], events: [] },
+{ id: 'ahn_junggeun', name: '安重根', birth: 1879, death: 1910, cat: 'military', emoji: '✊', desc: '朝鲜独立运动家。1909年在哈尔滨火车站刺杀伊藤博文，被捕后慷慨就义。在狱中写下《东洋和平论》，主张中日韩三国平等合作。被中韩两国尊为英雄。', achievements: ['刺杀伊藤博文', '《东洋和平论》'], relations: [], events: [] },
+{ id: 'kim_gu', name: '金九', birth: 1876, death: 1949, cat: 'politician', emoji: '🕊️', desc: '韩国独立运动领袖。大韩民国临时政府主席，领导海外抗日独立运动。战后反对朝鲜半岛分裂，致力于南北统一谈判。被极右势力暗杀。', achievements: ['独立运动领袖', '临时政府主席', '统一运动'], relations: [], events: [] },
+{ id: 'syngman_rhee', name: '李承晚', birth: 1875, death: 1965, cat: 'politician', emoji: '🏛️', desc: '韩国首任总统。早年参加独立运动，流亡美国。1948年就任大韩民国首任总统，执政12年。1960年因四一九革命被迫下台，流亡夏威夷。', achievements: ['首任总统', '独立运动先驱'], relations: [], events: [] },
+{ id: 'park_chunghee', name: '朴正熙', birth: 1917, death: 1979, cat: 'politician', emoji: '🏗️', desc: '韩国第五至第九任总统。通过军事政变上台，推行经济发展五年计划，创造了汉江奇迹。韩国经济从最贫穷国家跃升为工业强国。1979年被部下刺杀。', achievements: ['汉江奇迹', '经济发展'], relations: [], events: [] },
+];
+
+const KOREA_EVENTS = [
+{ id: 'e_gojoseon_founded', year: -2333, name: '檀君建立古朝鲜', type: 'politics', desc: '据《三国遗事》记载，檀君王俭于公元前2333年建立古朝鲜，定都平壤。这是朝鲜半岛最早的政权传说。', dynasty: '古朝鲜' },
+{ id: 'e_gija_joseon', year: -1100, name: '箕子东走朝鲜', type: 'politics', desc: '商朝灭亡后，纣王叔父箕子率五千人东走朝鲜，建立箕子朝鲜。带来中原农业技术和礼乐文化。', dynasty: '古朝鲜' },
+{ id: 'e_wiman_joseon', year: -195, name: '卫满朝鲜建立', type: 'politics', desc: '燕人卫满率千余人进入朝鲜推翻箕子朝鲜，建立卫满朝鲜。积极扩张领土。', dynasty: '古朝鲜' },
+{ id: 'e_han_goguryeo', year: -108, name: '汉武帝灭卫满朝鲜', type: 'war', desc: '汉武帝派兵征服卫满朝鲜，在其地设乐浪、临屯、玄菟、真番四郡。朝鲜半岛北部纳入汉朝直接统治400年。', dynasty: '古朝鲜' },
+{ id: 'e_goguryeo_founded', year: -37, name: '高句丽建国', type: 'politics', desc: '朱蒙从扶余国南逃至卒本，建立高句丽国。此后发展为朝鲜三国中最强大的国家。', dynasty: '三国' },
+{ id: 'e_baekje_founded', year: -18, name: '百济建国', type: 'politics', desc: '温祚王在汉江流域建立百济国。百济积极吸收中国文化，并向倭国传播佛教和先进技术。', dynasty: '三国' },
+{ id: 'e_silla_founded', year: -57, name: '新罗建国', type: 'politics', desc: '赫居世居西干建立新罗（徐罗伐），是三国中建立最早、存在最久的王朝。', dynasty: '三国' },
+{ id: 'e_buddhism_goguryeo', year: 372, name: '佛教传入高句丽', type: 'culture', desc: '前秦王苻坚遣使送佛经和僧人到高句丽，佛教正式传入朝鲜半岛。', dynasty: '三国' },
+{ id: 'e_weigoguryeo_war', year: 244, name: '魏国入侵高句丽', type: 'war', desc: '曹魏大将毌丘俭率军攻破高句丽丸都城，追击东川王至沃沮。刻石纪功而还。', dynasty: '三国' },
+{ id: 'e_sui_goguryeo_war', year: 612, name: '隋炀帝三征高句丽', type: 'war', desc: '隋炀帝三次大规模征伐高句丽。乙支文德在萨水大败隋军，隋朝国力大损而亡国。', dynasty: '三国' },
+{ id: 'e_tang_goguryeo_war', year: 645, name: '唐太宗亲征高句丽', type: 'war', desc: '李世民亲率大军东征，攻陷辽东十余城。在安市城被渊盖苏文击退，未能灭国。', dynasty: '三国' },
+{ id: 'e_baekje_fall', year: 660, name: '百济灭亡', type: 'war', desc: '唐将苏定方率军与新罗联军攻灭百济。义慈王被俘，阶伯在黄山伐阵亡。', dynasty: '三国' },
+{ id: 'e_goguryeo_fall', year: 668, name: '高句丽灭亡', type: 'war', desc: '李勣率唐军与金庾信联合攻灭高句丽。存在705年的高句丽亡国，朝鲜三国时代结束。', dynasty: '三国' },
+{ id: 'e_silla_unify', year: 676, name: '新罗统一三国', type: 'politics', desc: '新罗在文武王时期驱逐唐朝势力，统一了朝鲜半岛汉江以南地区，进入统一新罗时代。', dynasty: '统一新罗' },
+{ id: 'e_balhae_founded', year: 698, name: '渤海国建立', type: 'politics', desc: '高句丽遗民大祚荣在天门岭大败唐军后建立渤海国。与统一新罗并立，史称南北国时代。', dynasty: '渤海' },
+{ id: 'e_goryeo_founded', year: 918, name: '高丽王朝建立', type: 'politics', desc: '王建推翻弓裔建立高丽王朝。935年灭新罗、936年灭后百济，重新统一朝鲜半岛。', dynasty: '高丽' },
+{ id: 'e_balhae_fall', year: 926, name: '渤海国灭亡', type: 'war', desc: '契丹（辽）攻灭渤海国，存在228年的渤海国亡。大批渤海遗民南投高丽。', dynasty: '渤海' },
+{ id: 'e_khitan_invasion', year: 1010, name: '契丹三侵高丽', type: 'war', desc: '辽圣宗三次入侵高丽，高丽击退入侵。显宗雕刻高丽大藏经初版以祈佛佑国。', dynasty: '高丽' },
+{ id: 'e_tripitaka', year: 1236, name: '高丽大藏经再雕', type: 'culture', desc: '蒙古入侵，高丽再雕大藏经以求佛佑。8万块木版现存海印寺，是世界上最完整的汉文大藏经。', dynasty: '高丽' },
+{ id: 'e_mongol_invasion_kr', year: 1231, name: '蒙古入侵高丽', type: 'war', desc: '蒙古大军八次入侵高丽，高丽朝廷迁都江华岛坚持抵抗近30年。最终高丽成为元朝驸马国。', dynasty: '高丽' },
+{ id: 'e_joseon_founded', year: 1392, name: '朝鲜王朝建立', type: 'politics', desc: '李成桂废黜高丽恭让王，建立朝鲜王朝。定都汉阳（首尔），开启了500多年的李氏朝鲜。', dynasty: '朝鲜' },
+{ id: 'e_hangul_created', year: 1443, name: '训民正音创制', type: 'culture', desc: '世宗大王创制训民正音（韩文）。以科学原理设计的拼音文字，使平民百姓也能识字读书。', dynasty: '朝鲜' },
+{ id: 'e_imjin_war', year: 1592, name: '壬辰倭乱', type: 'war', desc: '丰臣秀吉派15万大军入侵朝鲜。李舜臣以龟船在海上大破日军，各地义兵奋起，明朝派军援助。7年战争日军最终撤退。', dynasty: '朝鲜' },
+{ id: 'e_qing_invasion_kr', year: 1636, name: '丙子胡乱', type: 'war', desc: '皇太极率清军入侵朝鲜，迫使朝鲜断绝与明朝宗藩关系，改为清朝藩属。朝鲜表面臣服，内心仍怀明朝。', dynasty: '朝鲜' },
+{ id: 'e_silhak_movement', year: 1700, name: '实学运动兴起', type: 'culture', desc: '以柳馨远、李瀷、丁若镛为代表的朝鲜实学派兴起。主张实用之学，批评空谈性理，关注民生科技。', dynasty: '朝鲜' },
+{ id: 'korea_modern_founded', year: 1897, name: '大韩帝国成立', type: 'politics', desc: '高宗称帝，改国号为大韩帝国。试图在列强夹缝中维持独立自主。', dynasty: '朝鲜' },
+{ id: 'e_japan_annex_kr', year: 1910, name: '日本吞并朝鲜', type: 'politics', desc: '《韩日合并条约》签订，大韩帝国被日本正式吞并。朝鲜沦为日本殖民地35年。', dynasty: '朝鲜' },
+{ id: 'korea_march1st', year: 1919, name: '三一独立运动', type: 'politics', desc: '朝鲜半岛爆发大规模反日独立示威。200多万人参与，日本军警镇压造成大量死伤。大韩民国临时政府在海外成立。', dynasty: '现代' },
+{ id: 'e_korea_liberation', year: 1945, name: '朝鲜光复', type: 'politics', desc: '日本投降，朝鲜半岛光复。但随即以北纬38度线分为美苏占领区，为后来的分裂埋下伏笔。', dynasty: '现代' },
+{ id: 'korea_rok_founded', year: 1948, name: '大韩民国成立', type: 'politics', desc: '李承晚就任首任总统，大韩民国正式成立。同年北部成立朝鲜民主主义人民共和国。', dynasty: '现代' },
+{ id: 'e_korean_war', year: 1950, name: '朝鲜战争爆发', type: 'war', desc: '朝鲜人民军南下，韩国军队节节败退。以美国为首的联合国军介入，中国派遣志愿军。1953年停战，38线至今仍是分裂线。', dynasty: '现代' },
+{ id: 'e_hangang_miracle', year: 1960, name: '汉江奇迹', type: 'economy', desc: '韩国从1960年代开始经济腾飞，30年间从世界最穷国之一跃升为高收入发达国家，创造了汉江奇迹。', dynasty: '现代' },
+{ id: 'e_seoul_olympics', year: 1988, name: '汉城奥运会', type: 'culture', desc: '第24届夏季奥运会在汉城举行，是韩国向世界展示发展成就的里程碑。', dynasty: '现代' },
 ];
