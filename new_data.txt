@@ -1,0 +1,244 @@
+### 世界新增人物 (15人)
+//archimedes
+  {
+    id: 'archimedes', name: '阿基米德', birth: -287, death: -212,
+    cat: 'scientist', emoji: '🔬',
+    desc: '古希腊最伟大的数学家、物理学家。发现浮力定律（阿基米德原理）和杠杆原理，计算圆周率，发明多种战争机械。在罗马攻破叙拉古时被士兵杀害，临终遗言"不要破坏我的圆"。',
+    achievements: ['浮力定律', '杠杆原理', '圆周率计算'],
+    relations: [],
+    events: []
+  },
+
+//cleopatra
+  {
+    id: 'cleopatra', name: '克娄巴特拉七世', birth: -69, death: -30,
+    cat: 'emperor', emoji: '👑',
+    desc: '古埃及托勒密王朝末代女王，以智慧和魅力著称。先后与凯撒和马克·安东尼结盟，试图维持埃及独立。安东尼战败后，以毒蛇自杀，埃及并入罗马帝国。',
+    achievements: ['最后一位埃及法老', '外交谋略'],
+    relations: [{ id: 'caesar', type: '情人', label: '凯撒' }],
+    events: []
+  },
+
+//constantine
+  {
+    id: 'constantine', name: '君士坦丁大帝', birth: 272, death: 337,
+    cat: 'emperor', emoji: '🏛️',
+    desc: '罗马帝国皇帝，重新统一罗马帝国。颁布《米兰敕令》承认基督教合法，迁都拜占庭（后改名君士坦丁堡），奠定了基督教成为罗马国教和东罗马帝国千年基业。',
+    achievements: ['米兰敕令', '迁都君士坦丁堡', '统一罗马帝国'],
+    relations: [],
+    events: []
+  },
+
+//elizabeth
+  {
+    id: 'elizabeth_i', name: '伊丽莎白一世', birth: 1533, death: 1603,
+    cat: 'emperor', emoji: '👸',
+    desc: '英国都铎王朝最后一位君主，开创伊丽莎白时代。击败西班牙无敌舰队，确立英国海上霸权；支持莎士比亚等文艺巨匠。终身未婚，被称为童贞女王。',
+    achievements: ['击败无敌舰队', '海上霸权', '伊丽莎白时代'],
+    relations: [],
+    events: []
+  },
+
+//voltaire
+  {
+    id: 'voltaire', name: '伏尔泰', birth: 1694, death: 1778,
+    cat: 'philosopher', emoji: '📝',
+    desc: '法国启蒙运动领袖，作家、哲学家。倡导言论自由、宗教宽容、理性主义，抨击教会和专制制度。代表作《哲学通信》《老实人》，名言——我不同意你的观点，但我誓死捍卫你说话的权利——代表启蒙精神。',
+    achievements: ['启蒙运动领袖', '《老实人》', '言论自由倡导'],
+    relations: [],
+    events: []
+  },
+
+//rousseau
+  {
+    id: 'rousseau', name: '让-雅克·卢梭', birth: 1712, death: 1778,
+    cat: 'philosopher', emoji: '📖',
+    desc: '法国启蒙思想家、哲学家。提出社会契约论和主权在民思想，深刻影响了法国大革命和现代民主政治。代表作《社会契约论》《忏悔录》，其回归自然理念开创浪漫主义。',
+    achievements: ['社会契约论', '主权在民', '法国大革命思想先驱'],
+    relations: [],
+    events: []
+  },
+
+//adam_smith
+  {
+    id: 'adam_smith', name: '亚当·斯密', birth: 1723, death: 1790,
+    cat: 'philosopher', emoji: '📈',
+    desc: '苏格兰经济学家、哲学家，古典经济学之父。代表作《国富论》系统阐述自由市场经济理论，提出看不见的手的著名比喻，奠定了现代经济学的基础。',
+    achievements: ['《国富论》', '看不见的手', '现代经济学之父'],
+    relations: [],
+    events: []
+  },
+
+//peter
+  {
+    id: 'peter_great', name: '彼得大帝', birth: 1672, death: 1725,
+    cat: 'emperor', emoji: '🛡️',
+    desc: '俄国沙皇，俄罗斯帝国奠基人。微服私访西欧学习先进技术，推行全面西化改革：建立海军、改革军制、迁都圣彼得堡。将落后的俄国带入欧洲强国之列。',
+    achievements: ['西化改革', '建立海军', '迁都圣彼得堡'],
+    relations: [],
+    events: []
+  },
+
+//bismarck
+  {
+    id: 'bismarck', name: '奥托·冯·俾斯麦', birth: 1815, death: 1898,
+    cat: 'politician', emoji: '🔮',
+    desc: '德意志帝国首任宰相，被称为铁血宰相。通过三次王朝战争统一德意志，建立了欧洲大陆最强大的国家。推行社会保险制度，开创现代福利国家先河。',
+    achievements: ['统一德意志', '铁血政策', '现代福利制度'],
+    relations: [],
+    events: []
+  },
+
+//tolstoy
+  {
+    id: 'tolstoy', name: '列夫·托尔斯泰', birth: 1828, death: 1910,
+    cat: 'artist', emoji: '📚',
+    desc: '俄国文学巨匠，世界文学史上最伟大的小说家之一。代表作《战争与和平》《安娜·卡列尼娜》《复活》以宏大叙事和深刻人性描写著称。晚年倡导托尔斯泰主义——不以暴力抗恶。',
+    achievements: ['《战争与和平》', '《安娜·卡列尼娜》', '《复活》'],
+    relations: [],
+    events: []
+  },
+
+//tesla
+  {
+    id: 'tesla', name: '尼古拉·特斯拉', birth: 1856, death: 1943,
+    cat: 'scientist', emoji: '⚡',
+    desc: '塞尔维亚裔美国发明家、电气工程师。发明交流电系统，奠定了现代电力工业的基础。拥有700多项专利，包括无线电、遥控技术、特斯拉线圈等。一生贫困但才华横溢，死后被誉为被遗忘的天才。',
+    achievements: ['交流电系统', '特斯拉线圈', '无线电先驱', '700多项专利'],
+    relations: [],
+    events: []
+  },
+
+//chaplin
+  {
+    id: 'chaplin', name: '查理·卓别林', birth: 1889, death: 1977,
+    cat: 'artist', emoji: '🎬',
+    desc: '英国喜剧大师、电影导演。创造了流浪汉夏尔洛的经典银幕形象。代表作《淘金记》《城市之光》《摩登时代》《大独裁者》，以幽默讽刺社会现实，被誉为电影史上最伟大的喜剧天才。',
+    achievements: ['流浪汉夏尔洛', '《摩登时代》', '《大独裁者》', '默片喜剧巅峰'],
+    relations: [],
+    events: []
+  },
+
+//hemingway
+  {
+    id: 'hemingway', name: '欧内斯特·海明威', birth: 1899, death: 1961,
+    cat: 'artist', emoji: '✍️',
+    desc: '美国作家，迷惘的一代代表人物。以简洁有力的冰山理论写作风格著称。代表作《老人与海》获诺贝尔文学奖，《太阳照常升起》《永别了，武器》记录战争创伤。',
+    achievements: ['诺贝尔文学奖', '《老人与海》', '冰山理论', '迷惘的一代'],
+    relations: [],
+    events: []
+  },
+
+//hawking
+  {
+    id: 'hawking', name: '斯蒂芬·霍金', birth: 1942, death: 2018,
+    cat: 'scientist', emoji: '🌌',
+    desc: '英国理论物理学家。21岁患渐冻症，在轮椅上完成毕生研究。提出黑洞辐射理论（霍金辐射），著《时间简史》全球畅销，将深奥的宇宙学普及给大众。',
+    achievements: ['霍金辐射', '《时间简史》', '黑洞理论', '科普巨人'],
+    relations: [],
+    events: []
+  },
+
+//jobs
+  {
+    id: 'jobs', name: '史蒂夫·乔布斯', birth: 1955, death: 2011,
+    cat: 'inventor', emoji: '📱',
+    desc: '美国企业家，苹果公司联合创始人。先后推出Mac电脑、iPod、iPhone、iPad等革命性产品，重新定义了个人电脑、音乐、手机和出版行业。Stay Hungry, Stay Foolish激励了无数人。',
+    achievements: ['创立苹果公司', 'iPhone', 'Mac', '颠覆四大行业'],
+    relations: [],
+    events: []
+  },
+
+### 世界新增事件 (9条)
+  { id: 'e_black_death', year: 1347, name: '黑死病大流行', type: 'economy', desc: '鼠疫席卷欧洲，约2500万人死亡（占欧洲人口三分之一）。深刻改变了欧洲社会结构，劳动力短缺加速了封建制度瓦解，推动了社会变革。' },
+  { id: 'e_constantinople_fall', year: 1453, name: '君士坦丁堡陷落', type: 'war', desc: '奥斯曼帝国苏丹穆罕默德二世攻陷君士坦丁堡，东罗马帝国（拜占庭）灭亡。大量希腊学者携带古籍西逃，促进了意大利文艺复兴。' },
+  { id: 'e_enlightenment', year: 1700, name: '启蒙运动', type: 'culture', desc: '18世纪欧洲思想解放运动。伏尔泰、卢梭、孟德斯鸠等思想家倡导理性、自由、平等，批判专制和教会权威，为法国大革命和美国独立提供了思想基础。' },
+  { id: 'e_us_constitution', year: 1787, name: '美国宪法制定', type: 'politics', desc: '美国制宪会议在费城召开，制定世界上第一部成文宪法，确立三权分立和联邦制原则，成为现代民主宪政的典范。' },
+  { id: 'e_communist_manifesto', year: 1848, name: '《共产党宣言》发表', type: 'politics', desc: '马克思和恩格斯发表《共产党宣言》，系统阐述了共产主义理论，提出全世界无产者联合起来的口号，深刻影响了世界历史进程。' },
+  { id: 'e_darwin_evolution', year: 1859, name: '进化论发表', type: 'science', desc: '达尔文出版《物种起源》，提出以自然选择为核心的进化论，彻底改变了人类对生命起源和演化过程的认识。' },
+  { id: 'e_great_depression', year: 1929, name: '世界经济大萧条', type: 'economy', desc: '纽约股市崩盘引发全球性经济危机，持续近十年。银行倒闭、工厂停工、大规模失业遍及全世界，促使各国加强经济干预。' },
+  { id: 'e_marshall_plan', year: 1948, name: '马歇尔计划实施', type: 'economy', desc: '美国对战后欧洲提供大规模经济援助，总额约130亿美元。帮助西欧迅速复兴经济，同时遏制苏联影响力扩张。' },
+  { id: 'e_genome', year: 2000, name: '人类基因组草图完成', type: 'science', desc: '美英日中德法六国科学家合作完成人类基因组测序草图，标志着生命科学研究进入了基因组时代。' },
+
+### 日本新增人物 (14人)
+//ganjin
+  { id: 'ganjin', name: '鉴真', birth: 688, death: 763, cat: 'philosopher', emoji: '🛤️',
+    desc: '唐代高僧，六次东渡日本，双目失明后终于抵达。在奈良建立唐招提寺，为日本传授戒律和唐代文化，被日本人民尊为日本律宗始祖。',
+    achievements: ['六次东渡', '创建唐招提寺', '日本律宗始祖'], relations: [], events: [] },
+
+//saicho
+  { id: 'saicho', name: '最澄', birth: 767, death: 822, cat: 'philosopher', emoji: '🕊️',
+    desc: '日本天台宗创始人。随遣唐使入唐，在天台山学习天台教义。回国后在比叡山建立延历寺，开创日本天台宗，与空海并称为日本佛教两大基石。',
+    achievements: ['创立天台宗', '延历寺', '日本佛教基石'], relations: [], events: [] },
+
+//sugawara
+  { id: 'sugawara_michizane', name: '菅原道真', birth: 845, death: 903, cat: 'scholar', emoji: '📜',
+    desc: '日本平安时代学者、政治家。学问渊博，官至右大臣。因遭诬陷被贬九州，去世后被尊为天满大神（学问之神），每年考试季考生们纷纷祈福。',
+    achievements: ['学问之神', '遣唐使建议', '右大臣'], relations: [], events: [] },
+
+//sei_shonagon
+  { id: 'sei_shonagon', name: '清少纳言', birth: 966, death: 1025, cat: 'artist', emoji: '📓',
+    desc: '日本平安时代女作家。仕奉中宫定子皇后，著有随笔文学杰作《枕草子》，与紫式部的《源氏物语》并称为日本古典文学双璧。',
+    achievements: ['《枕草子》', '平安文学双璧'], relations: [], events: [] },
+
+//taira_masakado
+  { id: 'taira_masakado', name: '平将门', birth: 903, death: 940, cat: 'military', emoji: '🗡️',
+    desc: '日本平安中期武士，自称新皇。在关东发动叛乱，占领坂东八国，是日本历史上第一个公开叛乱的武士。被讨伐后头颅被显示，传说其首级飞回家乡。',
+    achievements: ['第一个叛乱武士', '占领坂东'], relations: [], events: [] },
+
+//sesshu
+  { id: 'sesshu', name: '雪舟', birth: 1420, death: 1506, cat: 'artist', emoji: '🌨️',
+    desc: '日本室町时代水墨画大师。随遣明使入明朝，学习中国南宋水墨画技法。回国后融会贯通，创立日本水墨画流派，代表作《秋冬山水图》被列为国宝。',
+    achievements: ['日本水墨画宗师', '《秋冬山水图》', '入明学画'], relations: [], events: [] },
+
+//takeda
+  { id: 'takeda_shingen', name: '武田信玄', birth: 1521, death: 1573, cat: 'military', emoji: '🐉',
+    desc: '日本战国时代名将，甲斐国大名，甲斐之虎。以精锐骑兵队威震东日本，川中岛合战与上杉谦信五度对峙不分上下。风林火山军旗为战国最强标志之一。',
+    achievements: ['甲斐之虎', '骑兵精锐', '川中岛合战'],
+    relations: [{ id: 'uesugi_kenshin', type: '宿敌', label: '上杉谦信' }], events: [] },
+
+//uesugi
+  { id: 'uesugi_kenshin', name: '上杉谦信', birth: 1530, death: 1578, cat: 'military', emoji: '🐉',
+    desc: '日本战国时代名将，越后国大名，越后之龙。自称战神毗沙门天转世，以正义和仁义著称。川中岛合战与武田信玄势均力敌，是最受尊敬的战国大名。',
+    achievements: ['越后之龙', '战神毗沙门天', '川中岛合战'],
+    relations: [{ id: 'takeda_shingen', type: '宿敌', label: '武田信玄' }], events: [] },
+
+//basho
+  { id: 'matsuo_basho', name: '松尾芭蕉', birth: 1644, death: 1694, cat: 'artist', emoji: '🌸',
+    desc: '日本江户时代俳人，被尊为俳圣。将俳句从游戏文学提升为严肃的艺术形式。代表作——古池——青蛙跳入水声——传颂世界，《奥之细道》是俳句经典。',
+    achievements: ['俳圣', '《奥之细道》', '俳句艺术化'], relations: [], events: [] },
+
+//motoori
+  { id: 'motoori_norinaga', name: '本居宣长', birth: 1730, death: 1801, cat: 'scholar', emoji: '📗',
+    desc: '日本江户时代国学大师。花费四十年钻研《古事记》，著《古事记传》。强调日本文化的独特性，提出物哀美学理论，是日本民族主义思想的源头。',
+    achievements: ['《古事记传》', '国学大师', '物哀美学'], relations: [], events: [] },
+
+//hokusai
+  { id: 'hokusai', name: '葛饰北斋', birth: 1760, death: 1849, cat: 'artist', emoji: '🌊',
+    desc: '日本江户时代浮世绘大师。代表作《富岳三十六景》中的《神奈川冲浪里》是世界最著名的日本艺术作品，深刻影响了梵高、莫奈等印象派大师。',
+    achievements: ['《富岳三十六景》', '浮世绘顶峰', '影响印象派'], relations: [], events: [] },
+
+//akutagawa
+  { id: 'akutagawa', name: '芥川龙之介', birth: 1892, death: 1927, cat: 'artist', emoji: '📚',
+    desc: '日本大正时代作家，日本短篇小说之王。代表作《罗生门》《鼻子》《地狱变》等，以冷峻的笔触揭示人性的黑暗。日本最高文学奖以其名字命名。',
+    achievements: ['《罗生门》', '芥川奖', '短篇小说之王'], relations: [], events: [] },
+
+//kurosawa
+  { id: 'kurosawa', name: '黑泽明', birth: 1910, death: 1998, cat: 'artist', emoji: '🎥',
+    desc: '日本电影导演，世界电影史上最伟大的导演之一。代表作《罗生门》《七武士》《乱》《影武者》，将日本文化推向世界。获奥斯卡终身成就奖。',
+    achievements: ['《七武士》', '《罗生门》', '奥斯卡终身成就奖'], relations: [], events: [] },
+
+//kawabata
+  { id: 'kawabata', name: '川端康成', birth: 1899, death: 1972, cat: 'artist', emoji: '🏆',
+    desc: '日本作家，首位获得诺贝尔文学奖的日本人。代表作《雪国》《千只鹤》《伊豆的舞女》，以精美美学和日本传统文化享誉世界。',
+    achievements: ['诺贝尔文学奖', '《雪国》', '《千只鹤》'], relations: [], events: [] },
+
+### 日本新增事件 (8条)
+  { id: 'e_battle_baekgang', year: 663, name: '白村江之战', type: 'war', desc: '唐朝与新罗联军在白村江（今韩国锦江）击败日本与百济联军，是中日历史上首次大规模军事冲突。日本惨败后退守本土，全面学习唐朝制度。', dynasty: '飞鸟' },
+  { id: 'e_nara_daibutsu', year: 752, name: '奈良大佛开眼', type: 'culture', desc: '东大寺卢舍那大佛（奈良大佛）举行开眼供养仪式，是日本佛教文化鼎盛的象征。大佛高约15米，是日本最大的青铜佛像。', dynasty: '奈良' },
+  { id: 'e_masakado_rebellion', year: 940, name: '平将门之乱', type: 'war', desc: '平将门在关东发动叛乱，自称新皇。朝廷派遣藤原忠文讨伐，将门战死。这是日本历史上第一个公开反叛朝廷的武士。', dynasty: '平安' },
+  { id: 'e_nanboku_union', year: 1392, name: '南北朝统一', type: 'politics', desc: '室町幕府第三代将军足利义满促成南朝与北朝和解，结束了长达56年的南北朝分裂局面。义满受封为日本国王，与明朝建立勘合贸易。', dynasty: '室町' },
+  { id: 'e_shimabara', year: 1637, name: '岛原之乱', type: 'war', desc: '九州岛原和天草地区基督徒和农民联合起义，反抗幕府高压和重税。起义被镇压后，德川幕府彻底禁止基督教，锁国政策进一步强化。', dynasty: '江户' },
+  { id: 'e_abolish_domains', year: 1871, name: '废藩置县', type: 'politics', desc: '明治政府废除全国的藩，设立县，将地方权力收归中央。这标志着日本从封建制度彻底转向中央集权的近代国家体制。', dynasty: '明治' },
+  { id: 'e_tokyo_olympic', year: 1964, name: '东京奥运会', type: 'culture', desc: '亚洲首次举办奥运会，标志日本战后经济奇迹的巅峰。东海道新干线在奥运会前通车，日本向世界展示了其现代化成就。', dynasty: '昭和' },
+  { id: 'e_bubble_burst', year: 1990, name: '泡沫经济崩溃', type: 'economy', desc: '日本股市和房地产泡沫破裂，日经指数暴跌，银行坏账堆积如山。日本经济陷入长期低迷的失去的三十年。', dynasty: '平成' },

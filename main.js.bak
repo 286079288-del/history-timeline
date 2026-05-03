@@ -53,28 +53,9 @@ function yearToX(year) {
 function totalWidth() {
   return (YEAR_END - YEAR_START) * pxPerYear + 200;
 }
-function getAxisTopFor(blockId) {
-  const block = document.getElementById(blockId || 'chinaBlock');
-  const h = block ? block.clientHeight - 36 : 400;
+function getAxisTop() {
+  const h = document.getElementById('mainContainer').clientHeight;
   return Math.round(h * AXIS_TOP_RATIO);
-}
-// 通过 spacer 元素驱动wrapper垂直滚动
-function adjustWrapperHeight(wrapperId, personsData, axisTop) {
-  const wrapper = document.getElementById(wrapperId);
-  if (!wrapper || !personsData) return;
-  const rowH = 32;
-  const padding = 40;
-  const maxRows = Math.ceil(personsData.length / 2) + 2;
-  const needed = axisTop + maxRows * rowH + padding + 'px';
-
-  let spacer = wrapper.querySelector('.scroll-spacer');
-  if (!spacer) {
-    spacer = document.createElement('div');
-    spacer.className = 'scroll-spacer';
-    spacer.style.cssText = 'position:relative;width:1px;pointer-events:none;margin:0;padding:0;';
-    wrapper.appendChild(spacer);
-  }
-  spacer.style.height = needed;
 }
 function catClass(cat) { return 'cat-' + (cat || 'politician'); }
 function evtClass(type) { return 'evt-' + (type || 'default'); }
@@ -123,46 +104,73 @@ function formatYear(year) {
 
 function bindEvents() {
   // 缩放按钮
-  document.getElementById('zoomReset').addEventListener('click', () => {
-    pxPerYear = PX_PER_YEAR_DEFAULT;
+  document.getElementById('zoomIn').addEventListener('click', () => {
+    pxPerYear = Math.min(pxPerYear * 1.2, 5);
     renderTimeline();
     renderWorldTimeline();
-  renderKoreaTimeline();
     renderJapanTimeline();
     updateStats();
   });
 
-  // 鼠标滚轮缩放 - 以鼠标位置为中心
-  const scrollTarget = document.getElementById('mainContainer');
-
-  function zoomAtPoint(e) {
-    const rect = scrollTarget.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const factor = e.deltaY < 0 ? 1.1 : 0.9;
-    const newPx = Math.min(Math.max(pxPerYear * factor, 0.2), 5);
-    if (newPx === pxPerYear) return;
-
-    const targetYear = (scrollTarget.scrollLeft + mouseX) / pxPerYear + YEAR_START;
-    pxPerYear = newPx;
-
+  document.getElementById('zoomOut').addEventListener('click', () => {
+    pxPerYear = Math.max(pxPerYear / 1.2, 0.2);
     renderTimeline();
     renderWorldTimeline();
-  renderKoreaTimeline();
     renderJapanTimeline();
     updateStats();
+  });
 
-    scrollTarget.scrollLeft = (targetYear - YEAR_START) * pxPerYear - mouseX;
-    fixBlockHeaders();
-  }
+  document.getElementById('zoomReset').addEventListener('click', () => {
+    pxPerYear = PX_PER_YEAR_DEFAULT;
+    renderTimeline();
+    renderWorldTimeline();
+    renderJapanTimeline();
+    updateStats();
+  });
 
+  // 鼠标滚轮缩放
   const container = document.getElementById('dualTimelineContainer');
   if (container) {
-    container.addEventListener('wheel', (e) => { e.preventDefault(); zoomAtPoint(e); }, { passive: false });
-    document.getElementById('timelineWrapper').addEventListener('wheel', (e) => { e.preventDefault(); zoomAtPoint(e); }, { passive: false });
-    document.getElementById('worldTimelineWrapper').addEventListener('wheel', (e) => { e.preventDefault(); zoomAtPoint(e); }, { passive: false });
-    document.getElementById('japanTimelineWrapper').addEventListener('wheel', (e) => { e.preventDefault(); zoomAtPoint(e); }, { passive: false });
+    container.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const factor = e.deltaY < 0 ? 1.1 : 0.9;
+      pxPerYear = Math.min(Math.max(pxPerYear * factor, 0.2), 5);
+      renderTimeline();
+      renderWorldTimeline();
+      updateStats();
+    }, { passive: false });
+
+    // 也给 timelineWrapper 和 worldTimelineWrapper 绑滚轮
+    document.getElementById('timelineWrapper').addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const factor = e.deltaY < 0 ? 1.1 : 0.9;
+      pxPerYear = Math.min(Math.max(pxPerYear * factor, 0.2), 5);
+      renderTimeline();
+      renderWorldTimeline();
+      updateStats();
+    }, { passive: false });
+
+    document.getElementById('worldTimelineWrapper').addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const factor = e.deltaY < 0 ? 1.1 : 0.9;
+      pxPerYear = Math.min(Math.max(pxPerYear * factor, 0.2), 5);
+      renderTimeline();
+      renderWorldTimeline();
+      updateStats();
+    }, { passive: false });
+    document.getElementById('japanTimelineWrapper').addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const factor = e.deltaY < 0 ? 1.1 : 0.9;
+      pxPerYear = Math.min(Math.max(pxPerYear * factor, 0.2), 5);
+      renderTimeline();
+      renderWorldTimeline();
+      renderJapanTimeline();
+      updateStats();
+    }, { passive: false });
 
     // 拖拽滚动 - 绑在 mainContainer（实际可滚动容器）
+    const scrollTarget = document.getElementById('mainContainer');
+
     scrollTarget.addEventListener('mousedown', (e) => {
       isDragging = true;
       startX = e.pageX - scrollTarget.offsetLeft;
@@ -186,120 +194,26 @@ function bindEvents() {
       const x = e.pageX - scrollTarget.offsetLeft;
       const walk = (x - startX) * 2;
       scrollTarget.scrollLeft = scrollLeft - walk;
-    fixBlockHeaders();
-  });
+    });
   }
 }
 
-// ---- 标题栏固定 ----
-function fixBlockHeaders() {
-  const scrollX = document.getElementById('mainContainer').scrollLeft;
-  document.querySelectorAll('.block-header').forEach(h => {
-    h.style.transform = 'translateX(' + scrollX + 'px)';
-  });
-}
-
-// ---- 拉宽手柄 ----
-function initResizeHandles() {
-  const handles = document.querySelectorAll('.resize-handle');
-  handles.forEach(handle => {
-    let startY, startHeight, aboveBlock;
-    handle.addEventListener('mousedown', (e) => {
-      e.preventDefault();
-      const aboveId = handle.dataset.above;
-      aboveBlock = document.getElementById(aboveId);
-      if (!aboveBlock || aboveBlock.classList.contains('collapsed')) return;
-      startY = e.clientY;
-      startHeight = aboveBlock.getBoundingClientRect().height;
-      handle.classList.add('active');
-      document.body.style.cursor = 'row-resize';
-      document.body.style.userSelect = 'none';
-    });
-  });
-  document.addEventListener('mousemove', (e) => {
-    const active = document.querySelector('.resize-handle.active');
-    if (!active) return;
-    const aboveId = active.dataset.above;
-    const aboveBlock = document.getElementById(aboveId);
-    if (!aboveBlock || aboveBlock.classList.contains('collapsed')) return;
-    const delta = e.clientY - window._resizeStartY;
-    const newH = Math.max(100, (window._resizeStartHeight || 300) + delta);
-    aboveBlock.style.flex = 'none';
-    aboveBlock.style.height = newH + 'px';
-  });
-  document.addEventListener('mouseup', () => {
-    const active = document.querySelector('.resize-handle.active');
-    if (active) active.classList.remove('active');
-    document.body.style.cursor = '';
-    document.body.style.userSelect = '';
-  });
-  // 存储起始值用全局
-  document.addEventListener('mousedown', (e) => {
-    if (e.target.closest('.resize-handle')) {
-      window._resizeStartY = e.clientY;
-      const aboveId = e.target.closest('.resize-handle').dataset.above;
-      const aboveBlock = document.getElementById(aboveId);
-      window._resizeStartHeight = aboveBlock ? aboveBlock.getBoundingClientRect().height : 300;
-    }
-  }, true);
-}
-
-// ---- 折叠按钮 ----
-function initCollapseButtons() {
-  document.querySelectorAll('.btn-collapse').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const block = btn.closest('.timeline-block');
-      block.classList.toggle('collapsed');
-      // 刷新三轴渲染
-      setTimeout(() => {
-        renderTimeline();
-        renderWorldTimeline();
-  renderKoreaTimeline();
-        renderJapanTimeline();
-      }, 300);
-    });
-  });
-}
-
-// ---- 点击空白处关闭详情面板 ----
-function initClickOutsideClose() {
-  document.addEventListener('click', (e) => {
-    const panel = document.getElementById('detailPanel');
-    if (!panel || panel.classList.contains('hidden')) return;
-    // 检查是否点击在面板内
-    if (panel.contains(e.target)) return;
-    // 检查是否点击在人物行上（会触发 open）
-    if (e.target.closest('.person-row')) return;
-    // 检查是否点击在 button/input 等交互元素
-    if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea')) return;
-    panel.classList.add('hidden');
-    selectedPersonId = null;
-  });
-}
 
 document.addEventListener('DOMContentLoaded', () => {
   buildEraTabs();
   buildFilterBtns();
   renderTimeline();
   renderWorldTimeline();
-  renderKoreaTimeline();
   renderJapanTimeline();
   bindEvents();
   updateStats();
+  showKeyboardHint();
   initAddPersonModal();
-  initResizeHandles();
-  initCollapseButtons();
-  initClickOutsideClose();
-  fixBlockHeaders();
 });
-// 监听主容器滚动以固定标题栏
-document.getElementById('mainContainer').addEventListener('scroll', fixBlockHeaders, { passive: true });
 
 const debouncedResize = debounce(() => {
   renderTimeline();
   renderWorldTimeline();
-  renderKoreaTimeline();
   renderJapanTimeline();
   // renderGraph disabled
 // DISABLED:   // map disabled(); }
@@ -324,6 +238,16 @@ function updateStats() {
     <div class="stat-item">📜 事件 <span class="stat-value">${events}</span></div>
     <div class="stat-item">🔍 缩放 <span class="stat-value">${(pxPerYear / PX_PER_YEAR_DEFAULT * 100).toFixed(0)}%</span></div>
   `;
+}
+
+// ---- 快捷键提示 ----
+function showKeyboardHint() {
+  const hint = document.createElement('div');
+  hint.className = 'keyboard-hint';
+  hint.innerHTML = '<kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> 切换视图 · <kbd>+</kbd><kbd>-</kbd> 缩放 · <kbd>/</kbd> 搜索 · <kbd>Esc</kbd> 关闭面板';
+  document.getElementById('app').appendChild(hint);
+  // 5秒后淡出
+  setTimeout(() => hint.style.opacity = '0.3', 5000);
 }
 
 // ---- Era Tabs ----
@@ -360,7 +284,6 @@ function buildFilterBtns() {
       updateStats();
       renderTimeline();
       renderWorldTimeline();
-  renderKoreaTimeline();
     });
   });
 }
@@ -376,7 +299,7 @@ function applyFilter() {
 // ---- 渲染时间轴 ----
 function renderTimeline() {
   const wrapper = document.getElementById('timelineWrapper');
-  const axisTop = getAxisTopFor('chinaBlock');
+  const axisTop = getAxisTop();
   const w = totalWidth();
   wrapper.style.width = w + 'px';
 
@@ -396,7 +319,9 @@ function renderWorldTimeline() {
   if (!wrapper) return;
   const w = totalWidth();
   wrapper.style.width = w + 'px';
-  const axisTop = getAxisTopFor('worldBlock');
+  const block = document.getElementById('worldBlock');
+  const blockH = block ? block.clientHeight - 36 : 200;
+  const axisTop = Math.floor(blockH * 0.5);
 
   // 时代色带
   const bandsEl = document.getElementById('worldDynastyBands');
@@ -419,7 +344,7 @@ function renderWorldTimeline() {
     if (x2 - x1 > 40) {
       const label = document.createElement('div');
       label.className = 'dynasty-label';
-      label.style.cssText = 'left:' + x1 + 'px;';
+      label.style.cssText = 'left:' + (x1+(x2-x1)/2) + 'px;transform:translateX(-50%);';
       label.textContent = era.name;
       bandsEl.appendChild(label);
     }
@@ -490,20 +415,39 @@ function renderWorldTimeline() {
     container.appendChild(node);
   });
 
-  // 人物 - 使用与中国史相同的横条风格
+  // 人物
   if (typeof WORLD_PERSONS !== 'undefined') {
     const pAbove = document.getElementById('worldPersonsAbove');
     const pBelow = document.getElementById('worldPersonsBelow');
     if (pAbove) { pAbove.innerHTML = ''; pAbove.style.top = '0'; }
     if (pBelow) { pBelow.innerHTML = ''; pBelow.style.top = axisTop + 'px'; }
 
-    const sorted = [...WORLD_PERSONS].sort((a, b) => a.birth - b.birth);
-    const abovePersons = sorted.filter((_, i) => i % 2 === 0);
-    const belowPersons = sorted.filter((_, i) => i % 2 !== 0);
-
-    layoutPersonRows(abovePersons, pAbove, axisTop, true, 'world');
-    layoutPersonRows(belowPersons, pBelow, axisTop, false, 'world');
-    adjustWrapperHeight('worldTimelineWrapper', WORLD_PERSONS, axisTop);
+    WORLD_PERSONS.forEach((p, i) => {
+      const x = yearToX((p.birth + p.death) / 2);
+      const isAbove = i % 2 === 0;
+      const container = isAbove ? pAbove : pBelow;
+      if (!container) return;
+      const color = CAT_COLOR[p.cat] || '#888';
+      const node = document.createElement('div');
+      node.className = 'person-node ' + (isAbove ? 'above' : 'below');
+      node.style.cssText = 'left:' + x + 'px;' + (isAbove ? 'bottom:0;' : 'top:0;');
+      node.dataset.personId = p.id;
+      node.dataset.timeline = 'world';
+      const dot = document.createElement('div');
+      dot.className = 'person-dot';
+      dot.style.cssText = 'border-color:' + color + ';background:' + color + '30;';
+      dot.textContent = p.emoji || '?';
+      const line = document.createElement('div');
+      line.className = 'person-line';
+      line.style.cssText = 'height:' + (25 + (i%4)*12) + 'px;background:' + color + '80;';
+      const label = document.createElement('div');
+      label.className = 'person-label';
+      label.textContent = p.name;
+      node.appendChild(dot);
+      node.appendChild(line);
+      node.appendChild(label);
+      container.appendChild(node);
+    });
   }
 }
 // ---- 日本史时间轴 ----
@@ -513,7 +457,9 @@ function renderJapanTimeline() {
   if (!wrapper) return;
   const w = totalWidth();
   wrapper.style.width = w + 'px';
-  const axisTop = getAxisTopFor('japanBlock');
+  const block = document.getElementById('japanBlock');
+  const blockH = block ? block.clientHeight - 36 : 200;
+  const axisTop = Math.floor(blockH * 0.5);
 
   // 时代色带
   const bandsEl = document.getElementById('japanDynastyBands');
@@ -538,7 +484,7 @@ function renderJapanTimeline() {
     if (x2 - x1 > 40) {
       const label = document.createElement('div');
       label.className = 'dynasty-label';
-      label.style.cssText = 'left:' + x1 + 'px;';
+      label.style.cssText = 'left:' + (x1+(x2-x1)/2) + 'px;transform:translateX(-50%);';
       label.textContent = era.name;
       bandsEl.appendChild(label);
     }
@@ -609,118 +555,39 @@ function renderJapanTimeline() {
     container.appendChild(node);
   });
 
-  // 人物 - 使用与中国史相同的横条风格
+  // 人物
   if (typeof JAPAN_PERSONS !== 'undefined') {
     const pAbove = document.getElementById('japanPersonsAbove');
     const pBelow = document.getElementById('japanPersonsBelow');
     if (pAbove) { pAbove.innerHTML = ''; pAbove.style.top = '0'; }
     if (pBelow) { pBelow.innerHTML = ''; pBelow.style.top = axisTop + 'px'; }
 
-    const sorted = [...JAPAN_PERSONS].sort((a, b) => a.birth - b.birth);
-    const abovePersons = sorted.filter((_, i) => i % 2 === 0);
-    const belowPersons = sorted.filter((_, i) => i % 2 !== 0);
-
-    layoutPersonRows(abovePersons, pAbove, axisTop, true, 'japan');
-    layoutPersonRows(belowPersons, pBelow, axisTop, false, 'japan');
-    adjustWrapperHeight('japanTimelineWrapper', JAPAN_PERSONS, axisTop);
-  }
-}
-// ---- 朝鲜史时间轴 ----
-function renderKoreaTimeline() {
-  if (typeof KOREA_EVENTS === 'undefined') return;
-  const wrapper = document.getElementById('koreaTimelineWrapper');
-  if (!wrapper) return;
-  const w = totalWidth();
-  wrapper.style.width = w + 'px';
-  const axisTop = getAxisTopFor('koreaBlock');
-
-  const bandsEl = document.getElementById('koreaDynastyBands');
-  bandsEl.innerHTML = '';
-  const eras = [
-    { name: '古朝鲜', start: -2697, end: -108, color: '#8B4513' },
-    { name: '三国时代', start: -57, end: 668, color: '#6a0dad' },
-    { name: '统一新罗', start: 668, end: 935, color: '#4a0080' },
-    { name: '高丽王朝', start: 918, end: 1392, color: '#c0392b' },
-    { name: '朝鲜王朝', start: 1392, end: 1910, color: '#2980b9' },
-    { name: '近现代', start: 1910, end: 2025, color: '#27ae60' },
-  ];
-  eras.forEach(era => {
-    const x1 = yearToX(era.start), x2 = yearToX(era.end);
-    const band = document.createElement('div');
-    band.className = 'dynasty-band';
-    band.style.cssText = 'left:' + x1 + 'px;width:' + Math.max(x2-x1,2) + 'px;background:' + era.color + ';';
-    bandsEl.appendChild(band);
-    if (x2 - x1 > 40) {
+    JAPAN_PERSONS.forEach((p, i) => {
+      const x = yearToX((p.birth + p.death) / 2);
+      const isAbove = i % 2 === 0;
+      const container = isAbove ? pAbove : pBelow;
+      if (!container) return;
+      const color = CAT_COLOR[p.cat] || '#888';
+      const node = document.createElement('div');
+      node.className = 'person-node ' + (isAbove ? 'above' : 'below');
+      node.style.cssText = 'left:' + x + 'px;' + (isAbove ? 'bottom:0;' : 'top:0;');
+      node.dataset.personId = p.id;
+      node.dataset.timeline = 'japan';
+      const dot = document.createElement('div');
+      dot.className = 'person-dot';
+      dot.style.cssText = 'border-color:' + color + ';background:' + color + '30;';
+      dot.textContent = p.emoji || '?';
+      const line = document.createElement('div');
+      line.className = 'person-line';
+      line.style.cssText = 'height:' + (25 + (i%4)*12) + 'px;background:' + color + '80;';
       const label = document.createElement('div');
-      label.className = 'dynasty-label';
-      label.style.cssText = 'left:' + x1 + 'px;';
-      label.textContent = era.name;
-      bandsEl.appendChild(label);
-    }
-  });
-
-  const axisEl = document.getElementById('koreaAxisLine');
-  if (axisEl) axisEl.style.cssText = 'top:' + axisTop + 'px;left:0;width:' + w + 'px;';
-
-  const ticksEl = document.getElementById('koreaAxisTicks');
-  if (ticksEl) {
-    ticksEl.innerHTML = '';
-    const majorStep = pxPerYear < 0.3 ? 500 : pxPerYear < 0.8 ? 100 : 50;
-    const minorStep = majorStep / 5;
-    const frag = document.createDocumentFragment();
-    for (let y = Math.ceil(YEAR_START / minorStep) * minorStep; y <= YEAR_END; y += minorStep) {
-      const isMajor = y % majorStep === 0;
-      const x = yearToX(y);
-      const tick = document.createElement('div');
-      tick.className = 'tick-mark' + (isMajor ? ' tick-major' : '');
-      tick.style.cssText = 'left:' + x + 'px;top:' + (axisTop - (isMajor?10:5)) + 'px;';
-      const ln = document.createElement('div');
-      ln.className = 'tick-line'; ln.style.height = (isMajor?20:10) + 'px';
-      tick.appendChild(ln);
-      if (isMajor) {
-        const lbl = document.createElement('div');
-        lbl.className = 'tick-label';
-        lbl.textContent = y < 0 ? '前' + (-y) : '' + y;
-        tick.appendChild(lbl);
-      }
-      frag.appendChild(tick);
-    }
-    ticksEl.appendChild(frag);
-  }
-
-  // events
-  const aboveEl = document.getElementById('koreaEventsAbove');
-  const belowEl = document.getElementById('koreaEventsBelow');
-  if (aboveEl) { aboveEl.innerHTML = ''; aboveEl.style.top = '0'; }
-  if (belowEl) { belowEl.innerHTML = ''; belowEl.style.top = axisTop + 'px'; }
-  KOREA_EVENTS.forEach((evt, i) => {
-    const x = yearToX(evt.year), isAbove = i % 2 === 0;
-    const container = isAbove ? aboveEl : belowEl;
-    if (!container) return;
-    const color = evtColor(evt.type);
-    const node = document.createElement('div');
-    node.className = 'event-node ' + (isAbove ? 'above' : 'below');
-    node.style.cssText = 'left:' + x + 'px;' + (isAbove ? 'bottom:0;' : 'top:0;');
-    const dot = document.createElement('div'); dot.className = 'event-dot'; dot.style.cssText = 'border-color:' + color + ';';
-    const line = document.createElement('div'); line.className = 'event-line'; line.style.cssText = 'height:' + (30 + (i%5)*15) + 'px;background:' + color + ';';
-    const label = document.createElement('div'); label.className = 'event-label'; label.textContent = evt.name;
-    node.appendChild(dot); node.appendChild(line); node.appendChild(label);
-    node.addEventListener('mouseenter', (e) => showWorldEventTooltip(evt, e));
-    node.addEventListener('mouseleave', hideEventTooltip);
-    node.addEventListener('mousemove', throttle(moveTooltip, 16));
-    container.appendChild(node);
-  });
-
-  // persons
-  if (typeof KOREA_PERSONS !== 'undefined') {
-    const pAbove = document.getElementById('koreaPersonsAbove');
-    const pBelow = document.getElementById('koreaPersonsBelow');
-    if (pAbove) { pAbove.innerHTML = ''; pAbove.style.top = '0'; }
-    if (pBelow) { pBelow.innerHTML = ''; pBelow.style.top = axisTop + 'px'; }
-    const sorted = [...KOREA_PERSONS].sort((a, b) => a.birth - b.birth);
-    layoutPersonRows(sorted.filter((_, i) => i % 2 === 0), pAbove, axisTop, true, 'korea');
-    layoutPersonRows(sorted.filter((_, i) => i % 2 !== 0), pBelow, axisTop, false, 'korea');
-    adjustWrapperHeight('koreaTimelineWrapper', KOREA_PERSONS, axisTop);
+      label.className = 'person-label';
+      label.textContent = p.name;
+      node.appendChild(dot);
+      node.appendChild(line);
+      node.appendChild(label);
+      container.appendChild(node);
+    });
   }
 }
 
@@ -743,8 +610,8 @@ function renderDynastyBands(axisTop, totalW) {
     if (bandWidth > 40) {
       const label = document.createElement('div');
       label.className = 'dynasty-label';
-      const lx = x1;
-      label.style.cssText = `left:${lx}px;`;
+      const lx = x1 + bandWidth / 2;
+      label.style.cssText = `left:${lx}px;transform:translateX(-50%);`;
       label.textContent = d.name;
       container.appendChild(label);
     }
@@ -920,10 +787,9 @@ function renderPersons(axisTop) {
 
   layoutPersonRows(abovePersons, above, axisTop, true);
   layoutPersonRows(belowPersons, below, axisTop, false);
-  adjustWrapperHeight('timelineWrapper', PERSONS, axisTop);
 }
 
-function layoutPersonRows(persons, container, axisTop, isAbove, timelineType) {
+function layoutPersonRows(persons, container, axisTop, isAbove) {
   const rows = [];
   const rowHeight = 26;
   const padding = 4;
@@ -948,7 +814,6 @@ function layoutPersonRows(persons, container, axisTop, isAbove, timelineType) {
     const row = document.createElement('div');
     row.className = 'person-row';
     row.dataset.personId = p.id;
-    row.dataset.timeline = timelineType || 'china';
     row.dataset.cat = p.cat;
     row.style.cssText = `left:${x1}px;top:${topOffset}px;width:${barW}px;`;
 
@@ -974,7 +839,7 @@ function layoutPersonRows(persons, container, axisTop, isAbove, timelineType) {
     }
 
     row.appendChild(bar);
-    row.addEventListener('click', () => showPersonDetail(p.id, timelineType || 'china'));
+    row.addEventListener('click', () => showPersonDetail(p.id));
 
     fragment.appendChild(row);
   });
@@ -1007,13 +872,8 @@ function moveTooltip(e) {
 }
 
 // ---- 人物详情面板 ----
-function showPersonDetail(personId, timelineType) {
-  let dataSource;
-  if (timelineType === 'japan') dataSource = JAPAN_PERSONS;
-  else if (timelineType === 'world') dataSource = WORLD_PERSONS;
-  else if (timelineType === 'korea') dataSource = KOREA_PERSONS;
-  else dataSource = PERSONS;
-  const p = dataSource.find(x => x.id === personId);
+function showPersonDetail(personId) {
+  const p = PERSONS.find(x => x.id === personId);
   if (!p) return;
   selectedPersonId = personId;
 
@@ -1265,7 +1125,6 @@ function saveEdit() {
   // 重新渲染时间轴
   renderTimeline();
   renderWorldTimeline();
-  renderKoreaTimeline();
   renderJapanTimeline();
   if (currentView === 'map') updateMapMarkers();
   if (currentView === 'graph') { graphNodes = []; renderGraph(); }
@@ -1336,7 +1195,6 @@ document.getElementById('deletePersonConfirm').addEventListener('click', () => {
   // 4. 重新渲染所有视图
   renderTimeline();
   renderWorldTimeline();
-  renderKoreaTimeline();
   renderJapanTimeline();
   updateStats();
 
@@ -1681,7 +1539,6 @@ function saveNewPerson() {
   // 重新渲染时间轴
   renderTimeline();
   renderWorldTimeline();
-  renderKoreaTimeline();
   renderJapanTimeline();
   updateStats();
 
@@ -2155,6 +2012,7 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
 
 // ---- 键盘快捷键 ----
 document.addEventListener('keydown', (e) => {
+  // 搜索框获得焦点时不处理快捷键
   if (document.activeElement === document.getElementById('searchInput')) {
     if (e.key === 'Escape') {
       document.getElementById('searchInput').blur();
@@ -2164,9 +2022,20 @@ document.addEventListener('keydown', (e) => {
     }
     return;
   }
-  if (e.key === '/') {
-    e.preventDefault();
-    document.getElementById('searchInput').focus();
+
+  switch(e.key) {
+    case '1':
+      // 中国史时间轴回到起点
+      document.getElementById('timelineWrapper').scrollLeft = 0;
+      break;
+    case '2':
+      // 世界史时间轴回到起点
+      document.getElementById('worldTimelineWrapper').scrollLeft = 0;
+      break;
+    case '3':
+      // 聚焦搜索框
+      document.getElementById('searchInput').focus();
+      break;
   }
 });
 

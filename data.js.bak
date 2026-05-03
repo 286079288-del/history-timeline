@@ -1,0 +1,3416 @@
+// =============================================
+// 历史数据：朝代、人物、事件
+// =============================================
+
+const DYNASTIES = [
+  { name: '三皇', start: -4500, end: -2700, color: '#9b59b6' },
+  { name: '五帝', start: -2700, end: -2120, color: '#8e44ad' },
+  { name: '夏', start: -2120, end: -1600, color: '#c0392b' },
+  { name: '商', start: -1600, end: -1046, color: '#d35400' },
+  { name: '西周', start: -1046, end: -771, color: '#d4a843' },
+  { name: '东周', start: -770, end: -256, color: '#c19a6b' },
+  { name: '春秋', start: -770, end: -476, color: '#c19a6b' },
+  { name: '战国', start: -475, end: -221, color: '#b8860b' },
+  { name: '秦', start: -221, end: -206, color: '#16a085' },
+  { name: '汉', start: -206, end: 220, color: '#2980b9' },
+  { name: '三国', start: 220, end: 280, color: '#c0392b' },
+  { name: '晋', start: 280, end: 420, color: '#8e44ad' },
+  { name: '南北朝', start: 420, end: 589, color: '#7f8c8d' },
+  { name: '隋', start: 581, end: 618, color: '#27ae60' },
+  { name: '唐', start: 618, end: 907, color: '#f39c12' },
+  { name: '五代', start: 907, end: 960, color: '#95a5a6' },
+  { name: '北宋', start: 960, end: 1127, color: '#1abc9c' },
+  { name: '南宋', start: 1127, end: 1279, color: '#16a085' },
+  { name: '元', start: 1271, end: 1368, color: '#7f8c8d' },
+  { name: '明', start: 1368, end: 1644, color: '#e74c3c' },
+  { name: '清', start: 1644, end: 1912, color: '#2c3e50' },
+  { name: '民国', start: 1912, end: 1949, color: '#3498db' },
+];
+
+const ERA_GROUPS = [
+  { name: '先秦', start: -4500, end: -221 },
+  { name: '秦汉', start: -221, end: 220 },
+  { name: '魏晋南北朝', start: 220, end: 589 },
+  { name: '隋唐', start: 581, end: 907 },
+  { name: '五代十国', start: 907, end: 960 },
+  { name: '宋元', start: 960, end: 1368 },
+  { name: '明清', start: 1368, end: 1912 },
+  { name: '近现代', start: 1912, end: 1949 },
+];
+
+// 人物数据（含地理位置）
+const PERSONS = [
+  // ==================== 三皇时期 ====================
+  {
+    id: 'suiren', name: '燧人氏', birth: -4464, death: -4354,
+    cat: 'sage', dynasty: '三皇', emoji: '🔥',
+    location: { lat: 35.0, lng: 114.0, place: '商丘（今河南商丘）' },
+    desc: '传说中有巢氏五氏之一，发明钻木取火，结束人类茹毛饮血的时代，是人类用火历史的开创者。有史可考的第一位个体部落首领。',
+    achievements: ['钻木取火', '教民熟食'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'fuxi', name: '伏羲氏', birth: -4354, death: -4239,
+    cat: 'sage', dynasty: '三皇', emoji: '☯️',
+    location: { lat: 35.5, lng: 112.5, place: '宛丘（今河南淮阳）' },
+    desc: '中华民族的人文始祖之一，三皇之首。相传发明八卦、结绳记事、创造文字雏形，制定嫁娶制度，定都宛丘，开创中华文明的曙光。',
+    achievements: ['创造八卦', '结绳记事', '制定嫁娶', '发明渔猎'],
+    relations: [{ id: 'nüwa', type: '兄妹/夫妻', label: '女娲氏' }],
+    events: []
+  },
+  {
+    id: 'nüwa', name: '女娲氏', birth: -4239, death: -4109,
+    cat: 'sage', dynasty: '三皇', emoji: '🌙',
+    location: { lat: 35.5, lng: 111.2, place: '中皇山（今山西平定）' },
+    desc: '中华民族始祖母神，相传用黄土造人，炼石补天，斩巨鳌四足支撑天地，结束洪水灾难，是人类和万物的创造者。伏羲之妹兼妻。',
+    achievements: ['抟土造人', '炼石补天', '斩鳌立极', '创设婚姻'],
+    relations: [{ id: 'fuxi', type: '兄妹/夫妻', label: '伏羲氏' }],
+    events: ['e_nüwa_butian']
+  },
+  {
+    id: 'shennong', name: '炎帝（神农氏）', birth: -2700, death: -2600,
+    cat: 'sage', dynasty: '三皇', emoji: '🌿',
+    location: { lat: 27.5, lng: 111.6, place: '姜水流域（今陕西宝鸡）' },
+    desc: '农业和医药之神，9代神农氏之首。相传遍尝百草，教民耕种，发明医药和耒耜，建立中药学基础。与黄帝并称"炎黄"，是中华民族共同祖先。',
+    achievements: ['尝百草', '教民耕种', '发明医药', '发明耒耜', '日中为市'],
+    relations: [{ id: 'huangdi', type: '后代/融合', label: '黄帝（炎帝）' }],
+    events: ['e_shennong_yao']
+  },
+
+  // ==================== 五帝时期 ====================
+  {
+    id: 'huangdi', name: '黄帝', birth: -2697, death: -2599,
+    cat: 'emperor', dynasty: '五帝', emoji: '👑',
+    location: { lat: 35.5, lng: 109.5, place: '有熊氏部落（今河南新郑）' },
+    desc: '中华民族的人文始祖，五帝之首。统一华夏部落，发明指南车、历法、音律、医学，涿鹿之战大败蚩尤，开创华夏文明，被尊为"人文初祖"。享年约117岁（史料记载）。',
+    achievements: ['统一华夏', '涿鹿之战', '发明指南车', '创制历法', '奠定礼制'],
+    relations: [
+      { id: 'yandi', type: '同盟对立', label: '炎帝（阪泉之战后结盟）' },
+      { id: 'cangjie', type: '臣属', label: '仓颉（史官）' },
+      { id: 'zhuanyu', type: '祖孙', label: '颛顼（孙子）' },
+    ],
+    events: ['e_zhuoluzhan', 'e_banquanzhan', 'e_huangdi_jiwei']
+  },
+  {
+    id: 'shaohao', name: '少昊', birth: -2598, death: -2515,
+    cat: 'emperor', dynasty: '五帝', emoji: '👑',
+    location: { lat: 35.8, lng: 116.5, place: '穷桑（今山东曲阜）' },
+    desc: '黄帝长子，五帝之一。定都穷桑，创建太昊文化，以金德王，故称白帝。凤凰来朝，百官有序。',
+    achievements: ['定都穷桑', '创太昊文化', '凤凰来朝'],
+    relations: [
+      { id: 'huangdi', type: '父子', label: '黄帝（父亲）' },
+      { id: 'zhuanyu', type: '叔侄', label: '颛顼' },
+    ],
+    events: []
+  },
+  {
+    id: 'zhuanyu', name: '颛顼', birth: -2514, death: -2437,
+    cat: 'emperor', dynasty: '五帝', emoji: '👑',
+    location: { lat: 35.3, lng: 112.9, place: '昌意（今河南濮阳一带）' },
+    desc: '黄帝之孙，少昊之侄，五帝之一。继承黄帝之位，改革宗教，命重黎绝地天通，禁止民神杂糅，建立政治秩序。',
+    achievements: ['绝地天通', '改革宗教', '制定历法'],
+    relations: [
+      { id: 'huangdi', type: '祖孙', label: '黄帝（祖父）' },
+      { id: 'shaohao', type: '叔侄', label: '少昊' },
+      { id: 'gonggong', type: '对立', label: '共工（争位）' },
+    ],
+    events: ['e_zhudi_tongtian']
+  },
+  {
+    id: 'diku', name: '帝喾', birth: -2436, death: -2357,
+    cat: 'emperor', dynasty: '五帝', emoji: '👑',
+    location: { lat: 35.7, lng: 115.5, place: '亳（今河南商丘）' },
+    desc: '黄帝的曾孙，五帝之一。以仁德治国，取民之子为己之子，天下大服。传说他生而神明，洞察幽明，订立节气，制定历法。',
+    achievements: ['仁德治国', '推行德教', '制定节气', '制定历法'],
+    relations: [
+      { id: 'zhuanyu', type: '继承', label: '颛顼' },
+      { id: 'yao', type: '父子', label: '帝尧（儿子）' },
+    ],
+    events: []
+  },
+  {
+    id: 'yao', name: '帝尧', birth: -2436, death: -2259,
+    cat: 'emperor', dynasty: '五帝', emoji: '☀️',
+    location: { lat: 36.0, lng: 112.5, place: '平阳（今山西临汾）' },
+    desc: '五帝之一，以仁德著称。制定历法，设官分职，治理水患。首创禅让制，将帝位传给德才兼备的舜，是理想君主的典范。迁都平阳。',
+    achievements: ['制定历法', '禅让美政', '治理水患', '建立诽谤木'],
+    relations: [
+      { id: 'diku', type: '父子', label: '帝喾（父亲）' },
+      { id: 'shun', type: '禅让', label: '舜（接受禅让）' },
+      { id: 'danzhu', type: '父子', label: '帝挚（兄长）' },
+    ],
+    events: ['e_shanrang_yao', 'e_yao_zhiyu', 'e_fenghuang']
+  },
+  {
+    id: 'danzhu', name: '帝挚', birth: -2360, death: -2352,
+    cat: 'emperor', dynasty: '五帝', emoji: '👑',
+    location: { lat: 36.0, lng: 112.5, place: '平阳（今山西临汾）' },
+    desc: '帝喾之子，尧之兄长。在位8年，因不善治国禅让给尧。',
+    achievements: [],
+    relations: [
+      { id: 'diku', type: '父子', label: '帝喾（父亲）' },
+      { id: 'yao', type: '兄弟', label: '帝尧（弟弟）' },
+    ],
+    events: []
+  },
+  {
+    id: 'shun', name: '帝舜', birth: -2258, death: -2206,
+    cat: 'emperor', dynasty: '五帝', emoji: '🌸',
+    location: { lat: 35.3, lng: 112.6, place: '姚墟（今山东菏泽）' },
+    desc: '五帝之一，以孝德闻名。父顽母嚣弟傲而能孝感动天。受尧禅让即位，在位50年，又禅让给禹，是禅让制的最高典范。',
+    achievements: ['德政治国', '巡视四方', '制定五刑', '流放四凶'],
+    relations: [
+      { id: 'yao', type: '被禅让', label: '帝尧' },
+      { id: 'dayu', type: '禅让', label: '大禹' },
+      { id: 'ehuang', type: '夫妻', label: '娥皇（妻子）' },
+      { id: 'nüying', type: '夫妻', label: '女英（妻子）' },
+    ],
+    events: ['e_shanrang_shun', 'e_mantiyao', 'e_liufang']
+  },
+  {
+    id: 'dayu', name: '大禹', birth: -2120, death: -2070,
+    cat: 'emperor', dynasty: '夏', emoji: '🌊',
+    location: { lat: 35.5, lng: 111.2, place: '安邑（今山西夏县）' },
+    desc: '夏朝开国之君，因治水有功而受舜禅让。三过家门而不入，历时十三年终于制服洪水。建立中国历史上第一个王朝，结束禅让制。',
+    achievements: ['治理洪水', '划分九州', '建立夏朝', '铸九鼎', '征三苗'],
+    relations: [
+      { id: 'shun', type: '被禅让', label: '舜' },
+      { id: 'qi', type: '父子', label: '夏启（儿子）' },
+    ],
+    events: ['e_zhishui', 'e_xia_founded', 'e_shanrang_dayu']
+  },
+
+  // ==================== 夏朝君主 ====================
+  {
+    id: 'qi', name: '夏启', birth: -2100, death: -2050,
+    cat: 'emperor', dynasty: '夏', emoji: '👑',
+    location: { lat: 34.8, lng: 112.6, place: '阳城（今河南登封）' },
+    desc: '夏朝第二位君主，大禹之子。打破禅让制确立世袭制，建立夏王朝的家天下传统。甘之战平定有扈氏叛乱。',
+    achievements: ['确立世袭制', '甘之战平叛', '建立家天下', '大享诸侯'],
+    relations: [
+      { id: 'dayu', type: '父子', label: '大禹' },
+      { id: 'taikang', type: '父子', label: '太康（儿子）' },
+    ],
+    events: ['e_gan_zhanyi', 'e_xia_jingying']
+  },
+  {
+    id: 'taikang', name: '太康', birth: -2070, death: -2030,
+    cat: 'emperor', dynasty: '夏', emoji: '👑',
+    location: { lat: 34.0, lng: 112.6, place: '斟鄩（今河南偃师）' },
+    desc: '夏朝第三位君主，启之子。沉湎酒色，不理朝政，迷恋狩猎，被有穷氏部落首领后羿趁机夺取政权，史称"太康失国"。',
+    achievements: [],
+    relations: [
+      { id: 'qi', type: '父子', label: '夏启' },
+      { id: 'houyi', type: '对立', label: '后羿（篡位）' },
+    ],
+    events: ['e_taikang_luoguo', 'e_taikang_shiguo']
+  },
+  {
+    id: 'zhongkang', name: '仲康', birth: -2050, death: -2010,
+    cat: 'emperor', dynasty: '夏', emoji: '👑',
+    location: { lat: 34.0, lng: 112.6, place: '斟鄩（今河南偃师）' },
+    desc: '太康之弟，后羿所立的傀儡君主。名义上复位为王，实际上仍受后羿控制，天文官羲和因酒醉误报节气被处死，最终忧愤而死。',
+    achievements: [],
+    relations: [
+      { id: 'taikang', type: '兄弟', label: '太康' },
+      { id: 'houyi', type: '控制', label: '后羿' },
+      { id: 'xiang', type: '父子', label: '夏相' },
+    ],
+    events: []
+  },
+  {
+    id: 'xiang', name: '夏相', birth: -2040, death: -2000,
+    cat: 'emperor', dynasty: '夏', emoji: '👑',
+    location: { lat: 33.5, lng: 116.5, place: '帝丘（今河南濮阳）' },
+    desc: '仲康之子，出生时母亲后缗从窦中逃出。少康的父亲，后被寒浞派兵杀死，夏朝王统一度中断约40年。',
+    achievements: [],
+    relations: [
+      { id: 'zhongkang', type: '父子', label: '仲康' },
+      { id: 'huan', type: '杀', label: '寒浞' },
+      { id: 'shaokang', type: '父子', label: '少康' },
+    ],
+    events: []
+  },
+  {
+    id: 'shaokang', name: '少康', birth: -2010, death: -1960,
+    cat: 'emperor', dynasty: '夏', emoji: '👑',
+    location: { lat: 33.0, lng: 120.5, place: '纶邑（今河南虞城）' },
+    desc: '夏朝第六位君主，夏相之子。在有虞氏部落成长，积蓄力量，最终灭掉寒浞，恢复夏朝，史称"少康中兴"，夏朝进入鼎盛期。',
+    achievements: ['少康中兴', '恢复夏朝', '灭寒浞'],
+    relations: [
+      { id: 'xiang', type: '父子', label: '夏相' },
+      { id: 'huan', type: '灭', label: '寒浞' },
+    ],
+    events: ['e_shaokang_zhongxing']
+  },
+  {
+    id: 'houyi', name: '后羿', birth: -2060, death: -2020,
+    cat: 'general', dynasty: '夏', emoji: '🏹',
+    location: { lat: 35.5, lng: 116.0, place: '有穷国（今山东德州）' },
+    desc: '有穷氏部落首领，善射。见太康失德，趁太康外出游猎时夺取夏朝政权，史称"后羿代夏"。后被寒浞所杀。嫦娥奔月传说与其相关。',
+    achievements: ['后羿代夏', '善射'],
+    relations: [
+      { id: 'taikang', type: '对立', label: '太康' },
+      { id: 'huan', type: '杀', label: '寒浞' },
+    ],
+    events: ['e_houyi_daixia', 'e_taikang_shiguo']
+  },
+  {
+    id: 'huan', name: '寒浞', birth: -2040, death: -1980,
+    cat: 'politician', dynasty: '夏', emoji: '⚔️',
+    location: { lat: 36.5, lng: 118.0, place: '寒国（今山东潍坊）' },
+    desc: '寒国君主，杀死后羿及其子，篡夺夏朝政权。建立新朝，历时约40年，后被少康所灭。是夏朝前期的重要转折人物。',
+    achievements: ['杀后羿', '灭夏朝正统'],
+    relations: [
+      { id: 'houyi', type: '杀', label: '后羿' },
+      { id: 'shaokang', type: '被灭', label: '少康' },
+    ],
+    events: []
+  },
+
+  {
+    id: 'jie', name: '夏桀', birth: -1709, death: -1600,
+    cat: 'emperor', dynasty: '夏', emoji: '💀',
+    location: { lat: 34.8, lng: 112.6, place: '斟鄩（今河南偃师）' },
+    desc: '夏朝末代君主，暴君典型，宠爱妹喜，建酒池肉林，滥用民力。商汤起兵讨伐，夏朝灭亡。成语"桀骜不驯"、"助纣为虐"中的"桀"即指此。',
+    achievements: ['无（暴君）'],
+    relations: [{ id: 'tang', type: '对立', label: '商汤（灭夏）' }],
+    events: ['e_xia_miewang']
+  },
+
+  // 商朝
+  {
+    id: 'tang', name: '商汤', birth: -1600, death: -1589,
+    cat: 'emperor', dynasty: '商', emoji: '⚔️',
+    location: { lat: 34.7, lng: 111.3, place: '亳都（今河南商丘）' },
+    desc: '商朝开国君主，仁德之君。讨伐夏桀，建立商朝。重用伊尹为相，励精图治，创"商汤革命"，开以臣伐君先例。',
+    achievements: ['灭夏建商', '商汤革命', '重用伊尹'],
+    relations: [
+      { id: 'jie', type: '对立', label: '夏桀（讨伐灭夏）' },
+      { id: 'yiyin', type: '君臣', label: '伊尹（宰相）' }
+    ],
+    events: ['e_xia_miewang', 'e_shang_founded']
+  },
+  {
+    id: 'yiyin', name: '伊尹', birth: -1650, death: -1549,
+    cat: 'politician', dynasty: '商', emoji: '📜',
+    location: { lat: 34.0, lng: 112.5, place: '有莘国（今河南开封杞县）' },
+    desc: '商朝名相，辅助商汤建国立业。被后世尊为"元圣"，是儒、墨、法等家共同推崇的贤相。创"割烹"（以烹饪比喻治国）典故。',
+    achievements: ['辅佐商汤', '建国辅政', '制汤药治百病'],
+    relations: [{ id: 'tang', type: '君臣', label: '商汤（君主）' }],
+    events: ['e_shang_founded']
+  },
+  {
+    id: 'pangeng', name: '盘庚', birth: -1300, death: -1272,
+    cat: 'emperor', dynasty: '商', emoji: '🏛️',
+    location: { lat: 35.0, lng: 114.5, place: '殷（今河南安阳）' },
+    desc: '商朝第十九位君主，迁都于殷，摆脱旧贵族势力，推行新政，使商朝复兴，史称"盘庚迁殷"，殷墟即其都城遗址。',
+    achievements: ['盘庚迁殷', '复兴商朝', '推行新政'],
+    relations: [],
+    events: ['e_pangeng_qianyin']
+  },
+  {
+    id: 'wuding', name: '武丁', birth: -1250, death: -1192,
+    cat: 'emperor', dynasty: '商', emoji: '👑',
+    location: { lat: 35.0, lng: 114.5, place: '殷（今河南安阳）' },
+    desc: '商朝第二十二位君主，在位59年，商朝最繁荣时期。少年流落民间，知民间疾苦。重用傅说为相，对西北羌方、鬼方、南荆等用兵，开创"武丁中兴"。',
+    achievements: ['武丁中兴', '重用傅说', '征伐四方'],
+    relations: [{ id: 'fushuo', type: '君臣', label: '傅说（宰相）' }],
+    events: ['e_wuding_zhongxing']
+  },
+  {
+    id: 'fushuo', name: '傅说', birth: -1320, death: -1246,
+    cat: 'politician', dynasty: '商', emoji: '📋',
+    location: { lat: 35.8, lng: 111.2, place: '傅岩（今山西平陆）' },
+    desc: '商朝名相，原为筑墙劳役的囚徒，武丁夜梦得之，举以为相，辅佐武丁中兴。是中国历史上"寒士为相"的典范，与伊尹并称。',
+    achievements: ['辅佐武丁', '中兴商朝'],
+    relations: [{ id: 'wuding', type: '君臣', label: '武丁（君主）' }],
+    events: ['e_wuding_zhongxing']
+  },
+  {
+    id: 'taibaijia', name: '太甲', birth: -1572, death: -1547,
+    cat: 'emperor', dynasty: '商', emoji: '👑',
+    location: { lat: 34.7, lng: 111.3, place: '亳都（今河南商丘）' },
+    desc: '商朝第三位君主，商汤之孙。继位后不理朝政，被伊尹放逐于桐宫。三年后悔过自责，伊尹迎回复位，励精图治，史称"太甲反正"。',
+    achievements: ['太甲反正', '励精图治'],
+    relations: [
+      { id: 'tang', type: '祖孙', label: '商汤（祖父）' },
+      { id: 'yiyin', type: '被放逐', label: '伊尹' },
+    ],
+    events: ['e_shang_founded']
+  },
+  {
+    id: 'zhou_wang', name: '商纣王', birth: -1105, death: -1046,
+    cat: 'emperor', dynasty: '商', emoji: '👿',
+    location: { lat: 35.5, lng: 114.5, place: '朝歌（今河南淇县）' },
+    desc: '商朝末代君主，与夏桀并称"桀纣"，暴君代名词。宠幸妲己，造鹿台酒池，挖比干心，囚周文王，终被周武王伐灭。成语"助纣为虐"、"纨绔子弟"均与其相关。',
+    achievements: ['无（暴君）'],
+    relations: [
+      { id: 'bigan', type: '迫害', label: '比干（被剖心）' },
+      { id: 'jizi', type: '流放', label: '箕子（被流放）' },
+      { id: 'wuwang', type: '对立', label: '周武王（灭商）' }
+    ],
+    events: ['e_muye']
+  },
+  {
+    id: 'bigan', name: '比干', birth: -1110, death: -1047,
+    cat: 'politician', dynasty: '商', emoji: '❤️',
+    location: { lat: 35.5, lng: 114.5, place: '朝歌（今河南淇县）' },
+    desc: '商朝忠臣，纣王叔父，以忠直著称。因劝谏纣王被剖心而死，被孔子尊为"殷三仁"之首，后世奉为文财神。',
+    achievements: ['忠直敢谏', '被奉为文财神'],
+    relations: [{ id: 'zhou_wang', type: '忠臣', label: '商纣王（叔父）' }],
+    events: ['e_muye']
+  },
+  {
+    id: 'jizi', name: '箕子', birth: -1120, death: -1040,
+    cat: 'politician', dynasty: '商', emoji: '📿',
+    location: { lat: 35.5, lng: 114.5, place: '朝歌（今河南淇县）' },
+    desc: '商朝忠臣，纣王叔父。因劝谏纣王不听，披发佯狂为奴，被纣王囚禁。周武王灭商后，箕子率众东渡朝鲜，被推为王，建立箕子朝鲜。',
+    achievements: ['箕子朝鲜', '洪范九畴'],
+    relations: [{ id: 'zhou_wang', type: '忠臣', label: '商纣王（叔父）' }],
+    events: ['e_muye']
+  },
+  {
+    id: 'weiziji', name: '微子启', birth: -1135, death: -1055,
+    cat: 'politician', dynasty: '商', emoji: '🙏',
+    location: { lat: 35.5, lng: 114.5, place: '微子国（今河南商丘）' },
+    desc: '商纣王庶兄，见纣王无道，数次劝谏不听，遂离开商朝。周武王灭商后，被封于宋国，成为宋国始祖。孔子"殷三仁"之一。',
+    achievements: ['建立宋国', '殷三仁之一'],
+    relations: [{ id: 'zhou_wang', type: '对立', label: '商纣王（异母兄）' }],
+    events: ['e_muye']
+  },
+
+  // 西周
+  {
+    id: 'cheng_wang', name: '周成王', birth: -1055, death: -1021,
+    cat: 'emperor', dynasty: '周', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '镐京（今陕西西安）' },
+    desc: '西周第二位君主，武王之子。幼年即位，由周公旦摄政，平定管蔡之乱，亲政后继续推行礼乐之治，开创"成康之治"。',
+    achievements: ['成康之治', '稳定周朝'],
+    relations: [
+      { id: 'wuwang', type: '父子', label: '武王（父亲）' },
+      { id: 'zhougong', type: '摄政', label: '周公旦（摄政）' }
+    ],
+    events: ['e_zhougongshezheng']
+  },
+  {
+    id: 'kang_wang', name: '周康王', birth: -1020, death: -996,
+    cat: 'emperor', dynasty: '周', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '镐京（今陕西西安）' },
+    desc: '西周第三位君主，成王之子。在位期间继承父亲政策，与成王共创"成康之治"，是西周最繁盛时期，四十年不用刑罚。',
+    achievements: ['成康之治', '四十年不用刑'],
+    relations: [{ id: 'cheng_wang', type: '父子', label: '成王（父亲）' }],
+    events: []
+  },
+  {
+    id: 'zhaowang', name: '周昭王', birth: -995, death: -977,
+    cat: 'emperor', dynasty: '周', emoji: '⚔️',
+    location: { lat: 34.3, lng: 108.9, place: '镐京（今陕西西安）' },
+    desc: '西周第四位君主，康王之子。喜好游猎，南征荆楚，因贪婪索取当地玉石，被楚人设计沉船而死，周朝开始由盛转衰。',
+    achievements: ['南征荆楚'],
+    relations: [{ id: 'kang_wang', type: '父子', label: '康王（父亲）' }],
+    events: ['e_zhaowang_nansheng']
+  },
+  {
+    id: 'muwang', name: '周穆王', birth: -976, death: -922,
+    cat: 'emperor', dynasty: '周', emoji: '🐴',
+    location: { lat: 34.3, lng: 108.9, place: '镐京（今陕西西安）' },
+    desc: '西周第五位君主，昭王之子。在位55年，是周朝在位最长的君主。喜好游历，曾西巡见西王母，东征徐偃王，传说《穆天子传》即记其事。',
+    achievements: ['西巡见西王母', '东征徐偃王', '制定吕刑'],
+    relations: [{ id: 'zhaowang', type: '父子', label: '昭王（父亲）' }],
+    events: ['e_muwang_xiyun']
+  },
+  {
+    id: 'li_wang', name: '周厉王', birth: -905, death: -829,
+    cat: 'emperor', dynasty: '周', emoji: '😠',
+    location: { lat: 34.3, lng: 108.9, place: '镐京（今陕西西安）' },
+    desc: '西周第十位君主，实行"专利"政策垄断山林川泽，又派人监视百姓言论，导致"道路以目"。公元前841年，国人暴动，厉王出逃，共伯和摄政，史称"共和行政"。',
+    achievements: ['共和行政（结束）'],
+    relations: [],
+    events: ['e_guo_baodong', 'e_gonghe']
+  },
+  {
+    id: 'you_wang', name: '周幽王', birth: -795, death: -771,
+    cat: 'emperor', dynasty: '周', emoji: '🔥',
+    location: { lat: 34.3, lng: 108.9, place: '镐京（今陕西西安）' },
+    desc: '西周末代君主，昏庸无道。为博褒姒一笑，烽火戏诸侯，导致犬戎攻破镐京被杀，西周灭亡。典故"烽火戏诸侯"、"一笑倾城"即出于此。',
+    achievements: ['无（亡国之君）'],
+    relations: [{ id: 'pingwang', type: '父子', label: '平王（继承人）' }],
+    events: ['e_fenghuo_xizhhou', 'e_xizhou_miewang']
+  },
+
+  // 东周
+  {
+    id: 'pingwang', name: '周平王', birth: -781, death: -720,
+    cat: 'emperor', dynasty: '周', emoji: '🏯',
+    location: { lat: 34.7, lng: 112.4, place: '洛邑（今河南洛阳）' },
+    desc: '东周开国之君，幽王之子。镐京被犬戎攻破后，在郑、秦、晋等国护送下东迁洛邑，建立东周。周天子权威日衰，诸侯开始争霸。',
+    achievements: ['建立东周', '东迁洛邑'],
+    relations: [
+      { id: 'you_wang', type: '父子', label: '幽王（父亲）' },
+      { id: 'huangong', type: '护送', label: '郑桓公（护送继位）' }
+    ],
+    events: ['e_xizhou_miewang', 'e_dongzhou_licheng']
+  },
+
+  // 商周
+  {
+    id: 'wenwang', name: '周文王', birth: -1152, death: -1056,
+    cat: 'emperor', dynasty: '周', emoji: '📜',
+    location: { lat: 34.7, lng: 108.5, place: '西岐（今陕西岐山一带）' },
+    desc: '西周奠基者，被拘禁于羑里时演推《周易》。广纳贤才，任用姜尚，为武王灭商奠定基础，被后世尊为圣王。',
+    achievements: ['演周易', '广纳贤才', '奠定西周基础'],
+    relations: [
+      { id: 'wuwang', type: '父子', label: '武王（儿子）' },
+      { id: 'jiang_ziya', type: '君臣', label: '姜子牙（军师）' },
+      { id: 'zhou_wang', type: '对立', label: '商纣王（被其拘禁）' }
+    ],
+    events: ['e_yuligu']
+  },
+  {
+    id: 'wuwang', name: '周武王', birth: -1087, death: -1043,
+    cat: 'emperor', dynasty: '周', emoji: '⚔️',
+    location: { lat: 34.3, lng: 108.9, place: '镐京（今陕西西安）' },
+    desc: '西周开国之君，继承父志，联合诸侯，在牧野之战中大败商纣王，建立周朝，分封诸侯，确立封建制度。',
+    achievements: ['牧野之战', '建立周朝', '分封诸侯'],
+    relations: [
+      { id: 'wenwang', type: '父子', label: '文王（父亲）' },
+      { id: 'jiang_ziya', type: '君臣', label: '姜子牙（军师）' },
+      { id: 'zhougong', type: '兄弟', label: '周公旦（弟弟）' },
+      { id: 'zhou_wang', type: '对立', label: '商纣王（灭商）' }
+    ],
+    events: ['e_muye', 'e_zhoushi_fenfeng']
+  },
+  {
+    id: 'jiang_ziya', name: '姜子牙', birth: -1128, death: -1015,
+    cat: 'military', dynasty: '周', emoji: '🎣',
+    location: { lat: 36.8, lng: 118.3, place: '营丘（今山东潍坊临朐县）' },
+    desc: '周朝开国元勋，军事家、政治家。年过七旬方遇文王，辅佐文武两代君主灭商建周，封于齐地，开创齐国。',
+    achievements: ['灭商建周', '封神演义原型', '兵法始祖'],
+    relations: [
+      { id: 'wenwang', type: '君臣', label: '文王（君主）' },
+      { id: 'wuwang', type: '君臣', label: '武王（君主）' }
+    ],
+    events: ['e_muye']
+  },
+  {
+    id: 'zhougong', name: '周公旦', birth: -1100, death: -1043,
+    cat: 'politician', dynasty: '周', emoji: '📋',
+    location: { lat: 34.3, lng: 108.9, place: '洛邑（今河南洛阳）' },
+    desc: '周武王之弟，辅佐成王摄政，制礼作乐，建立周朝典章制度，是儒家推崇的圣人，孔子的精神偶像。',
+    achievements: ['制礼作乐', '摄政辅成王', '平定叛乱'],
+    relations: [
+      { id: 'wuwang', type: '兄弟', label: '武王（兄长）' },
+      { id: 'cheng_wang', type: '摄政', label: '周成王（辅佐）' },
+      { id: 'kongzi', type: '偶像', label: '孔子（崇拜者）' }
+    ],
+    events: ['e_zhougongshezheng']
+  },
+
+  // ==================== 春秋时期 ====================
+  {
+    id: 'laozi', name: '老子', birth: -571, death: -471,
+    cat: 'philosopher', dynasty: '周', emoji: '☯️',
+    location: { lat: 34.6, lng: 112.4, place: '陈国苦县（今河南鹿邑）' },
+    desc: '道家学派创始人，著有《道德经》（《老子》），提出"道"为宇宙本原，主张无为而治，对中华文化影响深远。',
+    achievements: ['创立道家', '著《道德经》', '影响道教'],
+    relations: [
+      { id: 'kongzi', type: '同时代', label: '孔子（曾向其请教）' },
+    ],
+    events: ['e_laozi_chujian']
+  },
+  {
+    id: 'kongzi', name: '孔子', birth: -551, death: -479,
+    cat: 'philosopher', dynasty: '周', emoji: '🎓',
+    location: { lat: 35.5, lng: 116.9, place: '鲁国陬邑（今山东曲阜）' },
+    desc: '儒家学派创始人，中国古代伟大的思想家、教育家。提出"仁"的核心思想，整理六经，开创私人讲学之风，被后世尊称"至圣先师"。',
+    achievements: ['创立儒学', '整理六经', '开创私学', '提出仁义礼智'],
+    relations: [
+      { id: 'laozi', type: '请教', label: '老子（曾问礼）' },
+      { id: 'mengzi', type: '继承', label: '孟子（儒学传人）' },
+      { id: 'zhougong', type: '崇拜', label: '周公（精神偶像）' }
+    ],
+    events: ['e_kongzi_zhongyou', 'e_kongzi_bianwen']
+  },
+  {
+    id: 'sunzi', name: '孙子', birth: -544, death: -496,
+    cat: 'military', dynasty: '周', emoji: '⚔️',
+    location: { lat: 33.0, lng: 119.8, place: '齐国乐安（今山东惠民）' },
+    desc: '春秋末期军事家，著有《孙子兵法》，是世界上最早最完整的兵书，被誉为"兵圣"，其思想影响延续至今。',
+    achievements: ['著《孙子兵法》', '辅佐吴王阖闾', '攻破楚都'],
+    relations: [{ id: 'wuqi', type: '同领域', label: '吴起（后继兵法家）' }],
+    events: ['e_sunzi_bingfa']
+  },
+  {
+    id: 'mengzi', name: '孟子', birth: -372, death: -289,
+    cat: 'philosopher', dynasty: '周', emoji: '📚',
+    location: { lat: 36.2, lng: 117.0, place: '邹国（今山东邹城）' },
+    desc: '战国时期儒家代表人物，继承发展孔子学说，提出"仁政"和"性善论"，被尊为"亚圣"。',
+    achievements: ['性善论', '仁政思想', '著《孟子》'],
+    relations: [{ id: 'kongzi', type: '继承', label: '孔子（思想宗师）' }],
+    events: []
+  },
+  {
+    id: 'zhuangzi', name: '庄子', birth: -369, death: -286,
+    cat: 'philosopher', dynasty: '周', emoji: '🦋',
+    location: { lat: 32.3, lng: 112.2, place: '宋国蒙县（今河南商丘）' },
+    desc: '道家学派代表人物，继承老子思想并加以发展，著有《庄子》，文学想象奇特，影响了中国文化艺术。',
+    achievements: ['发展道家哲学', '著《庄子》', '文学成就'],
+    relations: [{ id: 'laozi', type: '继承', label: '老子（道家始祖）' }],
+    events: []
+  },
+  {
+    id: 'hanfeizi', name: '韩非子', birth: -281, death: -233,
+    cat: 'philosopher', dynasty: '周', emoji: '⚖️',
+    location: { lat: 33.6, lng: 115.6, place: '韩国新郑（今河南新郑）' },
+    desc: '战国末期法家思想集大成者，著有《韩非子》，提出法、术、势三者结合，影响秦统一和后世专制政治。',
+    achievements: ['法家集大成', '著《韩非子》', '影响秦制'],
+    relations: [
+      { id: 'xunzi', type: '师从', label: '荀子（老师）' },
+      { id: 'qinshihuang', type: '影响', label: '秦始皇（实践其思想）' }
+    ],
+    events: []
+  },
+  {
+    id: 'xunzi', name: '荀子', birth: -313, death: -238,
+    cat: 'philosopher', dynasty: '周', emoji: '📜',
+    location: { lat: 36.5, lng: 116.5, place: '赵国（今山西南部）' },
+    desc: '战国末期儒家代表人物，提出"性恶论"，重视礼法教化，弟子有韩非子、李斯，对后世影响深远。',
+    achievements: ['性恶论', '礼法并重', '培养韩非、李斯'],
+    relations: [
+      { id: 'hanfeizi', type: '师徒', label: '韩非子（学生）' },
+    ],
+    events: []
+  },
+  {
+    id: 'quyuan', name: '屈原', birth: -340, death: -278,
+    cat: 'scholar', dynasty: '周', emoji: '🎭',
+    location: { lat: 29.0, lng: 111.5, place: '楚国郢都（今湖北荆州）' },
+    desc: '战国时期楚国诗人、政治家，创作《离骚》《九歌》等，开创楚辞文学形式，被誉为"中国诗歌之父"。投江殉国，后世以端午节纪念。',
+    achievements: ['创作《离骚》', '开创楚辞', '端午节起源'],
+    relations: [],
+    events: ['e_quyuan_tujian']
+  },
+  {
+    id: 'lisi', name: '李斯', birth: -284, death: -208,
+    cat: 'politician', dynasty: '秦', emoji: '📋',
+    location: { lat: 34.2, lng: 108.9, place: '上蔡（今河南上蔡），后居咸阳' },
+    desc: '秦朝丞相，协助秦始皇统一六国，统一文字、度量衡、货币，是法家思想的实践者。后因赵高陷害被腰斩。',
+    achievements: ['统一文字', '统一度量衡', '辅助统一六国'],
+    relations: [
+      { id: 'xunzi', type: '师从', label: '荀子（老师）' },
+      { id: 'qinshihuang', type: '君臣', label: '秦始皇（君主）' }
+    ],
+    events: ['e_liuguotongyi']
+  },
+
+  // ==================== 春秋战国重要人物（续） ====================
+  {
+    id: 'guojia', name: '管仲', birth: -723, death: -645,
+    cat: 'politician', dynasty: '春秋', emoji: '📋',
+    location: { lat: 36.8, lng: 118.3, place: '齐国颖上（今安徽颖上）' },
+    desc: '春秋时期齐国名相，辅佐齐桓公成为春秋五霸之首。实行改革，富国强兵，提出"尊王攘夷"策略，是法家先驱。',
+    achievements: ['辅佐齐桓公称霸', '管仲改革', '尊王攘夷'],
+    relations: [{ id: 'baogong', type: '好友', label: '鲍叔牙（知己）' }, { id: 'qihuangong', type: '君臣', label: '齐桓公' }],
+    events: ['e_chunqiu_wuxia']
+  },
+  {
+    id: 'baogong', name: '鲍叔牙', birth: -720, death: -644,
+    cat: 'politician', dynasty: '春秋', emoji: '🤝',
+    location: { lat: 36.8, lng: 118.3, place: '齐国（今山东济南）' },
+    desc: '春秋时期齐国大夫，与管仲为至交好友。推荐管仲给齐桓公，自己甘居其下，是知人善任的典范。成语"管鲍之交"出自二人。',
+    achievements: ['推荐管仲', '管鲍之交'],
+    relations: [{ id: 'guojia', type: '知己', label: '管仲' }],
+    events: []
+  },
+  {
+    id: 'qihuangong', name: '齐桓公', birth: -716, death: -643,
+    cat: 'emperor', dynasty: '春秋', emoji: '👑',
+    location: { lat: 36.8, lng: 118.3, place: '临淄（今山东淄博）' },
+    desc: '春秋五霸之首，齐国第十五位国君，名小白。前685年即位，重用管仲为相，实行改革，九合诸侯，成为春秋时期第一位霸主。晚年昏庸，饿死宫中。',
+    achievements: ['春秋首霸', '九合诸侯', '重用管仲'],
+    relations: [
+      { id: 'guojia', type: '君臣', label: '管仲（相国）' },
+      { id: 'baogong', type: '君臣', label: '鲍叔牙' },
+    ],
+    events: ['e_chunqiu_wuxia']
+  },
+  {
+    id: 'wencheng', name: '晋文公', birth: -697, death: -628,
+    cat: 'emperor', dynasty: '春秋', emoji: '👑',
+    location: { lat: 35.5, lng: 112.5, place: '晋国绛都（今山西翼城）' },
+    desc: '春秋五霸之一，晋献公之子，名重耳。因骊姬之乱流亡十九年，前636年回国即位，励精图治，城濮之战大败楚国，成为第二位春秋霸主。',
+    achievements: ['春秋五霸之一', '城濮之战', '流亡十九年'],
+    relations: [
+      { id: 'xunyan', type: '君臣', label: '狐偃（股肱之臣）' },
+      { id: 'wuzhen', type: '君臣', label: '赵衰（谋士）' },
+    ],
+    events: ['e_chunqiu_wuxia', 'e_chengpu_battle']
+  },
+  {
+    id: 'xunyan', name: '狐偃', birth: -715, death: -629,
+    cat: 'politician', dynasty: '春秋', emoji: '📋',
+    location: { lat: 35.5, lng: 112.5, place: '晋国（今山西南部）' },
+    desc: '晋文公的舅舅，跟随重耳流亡十九年，是文公复国的主要功臣之一。城濮之战前力劝文公退避三舍，后大败楚军。',
+    achievements: ['辅佐文公复国', '城濮之战献策'],
+    relations: [{ id: 'wencheng', type: '君臣', label: '晋文公（外甥）' }],
+    events: ['e_chengpu_battle']
+  },
+  {
+    id: 'mu_gong', name: '秦穆公', birth: -682, death: -621,
+    cat: 'emperor', dynasty: '春秋', emoji: '👑',
+    location: { lat: 34.3, lng: 108.7, place: '雍城（今陕西凤翔）' },
+    desc: '春秋五霸之一，秦国第九位国君，名任好。前659年即位，重用百里奚、蹇叔为相，灭西戎十二国，向东扩展，奠定秦国的霸主地位。',
+    achievements: ['称霸西戎', '重用贤臣', '秦晋之好'],
+    relations: [
+      { id: 'bailixi', type: '君臣', label: '百里奚' },
+      { id: 'wencheng', type: '联姻', label: '晋文公' },
+    ],
+    events: ['e_chunqiu_wuxia', 'e_qin_zhou']
+  },
+  {
+    id: 'bailixi', name: '百里奚', birth: -725, death: -621,
+    cat: 'politician', dynasty: '春秋', emoji: '📋',
+    location: { lat: 34.5, lng: 112.5, place: '虞国（今山西平陆）' },
+    desc: '春秋时期虞国大夫，后为秦穆公用五张羊皮换得，授以国政，成为秦国名相。与蹇叔、由余等共同辅佐穆公成就霸业。',
+    achievements: ['五羖大夫', '辅佐穆公'],
+    relations: [{ id: 'mu_gong', type: '君臣', label: '秦穆公' }],
+    events: []
+  },
+  {
+    id: 'chu_zhuangwang', name: '楚庄王', birth: -613, death: -591,
+    cat: 'emperor', dynasty: '春秋', emoji: '👑',
+    location: { lat: 30.6, lng: 112.2, place: '郢都（今湖北荆州）' },
+    desc: '春秋五霸之一，楚国国君。"一鸣惊人"典故的主人公。不鸣则已，一鸣惊人，最终问鼎中原，成为春秋霸主之一。',
+    achievements: ['问鼎中原', '一鸣惊人', '春秋霸主'],
+    relations: [{ id: 'sunshuao', type: '君臣', label: '孙叔敖（相国）' }],
+    events: ['e_chunqiu_wuxia', 'e_chu_wendou']
+  },
+  {
+    id: 'sunshuao', name: '孙叔敖', birth: -630, death: -593,
+    cat: 'politician', dynasty: '春秋', emoji: '📋',
+    location: { lat: 30.6, lng: 112.2, place: '楚国期思（今河南淮滨）' },
+    desc: '春秋时期楚国名相，孙武之祖。辅佐楚庄王成就霸业，主持修建芍陂水利工程，是中国最早的大型陂塘灌溉工程。',
+    achievements: ['辅佐庄王', '修建芍陂', '为相清廉'],
+    relations: [{ id: 'chu_zhuangwang', type: '君臣', label: '楚庄王' }],
+    events: []
+  },
+  {
+    id: 'wuzixuxu', name: '伍子胥', birth: -559, death: -484,
+    cat: 'military', dynasty: '春秋', emoji: '⚔️',
+    location: { lat: 31.5, lng: 121.0, place: '吴国都城（今江苏苏州）' },
+    desc: '春秋时期吴国大夫，名将。父兄被楚平王所杀，逃吴后辅佐吴王阖闾，率军攻破楚国郢都，鞭尸楚平王。后被吴王夫差赐死。',
+    achievements: ['破楚鞭尸', '辅吴称霸', '吴王夫差之死'],
+    relations: [
+      { id: 'bo_pei', type: '仇人', label: '伯嚭（奸臣）' },
+      { id: 'gong_zige', type: '荐', label: '专诸（刺客）' },
+    ],
+    events: ['e_wu_qubo', 'e_wu_fukui']
+  },
+  {
+    id: 'bo_pei', name: '伯嚭', birth: -560, death: -473,
+    cat: 'politician', dynasty: '春秋', emoji: '😈',
+    location: { lat: 31.5, lng: 121.0, place: '吴国都城（今江苏苏州）' },
+    desc: '春秋时期吴国太宰，奸臣。收受越王勾践贿赂，陷害伍子胥，导致其被赐死。吴国灭亡后降越。',
+    achievements: [],
+    relations: [
+      { id: 'wuzixuxu', type: '陷害', label: '伍子胥' },
+      { id: 'goujian', type: '勾结', label: '勾践' },
+    ],
+    events: ['e_wu_fukui']
+  },
+  {
+    id: 'bo_le', name: '伯乐', birth: -680, death: -610,
+    cat: 'scholar', dynasty: '春秋', emoji: '🐴',
+    location: { lat: 34.5, lng: 112.5, place: '秦国（今陕西一带）' },
+    desc: '春秋时期相马名师，以善相马闻名于世。"伯乐相马"典故出自此，与千里马一起比喻发现和推荐人才。',
+    achievements: ['相马之术', '伯乐相马'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'yangshebo', name: '羊舌肸', birth: -560, death: -524,
+    cat: 'politician', dynasty: '春秋', emoji: '📋',
+    location: { lat: 35.5, lng: 112.5, place: '晋国（今山西南部）' },
+    desc: '春秋时期晋国大夫，又称叔向。与郑国的子产并称，是当时著名的贤大夫。主张维护旧礼制，但也不反对适度改革。',
+    achievements: ['晋国贤大夫'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'zichan', name: '子产', birth: -580, death: -522,
+    cat: 'politician', dynasty: '春秋', emoji: '📋',
+    location: { lat: 34.7, lng: 113.6, place: '郑国都城（今河南新郑）' },
+    desc: '春秋时期郑国名相，推行政治改革，不毁乡校听取民意，铸刑书于鼎，是法家先驱。孔子称赞其为"古之遗爱"。',
+    achievements: ['郑国改革', '铸刑书', '不毁乡校'],
+    relations: [{ id: 'kongzi', type: '同时代', label: '孔子（同时代人）' }],
+    events: []
+  },
+  {
+    id: 'yanping', name: '晏婴', birth: -578, death: -500,
+    cat: 'politician', dynasty: '春秋', emoji: '📋',
+    location: { lat: 36.6, lng: 116.0, place: '齐国晏城（今山东齐河）' },
+    desc: '春秋时期齐国名相，历仕齐灵公、庄公、景公三世。以机智善辩著称，出使楚国时"晏子使楚"典故流传千古。身高不足五尺。',
+    achievements: ['晏子使楚', '二桃杀三士', '节俭奉公'],
+    relations: [{ id: 'qijinggong', type: '君臣', label: '齐景公' }],
+    events: ['e_yanzi_chu']
+  },
+  {
+    id: 'qijinggong', name: '齐景公', birth: -578, death: -490,
+    cat: 'emperor', dynasty: '春秋', emoji: '👑',
+    location: { lat: 36.8, lng: 118.3, place: '临淄（今山东淄博）' },
+    desc: '春秋时期齐国国君，在位58年。前期励精图治，后期奢侈无度。晏婴是其主要辅臣，"二桃杀三士"即出于此时。',
+    achievements: ['二桃杀三士'],
+    relations: [{ id: 'yanping', type: '君臣', label: '晏婴' }],
+    events: ['e_yanzi_chu', 'e_ertao_shasi']
+  },
+  {
+    id: 'linxiangru', name: '蔺相如', birth: -329, death: -283,
+    cat: 'diplomat', dynasty: '战国', emoji: '💎',
+    location: { lat: 36.8, lng: 114.5, place: '赵国邯郸（今河北邯郸）' },
+    desc: '战国时期赵国名相，完璧归赵、渑池之会的主角。与廉颇"将相和"传为千古美谈，体现顾全大局的精神。',
+    achievements: ['完璧归赵', '渑池之会', '将相和'],
+    relations: [
+      { id: 'lianpo', type: '将相和', label: '廉颇（将相和睦）' },
+      { id: 'zhaohuiwenwang', type: '君臣', label: '赵惠文王' },
+    ],
+    events: ['e_wanbi_guishi', 'e_mianchi_huihui']
+  },
+  {
+    id: 'lianpo', name: '廉颇', birth: -327, death: -243,
+    cat: 'military', dynasty: '战国', emoji: '⚔️',
+    location: { lat: 36.8, lng: 114.5, place: '赵国都城（今河北邯郸）' },
+    desc: '战国时期赵国名将，与蔺相如"将相和"传为美谈。老年仍想为国效力，但赵王已不再信任，是英雄末路的典型。',
+    achievements: ['大破齐国', '守卫赵国', '将相和'],
+    relations: [
+      { id: 'linxiangru', type: '将相和', label: '蔺相如' },
+    ],
+    events: ['e_jiangxianghe']
+  },
+  {
+    id: 'zhaohuiwenwang', name: '赵惠文王', birth: -308, death: -266,
+    cat: 'emperor', dynasty: '战国', emoji: '👑',
+    location: { lat: 36.8, lng: 114.5, place: '邯郸（今河北邯郸）' },
+    desc: '战国时期赵国国君，在位33年。赵国在他统治时期最为强盛，拥有蔺相如、廉颇、平原君等贤臣良将。',
+    achievements: ['赵国鼎盛时期'],
+    relations: [
+      { id: 'linxiangru', type: '君臣', label: '蔺相如' },
+      { id: 'lianpo', type: '君臣', label: '廉颇' },
+      { id: 'pingyuanjun', type: '君臣', label: '平原君' },
+    ],
+    events: ['e_wanbi_guishi']
+  },
+  {
+    id: 'pingyuanjun', name: '平原君', birth: -308, death: -251,
+    cat: 'politician', dynasty: '战国', emoji: '📋',
+    location: { lat: 36.8, lng: 114.5, place: '赵国邯郸（今河北邯郸）' },
+    desc: '战国四公子之一，赵国相国。门下食客数千，毛遂自荐的故事即出自其门下。"窃符救赵"的重要参与者。',
+    achievements: ['窃符救赵', '毛遂自荐', '门下食客三千'],
+    relations: [{ id: 'zhaohuiwenwang', type: '君臣', label: '赵惠文王' }],
+    events: ['e_qiebuxiu_zhao']
+  },
+  {
+    id: 'maosui', name: '毛遂', birth: -320, death: -264,
+    cat: 'politician', dynasty: '战国', emoji: '📋',
+    location: { lat: 36.8, lng: 114.5, place: '赵国（今河北一带）' },
+    desc: '战国时期赵国平原君门下食客。三年不鸣，一鸣惊人。公元前260年自荐出使楚国，说服楚王合纵抗秦，"毛遂自荐"典故出自此处。',
+    achievements: ['毛遂自荐', '说服楚王'],
+    relations: [{ id: 'pingyuanjun', type: '门客', label: '平原君' }],
+    events: ['e_maosui_zijian']
+  },
+  {
+    id: 'lübuwei', name: '吕不韦', birth: -292, death: -235,
+    cat: 'politician', dynasty: '战国', emoji: '💰',
+    location: { lat: 34.3, lng: 113.5, place: '阳翟（今河南禹州）' },
+    desc: '战国末期秦國丞相，商人出身。"奇货可居"的典故出自其经历，扶持异人（秦庄襄王）为王，后为秦始皇仲父。组织编写《吕氏春秋》。',
+    achievements: ['奇货可居', '编写《吕氏春秋》', '扶持异人'],
+    relations: [
+      { id: 'qinshihuang', type: '仲父', label: '秦始皇' },
+    ],
+    events: ['e_qihuo_keju']
+  },
+  {
+    id: 'baiqi', name: '白起', birth: -332, death: -257,
+    cat: 'military', dynasty: '战国', emoji: '⚔️',
+    location: { lat: 34.3, lng: 108.9, place: '眉县（今陕西眉县）' },
+    desc: '战国时期秦国名将，与王翦、李牧、廉颇并称"战国四大名将"。伊阙之战大破韩魏联军，长平之战坑杀赵军四十万，绰号"人屠"。',
+    achievements: ['伊阙之战', '长平之战', '人屠'],
+    relations: [{ id: 'qinshihuang', type: '君臣', label: '秦始皇' }],
+    events: ['e_changping_battle']
+  },
+  {
+    id: 'lianpo2', name: '廉颇', birth: -327, death: -243,
+    cat: 'military', dynasty: '战国', emoji: '⚔️',
+    location: { lat: 36.8, lng: 114.5, place: '赵国都城（今河北邯郸）' },
+    desc: '战国时期赵国名将，与白起、王翦、李牧并称"战国四大名将"。守护赵国，抵御秦军进攻。晚年不被重用，郁郁而终。',
+    achievements: ['赵国名将', '抵御秦军'],
+    relations: [
+      { id: 'linxiangru', type: '将相和', label: '蔺相如' },
+    ],
+    events: ['e_zhao_qin']
+  },
+  {
+    id: 'liangxiangzi', name: '樗里疾', birth: -300, death: -260,
+    cat: 'military', dynasty: '战国', emoji: '⚔️',
+    location: { lat: 34.3, lng: 108.9, place: '秦国咸阳（今陕西咸阳）' },
+    desc: '战国时期秦国名将，秦惠文王之子。因封地在樗里，称樗里疾，绰号"智囊"。多次率军攻打韩、赵、魏等国，功勋卓著。',
+    achievements: ['连横破合纵', '攻打六国'],
+    relations: [{ id: 'qinshihuang', type: '宗室', label: '秦始皇（族祖）' }],
+    events: []
+  },
+  {
+    id: 'zhaoshe', name: '赵奢', birth: -305, death: -266,
+    cat: 'military', dynasty: '战国', emoji: '⚔️',
+    location: { lat: 36.8, lng: 114.5, place: '赵国都城（今河北邯郸）' },
+    desc: '战国时期赵国名将。阏与之战大败秦军，打破秦军不可战胜的神话，是赵国抗秦的著名将领。其子赵括纸上谈兵，导致长平之败。',
+    achievements: ['阏与之战', '大破秦军'],
+    relations: [
+      { id: 'zhaokuo', type: '父子', label: '赵括（儿子）' },
+    ],
+    events: ['e_eyue_battle']
+  },
+  {
+    id: 'zhaokuo', name: '赵括', birth: -280, death: -260,
+    cat: 'military', dynasty: '战国', emoji: '📋',
+    location: { lat: 36.8, lng: 114.5, place: '赵国都城（今河北邯郸）' },
+    desc: '战国时期赵国将领，赵奢之子。熟读兵书但缺乏实战经验，长平之战取代廉颇为将，因轻敌冒进被白起大败，四十万赵军被坑杀，"纸上谈兵"典故出自此处。',
+    achievements: ['纸上谈兵（负面）'],
+    relations: [
+      { id: 'zhaoshe', type: '父子', label: '赵奢（父亲）' },
+    ],
+    events: ['e_changping_battle']
+  },
+  {
+    id: 'weilian', name: '魏冉', birth: -290, death: -264,
+    cat: 'politician', dynasty: '战国', emoji: '📋',
+    location: { lat: 34.8, lng: 112.5, place: '魏国都城（今河南开封）' },
+    desc: '战国时期秦昭襄王之舅，封为穰侯。多次担任秦相，推荐白起为将，四次出任丞相，权倾一时。后被范雎设计免职。',
+    achievements: ['推荐白起', '四次为相'],
+    relations: [
+      { id: 'baiqi', type: '举荐', label: '白起' },
+      { id: 'fanju', type: '对立', label: '范雎' },
+    ],
+    events: []
+  },
+  {
+    id: 'fanju', name: '范雎', birth: -290, death: -255,
+    cat: 'politician', dynasty: '战国', emoji: '📋',
+    location: { lat: 34.8, lng: 112.5, place: '魏国都城（今河南开封）' },
+    desc: '战国时期著名政治家、谋士，原为魏国中大夫，后入秦为相。提出"远交近攻"策略，辅佐秦昭襄王成为秦国实际统治者。',
+    achievements: ['远交近攻', '取代魏冉为相'],
+    relations: [
+      { id: 'weilian', type: '取代', label: '魏冉' },
+      { id: 'qinzhaoxiang', type: '君臣', label: '秦昭襄王' },
+    ],
+    events: []
+  },
+  {
+    id: 'qinzhaoxiang', name: '秦昭襄王', birth: -325, death: -251,
+    cat: 'emperor', dynasty: '战国', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '咸阳（今陕西咸阳）' },
+    desc: '战国时期秦国国君，在位56年，秦国在位最长的国君之一。重用白起、范雎等文臣武将，大破六国，为秦始皇统一六国奠定基础。',
+    achievements: ['长平之战', '奠定统一基础'],
+    relations: [
+      { id: 'baiqi', type: '君臣', label: '白起' },
+      { id: 'fanju', type: '君臣', label: '范雎' },
+      { id: 'qinshihuang', type: '曾孙', label: '秦始皇' },
+    ],
+    events: ['e_changping_battle']
+  },
+  {
+    id: 'piankui', name: '扁鹊', birth: -407, death: -310,
+    cat: 'scholar', dynasty: '春秋', emoji: '🏥',
+    location: { lat: 36.8, lng: 114.5, place: '渤海郡（今河北任丘）' },
+    desc: '春秋战国时期名医，齐国卢医。精通望闻问切四诊法，相传著有《难经》。被后世尊为"脉学之宗"和"中国医学鼻祖"。',
+    achievements: ['四诊法', '中医奠基人', '著《难经》'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'lubian', name: '鲁班', birth: -507, death: -440,
+    cat: 'scholar', dynasty: '春秋', emoji: '🔧',
+    location: { lat: 35.5, lng: 116.9, place: '鲁国（今山东滕州）' },
+    desc: '春秋时期著名工匠、公输般。被后世尊为"工匠祖师"，发明锯子、曲尺、墨斗等工具，相传云梯、钩强等攻城器械也为其所造。',
+    achievements: ['土木工匠祖师', '发明工具'],
+    relations: [{ id: 'mozi', type: '对立', label: '墨子（论战）' }],
+    events: []
+  },
+  {
+    id: 'mozi', name: '墨子', birth: -470, death: -391,
+    cat: 'philosopher', dynasty: '战国', emoji: '⚒️',
+    location: { lat: 30.5, lng: 116.5, place: '宋国（一说鲁国）' },
+    desc: '墨家学派创始人，提倡"兼爱""非攻""尚贤"等思想，与儒家并称"显学"。精通机械制造，曾为楚攻宋设计防御器械。',
+    achievements: ['创立墨家', '兼爱非攻', '机械制造'],
+    relations: [
+      { id: 'lubian', type: '论战', label: '鲁班（曾与之斗械）' },
+      { id: 'kongzi', type: '对立', label: '孔子（学派对立）' },
+    ],
+    events: []
+  },
+  {
+    id: 'gongshuban', name: '公输般', birth: -507, death: -440,
+    cat: 'scholar', dynasty: '春秋', emoji: '🔧',
+    location: { lat: 35.5, lng: 116.9, place: '鲁国（今山东滕州）' },
+    desc: '即鲁班，古代著名工匠。发明多种工具器械，与墨子论战的故事广为流传，是古代工匠智慧的象征。',
+    achievements: ['发明锯子', '工匠祖师'],
+    relations: [{ id: 'mozi', type: '论战', label: '墨子' }],
+    events: []
+  },
+
+  // 秦汉
+  {
+    id: 'qinshihuang', name: '秦始皇', birth: -259, death: -210,
+    cat: 'emperor', dynasty: '秦', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '咸阳（今陕西咸阳）' },
+    desc: '中国历史上第一个统一的中央集权国家秦朝的开国皇帝。统一六国，建立皇帝制度，统一文字、度量衡，修建长城，功过争议至今。',
+    achievements: ['统一六国', '建立皇帝制度', '统一文字度量衡', '修长城'],
+    relations: [
+      { id: 'lisi', type: '君臣', label: '李斯（丞相）' },
+      { id: 'hanfeizi', type: '影响', label: '韩非子（思想来源）' },
+      { id: 'liubang', type: '对立', label: '刘邦（灭秦者）' }
+    ],
+    events: ['e_liuguotongyi', 'e_changcheng']
+  },
+  {
+    id: 'liubang', name: '刘邦', birth: -256, death: -195,
+    cat: 'emperor', dynasty: '汉', emoji: '👑',
+    location: { lat: 33.4, lng: 115.6, place: '沛县（今江苏沛县）' },
+    desc: '汉朝开国皇帝（汉高祖），出身平民，灭秦后在楚汉之争中战胜项羽，建立汉朝，采用休养生息政策，奠定汉朝基础。',
+    achievements: ['建立汉朝', '楚汉之争获胜', '约法三章'],
+    relations: [
+      { id: 'xiangyu', type: '对立', label: '项羽（楚汉争雄）' },
+      { id: 'hanxin', type: '君臣', label: '韩信（大将军）' },
+      { id: 'zhanglianghanzu', type: '君臣', label: '张良（谋士）' }
+    ],
+    events: ['e_chuhanzhanzheng', 'e_han_founded']
+  },
+  {
+    id: 'xiangyu', name: '项羽', birth: -232, death: -202,
+    cat: 'military', dynasty: '秦末', emoji: '⚔️',
+    location: { lat: 33.4, lng: 118.3, place: '下相（今江苏宿迁）' },
+    desc: '秦末起义领袖，西楚霸王。破釜沉舟，巨鹿之战大败秦军；鸿门宴放走刘邦，最终乌江自刎，留下"霸王别姬"千古悲剧。',
+    achievements: ['巨鹿之战大破秦军', '推翻秦朝', '西楚霸王'],
+    relations: [
+      { id: 'liubang', type: '对立', label: '刘邦（楚汉争霸）' },
+    ],
+    events: ['e_julu', 'e_chuhanzhanzheng', 'e_wujiang']
+  },
+  {
+    id: 'hanxin', name: '韩信', birth: -231, death: -196,
+    cat: 'military', dynasty: '汉', emoji: '⚔️',
+    location: { lat: 33.8, lng: 117.3, place: '淮阴（今江苏淮安）' },
+    desc: '汉初三杰之一，军事天才。胯下之辱、背水一战等典故皆出其身。为汉朝建立立下不世之功，后被吕后杀害。',
+    achievements: ['背水一战', '明修栈道暗度陈仓', '辅助汉朝统一'],
+    relations: [
+      { id: 'liubang', type: '君臣', label: '刘邦（君主）' },
+    ],
+    events: ['e_chuhanzhanzheng']
+  },
+  {
+    id: 'zhanglianghanzu', name: '张良', birth: -250, death: -186,
+    cat: 'politician', dynasty: '汉', emoji: '🧠',
+    location: { lat: 33.9, lng: 116.9, place: '颍川城父（今河南郏县）' },
+    desc: '汉初三杰之一，足智多谋，被称为"谋圣"。协助刘邦建立汉朝后功成身退，修道养生，是知进退的典范。',
+    achievements: ['鸿门宴脱险计', '奠定汉朝基础', '功成身退'],
+    relations: [{ id: 'liubang', type: '君臣', label: '刘邦（君主）' }],
+    events: ['e_chuhanzhanzheng']
+  },
+  {
+    id: 'wudi_han', name: '汉武帝', birth: -156, death: -87,
+    cat: 'emperor', dynasty: '汉', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '西汉第七位皇帝，在位54年。独尊儒术，推恩令削藩，北击匈奴，开辟丝绸之路，设立太学，是汉朝最强盛时期的君主。',
+    achievements: ['独尊儒术', '北击匈奴', '开辟丝绸之路', '推恩令'],
+    relations: [
+      { id: 'weiqing', type: '君臣', label: '卫青（大将军）' },
+      { id: 'sima_qian', type: '君臣', label: '司马迁（史官，受腐刑）' },
+      { id: 'zhang_qian', type: '君臣', label: '张骞（出使西域）' }
+    ],
+    events: ['e_xiongnu_war', 'e_silkroad']
+  },
+  {
+    id: 'weiqing', name: '卫青', birth: -140, death: -106,
+    cat: 'military', dynasty: '汉', emoji: '⚔️',
+    location: { lat: 36.8, lng: 106.2, place: '河东平阳（今山西临汾）' },
+    desc: '西汉名将，七次出击匈奴，屡建奇功，收复河套地区，是汉武帝北击匈奴的主要将领，与霍去病并称"帝国双璧"。',
+    achievements: ['七击匈奴', '收复河套', '漠北大战'],
+    relations: [
+      { id: 'wudi_han', type: '君臣', label: '汉武帝（君主）' },
+      { id: 'huoqubing', type: '亲属', label: '霍去病（外甥）' }
+    ],
+    events: ['e_xiongnu_war']
+  },
+  {
+    id: 'huoqubing', name: '霍去病', birth: -140, death: -117,
+    cat: 'military', dynasty: '汉', emoji: '🏇',
+    location: { lat: 36.8, lng: 106.2, place: '河东平阳（今山西临汾）' },
+    desc: '西汉名将，卫青外甥。17岁初上战场便立大功，封冠军侯。"匈奴未灭，何以家为"是其名言，24岁英年早逝。',
+    achievements: ['封狼居胥', '六击匈奴', '漠北大战'],
+    relations: [
+      { id: 'wudi_han', type: '君臣', label: '汉武帝（君主）' },
+      { id: 'weiqing', type: '亲属', label: '卫青（舅父）' }
+    ],
+    events: ['e_xiongnu_war']
+  },
+  {
+    id: 'sima_qian', name: '司马迁', birth: -145, death: -86,
+    cat: 'scholar', dynasty: '汉', emoji: '📚',
+    location: { lat: 34.3, lng: 108.9, place: '龙门（今陕西韩城）' },
+    desc: '西汉史学家，著有《史记》，中国第一部纪传体通史。因为李陵辩护而遭汉武帝腐刑，忍辱负重完成史学巨著，被后世尊为"史圣"。',
+    achievements: ['著《史记》', '开创纪传体', '史圣'],
+    relations: [{ id: 'wudi_han', type: '君臣/受刑', label: '汉武帝（处以腐刑）' }],
+    events: ['e_shiji']
+  },
+  {
+    id: 'zhang_qian', name: '张骞', birth: -164, death: -114,
+    cat: 'politician', dynasty: '汉', emoji: '🗺️',
+    location: { lat: 34.3, lng: 108.9, place: '汉中城固（今陕西城固）' },
+    desc: '西汉外交家、探险家，两次出使西域，打通了联结东西方的丝绸之路，为东西方文化交流做出了不可磨灭的贡献。',
+    achievements: ['出使西域', '开辟丝绸之路', '凿空西域'],
+    relations: [{ id: 'wudi_han', type: '君臣', label: '汉武帝（遣派使者）' }],
+    events: ['e_silkroad']
+  },
+  {
+    id: 'lvhou', name: '吕后', birth: -241, death: -180,
+    cat: 'politician', dynasty: '汉', emoji: '👸',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '刘邦皇后，汉朝第一位皇后和皇太后。临朝称制16年，实行休养生息政策，为文景之治奠定基础；但也大开杀戒，诛杀刘氏诸王。',
+    achievements: ['临朝称制', '休养生息', '稳定汉初政局'],
+    relations: [
+      { id: 'liubang', type: '夫妻', label: '刘邦（丈夫）' },
+      { id: 'hanxin', type: '仇敌', label: '韩信（被其杀害）' }
+    ],
+    events: ['e_lvhouzheng']
+  },
+  {
+    id: 'hanwendi', name: '汉文帝', birth: -203, death: -157,
+    cat: 'emperor', dynasty: '汉', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '西汉第五位皇帝，励精图治，实行轻徭薄赋、与民休息的政策，开启"文景之治"。废除连坐法，取消肉刑，是中国历史上著名的仁德之君。',
+    achievements: ['文景之治', '废除连坐法', '轻徭薄赋', '仁德治国'],
+    relations: [
+      { id: 'liubang', type: '父子', label: '刘邦（父亲）' },
+      { id: 'hanjingdi', type: '父子', label: '汉景帝（儿子）' }
+    ],
+    events: ['e_wenjing_zhi']
+  },
+  {
+    id: 'hanjingdi', name: '汉景帝', birth: -188, death: -141,
+    cat: 'emperor', dynasty: '汉', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '西汉第六位皇帝，继续父亲汉文帝的治国方针，削藩平定七国之乱，开创"文景之治"。为汉武帝的大一统奠定了坚实基础。',
+    achievements: ['文景之治', '削藩平叛', '七国之乱'],
+    relations: [
+      { id: 'hanwendi', type: '父子', label: '汉文帝（父亲）' },
+      { id: 'wudi_han', type: '父子', label: '汉武帝（儿子）' }
+    ],
+    events: ['e_wenjing_zhi', 'e_qiguo_zhibian']
+  },
+  {
+    id: 'dongzhongshu', name: '董仲舒', birth: -179, death: -104,
+    cat: 'philosopher', dynasty: '汉', emoji: '📚',
+    location: { lat: 34.3, lng: 108.9, place: '广川（今河北景县）' },
+    desc: '西汉哲学家、思想家。提出"罢黜百家，独尊儒术"建议，创建今文经学体系，以儒学为正统，对中国后世思想文化影响深远。',
+    achievements: ['罢黜百家独尊儒术', '创立今文经学', '天人三策'],
+    relations: [{ id: 'wudi_han', type: '君臣', label: '汉武帝（献策）' }],
+    events: []
+  },
+  {
+    id: 'simaxiangru', name: '司马相如', birth: -179, death: -117,
+    cat: 'scholar', dynasty: '汉', emoji: '✍️',
+    location: { lat: 30.6, lng: 103.0, place: '蜀郡成都（今四川成都）' },
+    desc: '西汉著名辞赋家，被誉为"辞宗"和"赋圣"。代表作《子虚赋》《上林赋》被汉武帝赏识，与卓文君的爱情故事广为流传。',
+    achievements: ['《子虚赋》', '《上林赋》', '与卓文君的爱情'],
+    relations: [{ id: 'wudi_han', type: '君臣', label: '汉武帝' }],
+    events: []
+  },
+  {
+    id: 'suwu', name: '苏武', birth: -140, death: -60,
+    cat: 'diplomat', dynasty: '汉', emoji: '🏳️',
+    location: { lat: 36.6, lng: 114.5, place: '杜陵（今陕西西安）' },
+    desc: '西汉著名外交家，出使匈奴被扣押十九年，牧羊北海（今贝加尔湖），持节不屈。"苏武牧羊"成为中华民族忠贞不屈的象征。',
+    achievements: ['持节牧羊十九年', '苏武牧羊', '忠贞不屈'],
+    relations: [{ id: 'wudi_han', type: '君臣', label: '汉武帝' }],
+    events: []
+  },
+  {
+    id: 'liguang', name: '李广', birth: -184, death: -119,
+    cat: 'military', dynasty: '汉', emoji: '🏹',
+    location: { lat: 36.8, lng: 106.2, place: '陇西成纪（今甘肃静宁）' },
+    desc: '西汉名将，人称"飞将军"。与匈奴大小七十余战，未逢封侯之机，悲愤自刎。"冯唐易老，李广难封"成为千古遗憾。',
+    achievements: ['飞将军', '大小七十余战', '镇守边关'],
+    relations: [
+      { id: 'wudi_han', type: '君臣', label: '汉武帝' },
+      { id: 'weiqing', type: '同僚', label: '卫青' }
+    ],
+    events: ['e_xiongnu_war']
+  },
+  {
+    id: 'wangmang', name: '王莽', birth: -45, death: 23,
+    cat: 'politician', dynasty: '新', emoji: '📋',
+    location: { lat: 34.3, lng: 108.9, place: '魏郡元城（今河北大名）' },
+    desc: '西汉外戚王氏家族成员，以外戚专权，后篡汉建立新朝。推行托古改制，改革币制，最终引发绿林赤眉起义，被杀身亡。',
+    achievements: ['篡汉建新', '托古改制'],
+    relations: [
+      { id: 'liuxuan', type: '篡位', label: '汉平帝' },
+      { id: 'liuxiu', type: '对立', label: '刘秀（推翻新朝）' }
+    ],
+    events: ['e_wangmang_gaizhi', 'e_huanyang_zhiyi']
+  },
+
+  // 三国
+  {
+    id: 'caocao', name: '曹操', birth: 155, death: 220,
+    cat: 'emperor', dynasty: '三国', emoji: '⚔️',
+    location: { lat: 34.6, lng: 112.4, place: '沛国谯县（今安徽亳州）' },
+    desc: '三国时期曹魏的奠基者，杰出的政治家、军事家、文学家。挟天子以令诸侯，统一北方，赤壁之战失败后与刘备孙权三分天下。',
+    achievements: ['统一北方', '文学成就', '屯田制', '挟天子以令诸侯'],
+    relations: [
+      { id: 'liubei', type: '对立', label: '刘备（主要对手）' },
+      { id: 'sunquan', type: '对立', label: '孙权（赤壁对手）' },
+      { id: 'zhuge_liang', type: '对立', label: '诸葛亮（主要对手）' }
+    ],
+    events: ['e_chibi', 'e_guandu']
+  },
+  {
+    id: 'liubei', name: '刘备', birth: 161, death: 223,
+    cat: 'emperor', dynasty: '三国', emoji: '👑',
+    location: { lat: 30.7, lng: 104.0, place: '涿郡（今河北涿州）' },
+    desc: '蜀汉开国皇帝，汉室宗亲。三顾茅庐得诸葛亮，联孙抗曹，赤壁之战后建立蜀汉，仁义之名广为人知。',
+    achievements: ['建立蜀汉', '三顾茅庐', '联吴抗曹'],
+    relations: [
+      { id: 'zhuge_liang', type: '君臣', label: '诸葛亮（军师）' },
+      { id: 'caocao', type: '对立', label: '曹操（主要对手）' },
+      { id: 'guanyu', type: '结义', label: '关羽（义兄弟）' },
+      { id: 'zhangfei', type: '结义', label: '张飞（义兄弟）' }
+    ],
+    events: ['e_chibi', 'e_shu_founded']
+  },
+  {
+    id: 'zhuge_liang', name: '诸葛亮', birth: 181, death: 234,
+    cat: 'politician', dynasty: '三国', emoji: '🪁',
+    location: { lat: 32.0, lng: 112.2, place: '琅琊阳都（今山东临沂沂南）' },
+    desc: '三国时期蜀汉丞相，杰出的政治家、军事家、发明家。隆中对三分天下之策，六出祁山北伐，"鞠躬尽瘁死而后已"是其一生写照。',
+    achievements: ['隆中对', '赤壁之战', '六出祁山', '发明木牛流马', '八阵图'],
+    relations: [
+      { id: 'liubei', type: '君臣', label: '刘备（君主）' },
+      { id: 'caocao', type: '对立', label: '曹操（对手）' },
+      { id: 'zhouyu', type: '对立/同盟', label: '周瑜（联合赤壁）' }
+    ],
+    events: ['e_chibi', 'e_beifa']
+  },
+  {
+    id: 'guanyu', name: '关羽', birth: 162, death: 220,
+    cat: 'military', dynasty: '三国', emoji: '🔴',
+    location: { lat: 30.7, lng: 104.0, place: '河东解良（今山西运城）' },
+    desc: '三国时期蜀汉名将，与刘备张飞桃园三结义。忠义之名天下皆知，被后世尊为"武圣"、"关帝"，是中国民间信仰中的重要神祇。',
+    achievements: ['过五关斩六将', '水淹七军', '斩颜良文丑'],
+    relations: [
+      { id: 'liubei', type: '结义', label: '刘备（大哥）' },
+      { id: 'zhangfei', type: '结义', label: '张飞（结义兄弟）' }
+    ],
+    events: []
+  },
+  {
+    id: 'zhangfei', name: '张飞', birth: 167, death: 221,
+    cat: 'military', dynasty: '三国', emoji: '⚔️',
+    location: { lat: 32.4, lng: 105.7, place: '涿郡（今河北涿州）' },
+    desc: '三国时期蜀汉名将，桃园三结义之一。勇猛彪悍，当阳桥头一声怒吼退曹兵，是威猛武将的代表。',
+    achievements: ['长坂坡独退曹军', '义释严颜'],
+    relations: [
+      { id: 'liubei', type: '结义', label: '刘备（大哥）' },
+      { id: 'guanyu', type: '结义', label: '关羽（结义兄弟）' }
+    ],
+    events: []
+  },
+  {
+    id: 'zhouyu', name: '周瑜', birth: 175, death: 210,
+    cat: 'military', dynasty: '三国', emoji: '🎵',
+    location: { lat: 31.9, lng: 119.5, place: '庐江舒城（今安徽舒城）' },
+    desc: '东吴名将，赤壁之战主要指挥者，以少胜多击败曹操。"既生瑜，何生亮"表达了他与诸葛亮之间的恩怨情仇，英年早逝。',
+    achievements: ['赤壁之战', '统领东吴水军'],
+    relations: [
+      { id: 'zhuge_liang', type: '对立/同盟', label: '诸葛亮（赤壁合作又相争）' },
+      { id: 'sunquan', type: '君臣', label: '孙权（君主）' }
+    ],
+    events: ['e_chibi']
+  },
+  {
+    id: 'sunquan', name: '孙权', birth: 182, death: 252,
+    cat: 'emperor', dynasty: '三国', emoji: '👑',
+    location: { lat: 32.0, lng: 118.8, place: '吴郡富春（今浙江富阳）' },
+    desc: '东吴开国皇帝，继承父兄基业，联蜀抗曹，赤壁之战大败曹操。在位期间开发江东，遣使出海，促进航海事业。',
+    achievements: ['建立东吴', '联蜀抗曹', '开发江东'],
+    relations: [
+      { id: 'caocao', type: '对立', label: '曹操（赤壁对手）' },
+      { id: 'zhouyu', type: '君臣', label: '周瑜（大将）' }
+    ],
+    events: ['e_chibi']
+  },
+
+  // ==================== 东汉 ====================
+  {
+    id: 'liuxiu', name: '汉光武帝', birth: -5, death: 57,
+    cat: 'emperor', dynasty: '汉', emoji: '👑',
+    location: { lat: 33.0, lng: 112.5, place: '南阳蔡阳（今湖北枣阳）' },
+    desc: '东汉开国皇帝，汉高祖刘邦九世孙。在绿林起义中起兵，推翻王莽政权，统一天下，重建汉朝，史称"光武中兴"。',
+    achievements: ['建立东汉', '光武中兴', '统一天下'],
+    relations: [
+      { id: 'wangmang', type: '对立', label: '王莽（推翻其统治）' }
+    ],
+    events: ['e_guangwu_zhongxing']
+  },
+  {
+    id: 'banchao', name: '班超', birth: 32, death: 102,
+    cat: 'military', dynasty: '汉', emoji: '⚔️',
+    location: { lat: 39.9, lng: 116.4, place: '扶风平陵（今陕西咸阳）' },
+    desc: '东汉著名军事家、外交家，班固之弟。投笔从戎，出使西域三十一年，平定西域五十余国，维护了东汉对西域的统治。',
+    achievements: ['投笔从戎', '平定西域', '经营西域三十一年'],
+    relations: [
+      { id: 'banguda', type: '兄弟', label: '班固（兄长）' }
+    ],
+    events: ['e_xinjiang_peace']
+  },
+  {
+    id: 'banguda', name: '班固', birth: 32, death: 92,
+    cat: 'scholar', dynasty: '汉', emoji: '📚',
+    location: { lat: 39.9, lng: 116.4, place: '扶风平陵（今陕西咸阳）' },
+    desc: '东汉史学家，继承父志撰写《汉书》，是中国第一部纪传体断代史。与司马迁《史记》并称"史汉"。',
+    achievements: ['著《汉书》', '中国第一部断代史'],
+    relations: [
+      { id: 'banchao', type: '兄弟', label: '班超（弟弟）' }
+    ],
+    events: []
+  },
+  {
+    id: 'canglun', name: '蔡伦', birth: 63, death: 121,
+    cat: 'inventor', dynasty: '汉', emoji: '🔧',
+    location: { lat: 26.9, lng: 111.3, place: '桂阳耒阳（今湖南耒阳）' },
+    desc: '东汉宦官，发明改进造纸术，用树皮、麻头、破布、旧鱼网为原料造纸，被称为"蔡侯纸"，对世界文明做出巨大贡献。',
+    achievements: ['改进造纸术', '蔡侯纸', '四大发明之一'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'zhangheng', name: '张衡', birth: 78, death: 139,
+    cat: 'scholar', dynasty: '汉', emoji: '🔭',
+    location: { lat: 33.0, lng: 112.5, place: '南阳西鄂（今河南南阳）' },
+    desc: '东汉著名科学家、文学家，发明浑天仪和地动仪，绘制《灵宪图》，在天文、历法、数学、机械制造等方面都有杰出贡献。',
+    achievements: ['发明地动仪', '发明浑天仪', '绘制星图', '科学家'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'huatuo', name: '华佗', birth: 145, death: 208,
+    cat: 'scholar', dynasty: '汉', emoji: '🏥',
+    location: { lat: 33.8, lng: 115.8, place: '沛国谯县（今安徽亳州）' },
+    desc: '东汉末年著名医学家，被称为"外科鼻祖"和"神医"。发明麻沸散（麻醉药），开创外科手术；创编五禽戏健身法。',
+    achievements: ['麻沸散', '五禽戏', '外科手术', '神医'],
+    relations: [{ id: 'caocao', type: '就医', label: '曹操（为其治头风）' }],
+    events: []
+  },
+  {
+    id: 'zhangzhongjing', name: '张仲景', birth: 150, death: 219,
+    cat: 'scholar', dynasty: '汉', emoji: '🏥',
+    location: { lat: 33.0, lng: 112.5, place: '南阳涅阳（今河南邓州）' },
+    desc: '东汉著名医学家，被尊为"医圣"。著《伤寒杂病论》，确立中医辨证论治原则，是中医四大经典之一。',
+    achievements: ['著《伤寒杂病论》', '医圣', '确立辨证论治'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'simayimin', name: '司马懿', birth: 179, death: 251,
+    cat: 'politician', dynasty: '三国', emoji: '🧠',
+    location: { lat: 34.6, lng: 112.4, place: '河内温县（今河南温县）' },
+    desc: '三国时期曹魏权臣，政治家、军事家。辅佐曹丕、曹睿、曹芳三代，装病骗过诸葛亮，“高平陵之变”后掌控曹魏大权。',
+    achievements: ['高平陵之变', '抵御蜀汉', '子孙建立西晋'],
+    relations: [
+      { id: 'caocao', type: '君臣', label: '曹操' },
+      { id: 'zhuge_liang', type: '对立', label: '诸葛亮（老对手）' }
+    ],
+    events: ['e_gaopingling']
+  },
+  {
+    id: 'zhouyu2', name: '周瑜', birth: 175, death: 210,
+    cat: 'military', dynasty: '三国', emoji: '⚔️',
+    location: { lat: 33.0, lng: 119.8, place: '庐江舒县（今安徽舒城）' },
+    desc: '东吴名将，与孙权之妹孙小妹成婚。赤壁之战主战派，力劝孙权联合刘备，大败曹操。"谈笑间，樯橹灰飞烟灭"正是其风采。',
+    achievements: ['赤壁之战主将', '火烧曹营', '年少有为'],
+    relations: [
+      { id: 'sunquan', type: '君臣', label: '孙权' },
+      { id: 'caocao', type: '对立', label: '曹操' }
+    ],
+    events: ['e_chibi']
+  },
+  {
+    id: 'zhaoyun', name: '赵云', birth: 161, death: 229,
+    cat: 'military', dynasty: '三国', emoji: '⚔️',
+    location: { lat: 38.1, lng: 114.6, place: '常山真定（今河北正定）' },
+    desc: '赵云（？—229年），字子龙，常山真定（今河北正定）人。三国时期蜀汉名将，与关羽、张飞并称"燕南三士"。初从公孙瓒，后归刘备，追随刘备近三十年。长坂坡之战中单骑冲入曹军重围，救出幼主刘禅，威震天下。汉水之战以寡敌众，大破曹军，刘备赞其"一身都是胆"。赵云不仅是勇将，更有政治远见，曾劝谏刘备不要伐吴、不要分田宅于功臣，展现了儒将风范。诸葛亮北伐时，赵云以年迈之身力战退敌，229年病逝，追谥顺平侯。',
+    achievements: ['长坂坡单骑救主', '截江夺阿斗', '汉水之战大破曹军', '一身都是胆', '劝谏刘备勿伐吴'],
+    relations: [
+      { id: 'liubei', type: '君臣', label: '刘备' }
+    ],
+    events: []
+  },
+  {
+    id: 'zhangliao', name: '张辽', birth: 169, death: 222,
+    cat: 'military', dynasty: '三国', emoji: '⚔️',
+    location: { lat: 31.8, lng: 117.2, place: '雁门马邑（今山西朔州）' },
+    desc: '三国时期曹魏名将，威震逍遥津。以八百精兵大破孙权十万大军，吓得小儿不敢夜啼，是曹操麾下最勇猛的将领之一。',
+    achievements: ['威震逍遥津', '大破孙权', '五子良将之首'],
+    relations: [
+      { id: 'caocao', type: '君臣', label: '曹操' }
+    ],
+    events: []
+  },
+  {
+    id: 'lvbu', name: '吕布', birth: 151, death: 198,
+    cat: 'military', dynasty: '三国', emoji: '⚔️',
+    location: { lat: 37.4, lng: 121.4, place: '五原郡九原（今内蒙古包头）' },
+    desc: '三国时期猛将，骑射无双，号为"飞将"。先后背叛丁原、董卓，后割据徐州，曹操在下邳将其擒杀。',
+    achievements: ['辕门射戟', '虎牢关三英战吕布'],
+    relations: [
+      { id: 'caocao', type: '对立', label: '曹操' }
+    ],
+    events: []
+  },
+  {
+    id: 'jiangwei', name: '姜维', birth: 202, death: 264,
+    cat: 'military', dynasty: '三国', emoji: '⚔️',
+    location: { lat: 32.0, lng: 105.6, place: '天水冀县（今甘肃甘谷）' },
+    desc: '三国时期蜀汉名将，诸葛亮继承人。继承诸葛亮北伐遗志，九伐中原，忠于蜀汉至死，是蜀汉最后的守护者。',
+    achievements: ['九伐中原', '继承诸葛亮北伐', '蜀汉最后的忠臣'],
+    relations: [
+      { id: 'zhuge_liang', type: '师承', label: '诸葛亮' },
+      { id: 'liushan', type: '君臣', label: '刘禅' }
+    ],
+    events: []
+  },
+
+  // ==================== 两晋 ====================
+  {
+    id: 'sima_yan', name: '晋武帝', birth: 236, death: 290,
+    cat: 'emperor', dynasty: '晋', emoji: '👑',
+    location: { lat: 34.6, lng: 112.4, place: '河内温县（今河南温县）' },
+    desc: '司马昭之子，晋朝开国皇帝。逼迫魏元帝禅让，建立晋朝，后统一三国（280年）。晚年昏聩，引发八王之乱。',
+    achievements: ['建立晋朝', '统一三国', '太康之治'],
+    relations: [
+      { id: 'simayimin', type: '祖孙', label: '司马懿（祖父）' }
+    ],
+    events: ['e_jin_unified', 'e_bawang_zhiluan']
+  },
+  {
+    id: 'wangxizhi', name: '王羲之', birth: 303, death: 361,
+    cat: 'artist', dynasty: '晋', emoji: '✍️',
+    location: { lat: 30.3, lng: 120.2, place: '琅琊临沂（今山东临沂）' },
+    desc: '东晋著名书法家，被誉为"书圣"。其书法《兰亭集序》被誉为"天下第一行书"，对后世书法影响极其深远。',
+    achievements: ['书圣', '《兰亭集序》', '天下第一行书'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'xie_an', name: '谢安', birth: 320, death: 385,
+    cat: 'politician', dynasty: '晋', emoji: '🧠',
+    location: { lat: 31.6, lng: 120.3, place: '陈郡阳夏（今河南太康）' },
+    desc: '东晋著名政治家、军事家。淝水之战的总指挥，以八万北府兵大破苻坚八十七万大军，是东晋的救星。',
+    achievements: ['淝水之战', '东山再起', '稳住东晋'],
+    relations: [
+      { id: 'xiexuan', type: '兄弟', label: '谢玄（弟弟）' }
+    ],
+    events: ['e_feishui']
+  },
+  {
+    id: 'xiexuan', name: '谢玄', birth: 343, death: 388,
+    cat: 'military', dynasty: '晋', emoji: '⚔️',
+    location: { lat: 31.6, lng: 120.3, place: '陈郡阳夏（今河南太康）' },
+    desc: '东晋名将，谢安之侄。组建北府兵，在淝水之战中担任先锋，与叔父谢安一起大破前秦苻坚。',
+    achievements: ['组建北府兵', '淝水之战先锋'],
+    relations: [
+      { id: 'xie_an', type: '叔侄', label: '谢安' }
+    ],
+    events: ['e_feishui']
+  },
+  {
+    id: 'taoyuanming', name: '陶渊明', birth: 365, death: 427,
+    cat: 'scholar', dynasty: '晋', emoji: '🍶',
+    location: { lat: 29.6, lng: 115.9, place: '江州寻阳（今江西九江）' },
+    desc: '东晋著名诗人、辞赋家，中国田园诗的开创者。不愿为五斗米折腰，辞官归隐，写下《桃花源记》《归去来兮辞》等名作。',
+    achievements: ['田园诗之祖', '《桃花源记》', '《归去来兮辞》', '不为五斗米折腰'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'zuti', name: '祖逖', birth: 266, death: 321,
+    cat: 'military', dynasty: '晋', emoji: '⚔️',
+    location: { lat: 37.8, lng: 112.7, place: '范阳遒县（今河北涞水）' },
+    desc: '东晋名将，"闻鸡起舞"的主人公之一。率部北伐，收复黄河以南地区，但因东晋朝廷不信任，忧愤而死。',
+    achievements: ['闻鸡起舞', '北伐中原', '收复失地'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'liukun', name: '刘琨', birth: 271, death: 318,
+    cat: 'military', dynasty: '晋', emoji: '⚔️',
+    location: { lat: 37.8, lng: 112.5, place: '中山魏昌（今河北无极）' },
+    desc: '东晋名将，"闻鸡起舞"的另一位主人公。与祖逖是好朋友，并称"祖逖刘琨"，一同立志北伐。',
+    achievements: ['闻鸡起舞', '坚守晋阳'],
+    relations: [{ id: 'zuti', type: '好友', label: '祖逖' }],
+    events: []
+  },
+
+  // ==================== 南北朝 ====================
+  {
+    id: 'liuyu', name: '宋武帝', birth: 363, death: 422,
+    cat: 'emperor', dynasty: '南北朝', emoji: '👑',
+    location: { lat: 31.3, lng: 120.6, place: '彭城绥舆里（今江苏徐州）' },
+    desc: '南朝宋开国皇帝，南北朝时期南朝第一帝。从奴隶到皇帝，灭桓玄、恢复晋朝，后代晋建国，北伐收复黄河以南地区。',
+    achievements: ['建立南朝宋', '北伐中原', '从奴隶到皇帝'],
+    relations: [],
+    events: ['e_southern_dynasty']
+  },
+  {
+    id: 'xiaoyans', name: '梁武帝', birth: 464, death: 549,
+    cat: 'emperor', dynasty: '南北朝', emoji: '👑',
+    location: { lat: 32.0, lng: 118.8, place: '南兰陵中都里（今江苏丹徒）' },
+    desc: '南朝梁开国皇帝，在位48年，前半期政治清明，后半期佞佛误国，导致侯景之乱，最终饿死台城。',
+    achievements: ['建立南朝梁', '编《昭明文选》', '大力提倡佛教'],
+    relations: [],
+    events: ['e_houjing_zhibian']
+  },
+  {
+    id: 'zuchongzhi', name: '祖冲之', birth: 429, death: 500,
+    cat: 'scholar', dynasty: '南北朝', emoji: '🔢',
+    location: { lat: 32.0, lng: 118.8, place: '范阳遒县（今河北涞水）' },
+    desc: '南北朝时期著名科学家，在数学、天文历法和机械制造方面都有杰出贡献。将圆周率精确到小数点后七位，编制《大明历》，发明千里船、水碓磨等。',
+    achievements: ['精确圆周率', '编制《大明历》', '发明千里船'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'lidaoyuan', name: '郦道元', birth: 472, death: 527,
+    cat: 'scholar', dynasty: '南北朝', emoji: '📜',
+    location: { lat: 36.6, lng: 114.5, place: '范阳涿县（今河北涿州）' },
+    desc: '北魏著名地理学家，著《水经注》，是中国古代最全面、最系统的综合性地理著作，对后世地理学和文学都有深远影响。',
+    achievements: ['著《水经注》', '地理学巨著'],
+    relations: [],
+    events: []
+  },
+
+  // ==================== 隋 ====================
+  {
+    id: 'suiyangdi', name: '隋文帝', birth: 541, death: 604,
+    cat: 'emperor', dynasty: '隋', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '大兴城（今陕西西安）' },
+    desc: '隋朝开国皇帝，统一南北朝，结束近三百年的分裂局面。创立科举制度，推行三省六部制，修建大运河，为后世留下宝贵遗产。',
+    achievements: ['统一南北朝', '创立科举', '修建大运河', '三省六部制'],
+    relations: [
+      { id: 'suizhou', type: '父子', label: '隋炀帝（儿子）' }
+    ],
+    events: ['e_sui_founded', 'e_dayunhe']
+  },
+  {
+    id: 'suijiangdi', name: '隋炀帝', birth: 569, death: 618,
+    cat: 'emperor', dynasty: '隋', emoji: '💀',
+    location: { lat: 34.3, lng: 108.9, place: '大兴城（今陕西西安）' },
+    desc: '隋朝第二位皇帝，开凿大运河，三征高句丽，修建东都洛阳。因暴政导致农民起义，隋朝灭亡，被宇文化及缢杀。',
+    achievements: ['开凿大运河', '三征高句丽', '修建东都洛阳'],
+    relations: [
+      { id: 'suiyangdi', type: '父子', label: '隋文帝（父亲）' }
+    ],
+    events: ['e_dayunhe', 'e_sui_mie']
+  },
+  {
+    id: 'yanzhi', name: '宇文化及', birth: 585, death: 619,
+    cat: 'politician', dynasty: '隋', emoji: '😈',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '宇文化及（585年—619年），隋末权臣、叛将。宇文述之子，出身鲜卑贵族。隋炀帝时任右屯卫将军，深得信任。隋末天下大乱，炀帝滞留江都（今江苏扬州），618年宇文化及发动江都之变，缢杀隋炀帝，立秦王杨浩为傀儡皇帝，自任大丞相。随后率军西归，沿途被李密所败，遂弑杨浩自立为帝，国号"许"，年号天寿。619年被窦建德擒获，以弑君之罪斩于襄国（今河北邢台），传首长安。',
+    achievements: ['发动江都之变', '缢杀隋炀帝', '建立许国（短暂）'],
+    relations: [
+      { id: 'suijiangdi', type: '弑', label: '隋炀帝' }
+    ],
+    events: ['e_sui_mie']
+  },
+
+  // 隋唐
+  {
+    id: 'liyuan', name: '唐高祖李渊', birth: 566, death: 635,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 37.8, lng: 112.5, place: '太原（今山西太原）' },
+    desc: '唐朝开国皇帝，趁隋末天下大乱起兵太原，建立唐朝。后被儿子李世民发动玄武门之变夺权，被迫退位为太上皇。',
+    achievements: ['建立唐朝', '统一全国'],
+    relations: [{ id: 'li_shimin', type: '父子', label: '李世民（儿子/篡位者）' }],
+    events: ['e_tang_founded', 'e_xuanwumen']
+  },
+  {
+    id: 'li_shimin', name: '唐太宗', birth: 599, death: 649,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐朝第二位皇帝（唐太宗李世民），发动玄武门之变夺得皇位。开创"贞观之治"，虚心纳谏，国泰民安，是中国历史上最杰出的帝王之一。',
+    achievements: ['贞观之治', '虚心纳谏', '平定东突厥', '天可汗'],
+    relations: [
+      { id: 'liyuan', type: '父子', label: '高祖（父亲）' },
+      { id: 'wei_zheng', type: '君臣', label: '魏征（谏臣）' },
+      { id: 'wu_zetian', type: '君臣', label: '武则天（侍妾/后继者）' }
+    ],
+    events: ['e_xuanwumen', 'e_zhenguan']
+  },
+  {
+    id: 'wei_zheng', name: '魏征', birth: 580, death: 643,
+    cat: 'politician', dynasty: '唐', emoji: '📜',
+    location: { lat: 34.5, lng: 113.0, place: '魏州曲城（今河北大名）' },
+    desc: '唐太宗时期著名谏臣，敢于直言进谏二百余次，是"贞观之治"的重要功臣。以铜为镜可正衣冠，以人为镜可知得失，是太宗的一面镜子。',
+    achievements: ['直言进谏', '参与修史', '贞观之治重要辅臣'],
+    relations: [{ id: 'li_shimin', type: '君臣', label: '太宗（君主）' }],
+    events: ['e_zhenguan']
+  },
+  {
+    id: 'wu_zetian', name: '武则天', birth: 624, death: 705,
+    cat: 'emperor', dynasty: '唐', emoji: '👸',
+    location: { lat: 34.7, lng: 112.4, place: '利州（今四川广元）' },
+    desc: '中国历史上唯一正式登基的女皇帝，改唐为周，在位15年。重视科举，广开言路，其统治期间国力持续增强，史称"武周之治"。',
+    achievements: ['中国唯一女皇', '发展科举', '武周之治'],
+    relations: [
+      { id: 'li_shimin', type: '君臣/情', label: '太宗（最初侍妾）' },
+      { id: 'xuanzong', type: '祖孙', label: '玄宗（孙子）' }
+    ],
+    events: ['e_wu_jidi']
+  },
+  {
+    id: 'xuanzong', name: '唐玄宗', birth: 685, death: 762,
+    cat: 'emperor', dynasty: '唐', emoji: '🎭',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐朝第六位皇帝，前期励精图治，开创"开元盛世"，使唐朝达到鼎盛；后期宠爱杨贵妃，重用安禄山，酿成安史之乱，盛唐走向衰落。',
+    achievements: ['开元盛世', '重视文艺音乐', '唐朝鼎盛期'],
+    relations: [
+      { id: 'yang_guifei', type: '情', label: '杨贵妃（宠妃）' },
+      { id: 'li_bai', type: '赏识', label: '李白（供奉翰林）' }
+    ],
+    events: ['e_kaiyuan', 'e_anshi']
+  },
+  {
+    id: 'yang_guifei', name: '杨贵妃', birth: 719, death: 756,
+    cat: 'artist', dynasty: '唐', emoji: '💃',
+    location: { lat: 34.1, lng: 107.0, place: '蒲州永乐（今山西永济）' },
+    desc: '唐玄宗宠妃，中国古代四大美女之一。安史之乱中在马嵬驿被迫自缢，留下了"汉皇重色思倾国"的千古传奇。',
+    achievements: ['四大美女之一', '安史之乱导火索'],
+    relations: [{ id: 'xuanzong', type: '情', label: '玄宗（宠爱她的皇帝）' }],
+    events: ['e_anshi']
+  },
+  {
+    id: 'li_bai', name: '李白', birth: 701, death: 762,
+    cat: 'scholar', dynasty: '唐', emoji: '🍷',
+    location: { lat: 31.2, lng: 121.4, place: '碎叶城（今吉尔吉斯斯坦托克马克），后寓居四川江油' },
+    desc: '唐代著名诗人，字太白，号青莲居士，被誉为"诗仙"。一生豪放不羁，留下大量脍炙人口的诗歌，如《静夜思》《将进酒》等。',
+    achievements: ['诗仙', '《将进酒》', '《静夜思》', '翰林供奉'],
+    relations: [
+      { id: 'du_fu', type: '友情', label: '杜甫（诗坛挚友）' },
+      { id: 'xuanzong', type: '君臣', label: '玄宗（供奉翰林）' }
+    ],
+    events: []
+  },
+  {
+    id: 'du_fu', name: '杜甫', birth: 712, death: 770,
+    cat: 'scholar', dynasty: '唐', emoji: '📝',
+    location: { lat: 30.9, lng: 103.8, place: '河南巩县（今河南巩义）' },
+    desc: '唐代著名诗人，字子美，被誉为"诗圣"。一生颠沛流离，其诗忧国忧民，被称为"诗史"，代表作有《春望》《三吏》《三别》等。',
+    achievements: ['诗圣', '诗史', '《春望》', '《茅屋为秋风所破歌》'],
+    relations: [{ id: 'li_bai', type: '友情', label: '李白（诗坛挚友）' }],
+    events: []
+  },
+  {
+    id: 'fang_xuanling', name: '房玄龄', birth: 579, death: 648,
+    cat: 'politician', dynasty: '唐', emoji: '📋',
+    location: { lat: 37.8, lng: 112.5, place: '齐州临淄（今山东临淄）' },
+    desc: '唐太宗时期宰相，善于谋略，与杜如晦并称"房杜"，是贞观之治的主要辅臣。辅佐李世民夺取帝位，为相二十四年。',
+    achievements: ['贞观之治', '房谋杜断', '辅佐李世民登基'],
+    relations: [
+      { id: 'li_shimin', type: '君臣', label: '唐太宗' },
+      { id: 'du_ruhu', type: '同僚', label: '杜如晦（并称房杜）' }
+    ],
+    events: ['e_zhenguan']
+  },
+  {
+    id: 'du_ruhu', name: '杜如晦', birth: 585, death: 630,
+    cat: 'politician', dynasty: '唐', emoji: '📋',
+    location: { lat: 34.3, lng: 108.9, place: '京兆杜陵（今陕西西安）' },
+    desc: '唐太宗时期宰相，善于决断，与房玄龄并称"房杜"。参与玄武门之变，帮助李世民夺取帝位，英年早逝。',
+    achievements: ['玄武门之变', '房谋杜断'],
+    relations: [
+      { id: 'li_shimin', type: '君臣', label: '唐太宗' }
+    ],
+    events: ['e_xuanwumen', 'e_zhenguan']
+  },
+  {
+    id: 'lichengxiang', name: '长孙无忌', birth: 594, death: 659,
+    cat: 'politician', dynasty: '唐', emoji: '📋',
+    location: { lat: 34.3, lng: 108.9, place: '河南洛阳' },
+    desc: '唐太宗皇后长孙氏之兄，唐朝开国功臣。参与玄武门之变，后辅佐唐高宗，被武则天迫害而死。',
+    achievements: ['玄武门之变', '辅佐三朝'],
+    relations: [
+      { id: 'li_shimin', type: '舅兄', label: '唐太宗' }
+    ],
+    events: ['e_xuanwumen']
+  },
+  {
+    id: 'lijing', name: '李靖', birth: 571, death: 649,
+    cat: 'military', dynasty: '唐', emoji: '⚔️',
+    location: { lat: 34.3, lng: 108.9, place: '京兆三原（今陕西三原）' },
+    desc: '唐朝著名军事家，屡立战功。平定东突厥、讨伐吐谷浑，被李渊赞为"韩、白、王、卫不及也"。',
+    achievements: ['平定东突厥', '讨伐吐谷浑', '军神'],
+    relations: [
+      { id: 'li_shimin', type: '君臣', label: '唐太宗' }
+    ],
+    events: ['e_zhenguan']
+  },
+  {
+    id: 'lishimin', name: '李世勣', birth: 594, death: 669,
+    cat: 'military', dynasty: '唐', emoji: '⚔️',
+    location: { lat: 37.8, lng: 112.5, place: '离狐（今山东鄄城）' },
+    desc: '唐朝开国功臣，原名徐世勣，李渊赐姓李。随李世民平定四方，破东突厥、薛延陀、高句丽，是贞观年间主要将领。',
+    achievements: ['破东突厥', '平薛延陀', '三朝元老'],
+    relations: [
+      { id: 'li_shimin', type: '君臣', label: '唐太宗' }
+    ],
+    events: ['e_zhenguan']
+  },
+  {
+    id: 'qinqiong', name: '秦琼', birth: 598, death: 638,
+    cat: 'military', dynasty: '唐', emoji: '⚔️',
+    location: { lat: 36.7, lng: 119.4, place: '齐州历城（今山东济南）' },
+    desc: '唐朝开国功臣，凌烟阁二十四功臣之一。勇猛善战，为秦王李世民夺取帝位立下汗马功劳。与尉迟恭一起被供奉为门神。',
+    achievements: ['凌烟阁二十四功臣', '门神之一'],
+    relations: [
+      { id: 'li_shimin', type: '君臣', label: '秦王李世民' }
+    ],
+    events: ['e_tang_founded']
+  },
+  {
+    id: 'yuchigong', name: '尉迟恭', birth: 585, death: 658,
+    cat: 'military', dynasty: '唐', emoji: '⚔️',
+    location: { lat: 39.9, lng: 114.5, place: '朔州善阳（今山西朔州）' },
+    desc: '唐朝开国功臣，凌烟阁二十四功臣之一。本为刘武周部将，后归顺李世民。勇冠三军，在玄武门之变中发挥重要作用。',
+    achievements: ['凌烟阁二十四功臣', '门神之一'],
+    relations: [
+      { id: 'li_shimin', type: '君臣', label: '秦王李世民' }
+    ],
+    events: ['e_xuanwumen']
+  },
+  {
+    id: 'xuanzang', name: '玄奘', birth: 602, death: 664,
+    cat: 'scholar', dynasty: '唐', emoji: '🙏',
+    location: { lat: 34.3, lng: 108.9, place: '洛州缑氏（今河南偃师）' },
+    desc: '唐代著名高僧，佛经翻译家。贞观年间西行取经，历经十七年，带回佛经六百余部，是中国佛教史上的传奇人物。《西游记》中唐僧的原型。',
+    achievements: ['西天取经', '翻译佛经', '《大唐西域记》'],
+    relations: [
+      { id: 'li_shimin', type: '受到', label: '唐太宗（支持取经）' }
+    ],
+    events: ['e_xuanzang_trip']
+  },
+  {
+    id: 'liuyizhou', name: '刘禹锡', birth: 772, death: 842,
+    cat: 'scholar', dynasty: '唐', emoji: '📝',
+    location: { lat: 34.3, lng: 108.9, place: '洛阳（含籍贯浙江嘉兴）' },
+    desc: '唐代著名诗人、文学家、哲学家，有"诗豪"之称。参与王叔文政治革新（永贞革新），失败后被贬谪二十余年。与白居易并称"刘白"，与柳宗元并称"刘柳"。代表作《陋室铭》《竹枝词》《乌衣巷》等。',
+    achievements: ['诗豪', '《陋室铭》', '永贞革新', '刘白齐名'],
+    relations: [
+      { id: 'baijuyi', type: '友情', label: '白居易' }
+    ],
+    events: []
+  },
+  {
+    id: 'baijuyi', name: '白居易', birth: 772, death: 846,
+    cat: 'scholar', dynasty: '唐', emoji: '📝',
+    location: { lat: 34.7, lng: 113.6, place: '下邽（今陕西渭南）' },
+    desc: '唐代著名诗人，字乐天，号香山居士。倡导新乐府运动，诗作通俗易懂，代表作《长恨歌》《琵琶行》等。',
+    achievements: ['新乐府运动', '《长恨歌》', '《琵琶行》', '诗魔'],
+    relations: [
+      { id: 'liuyizhou', type: '友情', label: '刘禹锡' }
+    ],
+    events: []
+  },
+  {
+    id: 'hansan', name: '韩愈', birth: 768, death: 824,
+    cat: 'scholar', dynasty: '唐', emoji: '📝',
+    location: { lat: 23.4, lng: 116.6, place: '昌黎（今河南孟州）' },
+    desc: '唐代文学家、思想家，唐宋八大家之首。倡导古文运动，反对六朝骈文，主张文以载道。代表作《师说》《祭十二郎文》等。',
+    achievements: ['古文运动', '唐宋八大家之首', '《师说》'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'liushangyin', name: '李商隐', birth: 813, death: 858,
+    cat: 'scholar', dynasty: '唐', emoji: '📝',
+    location: { lat: 30.6, lng: 104.0, place: '怀州河内（今河南沁阳）' },
+    desc: '晚唐著名诗人，与杜牧并称"小李杜"。诗作深情绵邈，多用典故，无题诗堪称一绝。代表作《无题》《锦瑟》等。',
+    achievements: ['小李杜', '《无题》诗', '深情绵邈'],
+    relations: [
+      { id: 'dumu', type: '友情', label: '杜牧' }
+    ],
+    events: []
+  },
+  {
+    id: 'dumu', name: '杜牧', birth: 803, death: 852,
+    cat: 'scholar', dynasty: '唐', emoji: '📝',
+    location: { lat: 33.0, lng: 115.6, place: '京兆万年（今陕西西安）' },
+    desc: '晚唐著名诗人，与李商隐并称"小李杜"。诗风俊爽明丽，《阿房宫赋》传颂千古。代表作《泊秦淮》《山行》等。',
+    achievements: ['小李杜', '《阿房宫赋》', '俊爽诗风'],
+    relations: [
+      { id: 'liushangyin', type: '友情', label: '李商隐' }
+    ],
+    events: []
+  },
+  {
+    id: 'guozhen', name: '郭子仪', birth: 697, death: 781,
+    cat: 'military', dynasty: '唐', emoji: '⚔️',
+    location: { lat: 34.3, lng: 108.9, place: '华州郑县（今陕西华县）' },
+    desc: '唐代名将，平定安史之乱的主要功臣。戎马一生，功高望重，被封为汾阳王，平安史之乱，收复两京。',
+    achievements: ['平定安史之乱', '收复两京', '汾阳王'],
+    relations: [
+      { id: 'xuanzong', type: '君臣', label: '唐玄宗' }
+    ],
+    events: ['e_anshi']
+  },
+  {
+    id: 'lichengan', name: '李光弼', birth: 727, death: 779,
+    cat: 'military', dynasty: '唐', emoji: '⚔️',
+    location: { lat: 22.2, lng: 112.5, place: '营州柳城（今辽宁朝阳）' },
+    desc: '唐代名将，与郭子仪并称"郭李"。平定安史之乱的主要功臣，在太原之战中以少胜多，大破史思明叛军。',
+    achievements: ['太原之战', '大破史思明', '平定安史之乱'],
+    relations: [],
+    events: ['e_anshi']
+  },
+  {
+    id: 'peiquei', name: '裴度', birth: 765, death: 839,
+    cat: 'politician', dynasty: '唐', emoji: '📋',
+    location: { lat: 34.7, lng: 113.6, place: '河东闻喜（今山西闻喜）' },
+    desc: '唐代名相，辅佐唐宪宗平定淮西之乱，元和中兴的主要功臣。与裴度同时代的还有韩愈、白居易等。',
+    achievements: ['平定淮西之乱', '元和中兴', '名相'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'lifuguo', name: '李辅国', birth: 704, death: 762,
+    cat: 'politician', dynasty: '唐', emoji: '😈',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐代权阉，本名静忠，安史之乱中劝太子李亨即位（即唐肃宗），掌握禁军，权倾朝野。肃宗病重时杀张皇后，拥立代宗。代宗即位后被尊为"尚父"，旋即被代宗派人刺杀，是唐代宦官专权的开端。',
+    achievements: ['拥立肃宗', '拥立代宗', '唐代宦官专权之始'],
+    relations: [
+      { id: 'xuanzong', type: '胁迫', label: '唐玄宗' }
+    ],
+    events: ['e_anshi']
+  },
+  {
+    id: 'gaozong_tang', name: '唐高宗', birth: 628, death: 683,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐朝第三位皇帝，在位34年。继续贞观之治的繁荣，但在后期大权旁落于武则天。',
+    achievements: ['永徽之治', '继续贞观之治'],
+    relations: [
+      { id: 'li_shimin', type: '父子', label: '唐太宗（父亲）' },
+      { id: 'wu_zetian', type: '夫妻', label: '武则天（皇后）' }
+    ],
+    events: []
+  },
+
+  // ==================== 晚唐（安史之乱后） ====================
+  {
+    id: 'suzong', name: '唐肃宗', birth: 711, death: 762,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '灵武（今宁夏灵武）' },
+    desc: '唐玄宗第三子，安史之乱中在灵武即位，遥尊玄宗为太上皇。倚重郭子仪、李光弼等将领平叛，收复长安、洛阳两京。但在位期间宦官李辅国、程元振专权，张皇后干政，朝政混乱。762年病逝，在位仅6年。',
+    achievements: ['灵武即位', '收复两京', '平定安史之乱'],
+    relations: [
+      { id: 'xuanzong', type: '父子', label: '唐玄宗（父亲）' },
+      { id: 'guozhen', type: '君臣', label: '郭子仪' },
+      { id: 'lifuguo', type: '被控制', label: '李辅国' }
+    ],
+    events: ['e_anshi']
+  },
+  {
+    id: 'daizong', name: '唐代宗', birth: 727, death: 779,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐肃宗长子，安史之乱末期即位。763年吐蕃攻入长安，代宗出逃，后赖郭子仪收复。在位期间始定"两税法"雏形，以宦官程元振、鱼朝恩典禁军，藩镇割据日益严重，河北三镇（魏博、成德、卢龙）事实上独立。',
+    achievements: ['平定安史残余', '两税法雏形'],
+    relations: [
+      { id: 'suzong', type: '父子', label: '唐肃宗（父亲）' },
+      { id: 'guozhen', type: '君臣', label: '郭子仪' }
+    ],
+    events: []
+  },
+  {
+    id: 'de_zong', name: '唐德宗', birth: 742, death: 805,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐代宗长子，在位26年。初期试图削藩，引发"四镇之乱"和"泾原兵变"，被迫出逃奉天（今陕西乾县）。后推行两税法改革，由宰相杨炎主导，是中国赋税制度重大变革。晚年信任宦官，以窦文场、霍仙鸣典禁军，宦官专权制度化。',
+    achievements: ['推行两税法', '削藩失败'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'yangyan', name: '杨炎', birth: 727, death: 781,
+    cat: 'politician', dynasty: '唐', emoji: '📋',
+    location: { lat: 34.3, lng: 108.9, place: '凤翔（今陕西凤翔）' },
+    desc: '唐代改革家、宰相，两税法的创立者。建中元年（780年）提出并推行两税法，以资产为本、按夏秋两季征税，取代租庸调制，是中国赋税史上的里程碑。后因与卢杞争权被贬赐死。',
+    achievements: ['创立两税法', '赋税制度改革'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'xianzong', name: '唐宪宗', birth: 778, death: 820,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐朝中期最有作为的皇帝之一，在位15年。以"元和中兴"著称，决心削藩，先后平定西川刘辟、镇海李锜、淮西吴元济、淄青李师道等藩镇叛乱，一度恢复中央权威，使藩镇暂时服从。但晚年信佛求长生，被宦官陈弘志弑杀，是唐代被宦官弑杀的第一位皇帝。',
+    achievements: ['元和中兴', '平定淮西', '恢复中央权威'],
+    relations: [
+      { id: 'peiquei', type: '君臣', label: '裴度（宰相）' }
+    ],
+    events: ['e_yuanhe_zhongxing']
+  },
+  {
+    id: 'muzong', name: '唐穆宗', birth: 795, death: 824,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐宪宗第三子，在位仅4年。即位后尽废宪宗削藩之策，藩镇复叛，河北三镇再度割据。沉迷宴乐，宠信宦官，朝政日益败坏。击球时受伤，中风不起，24岁暴亡。',
+    achievements: [],
+    relations: [
+      { id: 'xianzong', type: '父子', label: '唐宪宗（父亲）' }
+    ],
+    events: []
+  },
+  {
+    id: 'wenzong', name: '唐文宗', birth: 809, death: 840,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐穆宗次子，有心振作却无力回天。太和九年（835年）与李训、郑注策划"甘露之变"，企图以观甘露为名诛杀宦官仇士良，事泄失败，参与朝臣千余人被杀，史称"甘露之变"。此后文宗被宦官完全控制，形同傀儡，自叹"受制于家奴"，抑郁而终。',
+    achievements: ['甘露之变（失败）'],
+    relations: [
+      { id: 'muzong', type: '兄弟', label: '唐穆宗（兄长）' }
+    ],
+    events: ['e_ganlu_zhibian']
+  },
+  {
+    id: 'wuzong', name: '唐武宗', birth: 814, death: 846,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐穆宗第五子，在位6年。倚重宰相李德裕，推行"会昌灭佛"，拆毁寺院4600余所，没收寺院土地和铜像铸钱，暂时充实国库。对外击败回鹘，平定泽潞刘稹之叛，是晚唐最后的强势君主。因服食丹药中毒而死，年仅32岁。',
+    achievements: ['会昌灭佛', '击败回鹘', '平定泽潞'],
+    relations: [
+      { id: 'muzong', type: '父子', label: '唐穆宗（父亲）' }
+    ],
+    events: ['e_huichang_miefo']
+  },
+  {
+    id: 'xuanzong_tang', name: '唐宣宗', birth: 810, death: 859,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐宪宗第十三子，被称"小太宗"。装傻数十年以避宦官猜忌，即位后一改会昌之政，恢复佛教，贬斥李德裕，起用白敏中。在位13年，勤政爱民，洞察下情，一度出现"大中之治"的治世局面。但无法解决根本的宦官和藩镇问题，唐朝衰亡之势不可逆转。',
+    achievements: ['大中之治', '装傻保身', '勤政爱民'],
+    relations: [
+      { id: 'xianzong', type: '父子', label: '唐宪宗（父亲）' }
+    ],
+    events: ['e_dazhong_zhizhi']
+  },
+  {
+    id: 'yizong', name: '唐懿宗', birth: 833, death: 873,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐宣宗长子，在位14年，是唐朝最荒淫的皇帝之一。沉迷佛事，广建寺院，出游无度，耗费巨资。其统治时期，浙东裘甫起义、桂林庞勋兵变相继爆发，藩镇割据加剧，唐朝加速走向灭亡。',
+    achievements: [],
+    relations: [
+      { id: 'xuanzong_tang', type: '父子', label: '唐宣宗（父亲）' }
+    ],
+    events: []
+  },
+  {
+    id: 'xizong', name: '唐僖宗', birth: 862, death: 888,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐懿宗第五子，12岁即位，是唐朝即位年龄最小的皇帝。在位期间由宦官田令孜把持朝政，本人沉迷蹴鞠嬉戏。875年王仙芝、黄巢起义爆发，880年黄巢攻入长安，僖宗出逃四川，流亡5年。885年返长安后又被藩镇逼迫出逃，直至888年病逝。',
+    achievements: [],
+    relations: [
+      { id: 'yizong', type: '父子', label: '唐懿宗（父亲）' },
+      { id: 'huangchao', type: '对立', label: '黄巢' }
+    ],
+    events: ['e_huangchao_qiyi']
+  },
+  {
+    id: 'zhaozong', name: '唐昭宗', birth: 867, death: 904,
+    cat: 'emperor', dynasty: '唐', emoji: '👑',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐僖宗之弟，有志恢复唐朝，但无力回天。在位16年，先后被宦官杨复恭、藩镇李茂贞、韩建挟持，又被朱温控制。904年被朱温弑杀，终年37岁。其子唐哀帝即位后仅3年，唐朝即告灭亡。',
+    achievements: [],
+    relations: [
+      { id: 'xizong', type: '兄弟', label: '唐僖宗（兄长）' },
+      { id: 'zhu_wen', type: '被害', label: '朱温' }
+    ],
+    events: []
+  },
+  {
+    id: 'lixun', name: '李训', birth: 790, death: 835,
+    cat: 'politician', dynasty: '唐', emoji: '📋',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '晚唐政治人物，唐文宗的心腹谋臣。与郑注合谋策划"甘露之变"，以天降甘露为名企图诛杀权阉仇士良，因部署不周密而失败。李训逃出长安后被捕杀，千余朝臣被牵连处死，此后宦官完全控制朝政。',
+    achievements: ['策划甘露之变（失败）'],
+    relations: [],
+    events: ['e_ganlu_zhibian']
+  },
+  {
+    id: 'choushiliang', name: '仇士良', birth: 781, death: 843,
+    cat: 'politician', dynasty: '唐', emoji: '😈',
+    location: { lat: 34.3, lng: 108.9, place: '长安（今陕西西安）' },
+    desc: '唐代最有权势的宦官之一，甘露之变中粉碎文宗和李训的诛杀计划，此后专权近十年，杀二王、一妃、四宰相，朝臣被杀千余人。文宗沦为傀儡，自叹"赧献受制于强臣，今朕受制于家奴"。致仕后卒于家，追赠扬州大都督。',
+    achievements: ['甘露之变反击', '杀朝臣千余人'],
+    relations: [],
+    events: ['e_ganlu_zhibian']
+  },
+  {
+    id: 'liruide', name: '李德裕', birth: 787, death: 850,
+    cat: 'politician', dynasty: '唐', emoji: '📋',
+    location: { lat: 34.3, lng: 108.9, place: '赵郡（今河北赵县）' },
+    desc: '晚唐名相，"牛李党争"中李党领袖。唐武宗时为相，主导会昌灭佛、击败回鹘、平定泽潞，政绩卓著。宣宗即位后被贬崖州（今海南），死于贬所。与牛僧孺的党争持续数十年，严重消耗了晚唐政治资源。',
+    achievements: ['会昌灭佛', '平定泽潞', '击败回鹘'],
+    relations: [],
+    events: ['e_huichang_miefo']
+  },
+  {
+    id: 'niusengru', name: '牛僧孺', birth: 779, death: 848,
+    cat: 'politician', dynasty: '唐', emoji: '📋',
+    location: { lat: 34.3, lng: 108.9, place: '安定鹑觚（今甘肃灵台）' },
+    desc: '晚唐政治家，"牛李党争"中牛党领袖。与李德裕长期争权，两派交替执政，相互倾轧，史称"牛李党争"，持续近四十年，严重消耗朝廷力量。牛僧孺为政宽简，但在党争中多占下风。',
+    achievements: ['牛党领袖', '牛李党争'],
+    relations: [{ id: 'liruide', type: '对立', label: '李德裕（政敌）' }],
+    events: []
+  },
+  {
+    id: 'liuzongyuan', name: '柳宗元', birth: 773, death: 819,
+    cat: 'scholar', dynasty: '唐', emoji: '📝',
+    location: { lat: 34.3, lng: 108.9, place: '河东（今山西运城）' },
+    desc: '唐代著名文学家、哲学家，唐宋八大家之一。参与永贞革新失败后被贬永州司马，后迁柳州刺史，世称"柳柳州"。与韩愈共同倡导古文运动，并称"韩柳"。代表作《江雪》《捕蛇者说》《三戒》《永州八记》等，是中国散文和游记文学的里程碑。',
+    achievements: ['唐宋八大家', '古文运动', '《江雪》', '《永州八记》'],
+    relations: [
+      { id: 'hansan', type: '同道', label: '韩愈' },
+      { id: 'liuyizhou', type: '好友', label: '刘禹锡' }
+    ],
+    events: []
+  },
+  {
+    id: 'huangchao', name: '黄巢', birth: 820, death: 884,
+    cat: 'general', dynasty: '唐', emoji: '⚔️',
+    location: { lat: 35.3, lng: 115.6, place: '曹州冤句（今山东菏泽）' },
+    desc: '唐末农民起义领袖，盐商出身。875年响应王仙芝起义，王仙芝战死后成为义军首领。880年攻入长安，即皇帝位，国号"大齐"，年号金统。但未能建立有效统治，唐军反攻后退出长安。884年在泰山狼虎谷兵败自杀（一说被外甥所杀）。其起义虽失败，但彻底动摇了唐朝根基，是中国历史上影响最深远的农民起义之一。',
+    achievements: ['攻入长安', '建立大齐', '动摇唐朝根基'],
+    relations: [
+      { id: 'xizong', type: '对立', label: '唐僖宗' }
+    ],
+    events: ['e_huangchao_qiyi']
+  },
+  {
+    id: 'wangxianzhi', name: '王仙芝', birth: 820, death: 878,
+    cat: 'general', dynasty: '唐', emoji: '⚔️',
+    location: { lat: 35.3, lng: 115.6, place: '濮州（今山东鄄城）' },
+    desc: '唐末农民起义先驱，874年在长垣起兵，自称"天补平均大将军"。起义军转战山东、河南、湖北等地，声势浩大。878年在黄梅战死，余部由黄巢统领继续抗争。其起义拉开了唐末农民大起义的序幕。',
+    achievements: ['首举义旗', '唐末起义先驱'],
+    relations: [{ id: 'huangchao', type: '战友', label: '黄巢' }],
+    events: ['e_huangchao_qiyi']
+  },
+
+  // ==================== 五代十国 ====================
+  {
+    id: 'zhu_wen', name: '朱温', birth: 852, death: 912,
+    cat: 'emperor', dynasty: '五代', emoji: '👑',
+    location: { lat: 34.7, lng: 113.6, place: '宋州砀山（今安徽砀山）' },
+    desc: '后梁开国皇帝，原名朱全忠。出身贫寒，早年参加黄巢起义，后降唐被赐名"全忠"。逐步消灭宦官势力、击败李克用等对手，904年弑唐昭宗，907年废唐哀帝自立，建立后梁，定都开封，五代十国时代由此开始。在位5年，晚年荒淫无道，被其子朱友珪弑杀。',
+    achievements: ['灭唐建梁', '五代开端', '结束唐朝'],
+    relations: [
+      { id: 'huangchao', type: '叛离', label: '黄巢（原从后叛离）' },
+      { id: 'like_yong', type: '世仇', label: '李克用（宿敌）' }
+    ],
+    events: ['e_zhuwen_tangmiewang']
+  },
+  {
+    id: 'like_yong', name: '李克用', birth: 856, death: 908,
+    cat: 'military', dynasty: '五代', emoji: '⚔️',
+    location: { lat: 39.9, lng: 116.4, place: '神武川新城（今山西应县）' },
+    desc: '沙陀族将领，唐末五代军事强人，后唐奠基者。因一目失明号称"独眼龙"。镇压黄巢起义有功，封晋王，与朱温争霸数十年（史称"梁晋争霸"）。其子李存勖建立后唐后，追尊为太祖。一生征战，是唐末最勇猛的将领之一。',
+    achievements: ['镇压黄巢', '晋王争霸', '后唐奠基者'],
+    relations: [
+      { id: 'zhu_wen', type: '世仇', label: '朱温' },
+      { id: 'licunxu', type: '父子', label: '李存勖（儿子）' }
+    ],
+    events: []
+  },
+  {
+    id: 'licunxu', name: '李存勖', birth: 885, death: 926,
+    cat: 'emperor', dynasty: '五代', emoji: '👑',
+    location: { lat: 38.4, lng: 112.7, place: '晋阳（今山西太原）' },
+    desc: '后唐开国皇帝，即后唐庄宗，李克用之子。军事天才，923年灭后梁建立后唐，后灭前蜀，一度统一北方大部。但即位后沉迷戏曲，宠信伶人（戏子），朝政荒废，将士离心。926年兴教门之变中被伶人将领郭从谦所杀，在位仅3年，是"马上得天下、戏台失天下"的典型。',
+    achievements: ['灭后梁', '建后唐', '灭前蜀', '军事天才'],
+    relations: [
+      { id: 'like_yong', type: '父子', label: '李克用（父亲）' }
+    ],
+    events: ['e_houtang_founded']
+  },
+  {
+    id: 'shijing_tang', name: '石敬瑭', birth: 892, death: 942,
+    cat: 'emperor', dynasty: '五代', emoji: '👑',
+    location: { lat: 38.4, lng: 112.7, place: '太原（今山西太原）' },
+    desc: '后晋开国皇帝，沙陀族人。原为后唐河东节度使，936年起兵反唐，为求契丹支持，割让燕云十六州予契丹，并自认"儿皇帝"，以比他小十岁的耶律德光为"父皇帝"。在契丹帮助下灭后唐建后晋。割让燕云十六州使中原失去北方屏障，遗祸四百年，是历史上最臭名昭著的卖国行为之一。',
+    achievements: ['割燕云十六州（负面）', '建后晋', '称儿皇帝'],
+    relations: [
+      { id: 'yilv_deguang', type: '臣属', label: '耶律德光（认父）' }
+    ],
+    events: ['e_yanyun_cede']
+  },
+  {
+    id: 'chong_rong', name: '柴荣', birth: 921, death: 959,
+    cat: 'emperor', dynasty: '五代', emoji: '👑',
+    location: { lat: 34.7, lng: 113.6, place: '邢州尧山（今河北隆尧）' },
+    desc: '后周第二位皇帝，即周世宗，五代最杰出的君主。本是郭威内侄，被收为养子。954年即位后，高平之战大败北汉与辽联军。政治上整顿吏治、严惩贪腐、均定田赋、限制佛教；军事上南征南唐、西败后蜀、北伐辽国收复三州三关。959年北伐途中病逝，年仅38岁，壮志未酬。其改革为后来北宋统一奠定了基础。',
+    achievements: ['高平之战', '北伐收复三关', '整顿吏治', '限制佛教', '五代明君'],
+    relations: [
+      { id: 'guo_wei', type: '养父子', label: '郭威（养父）' },
+      { id: 'zhao_kuangyin', type: '君臣', label: '赵匡胤（部将）' }
+    ],
+    events: ['e_gaoping_battle']
+  },
+  {
+    id: 'guo_wei', name: '郭威', birth: 904, death: 954,
+    cat: 'emperor', dynasty: '五代', emoji: '👑',
+    location: { lat: 34.7, lng: 113.6, place: '邢州尧山（今河北隆尧）' },
+    desc: '后周开国皇帝，即周太祖。出身寒微，从军卒做到后汉枢密使。950年后汉隐帝欲杀郭威，郭威起兵反叛，以"黄旗加身"方式称帝，建立后周。在位3年，革除弊政，减轻赋税，崇尚节俭，为后周强盛奠定基础。死后传位养子柴荣。',
+    achievements: ['建后周', '黄旗加身', '革除弊政'],
+    relations: [
+      { id: 'chong_rong', type: '养父子', label: '柴荣（养子）' }
+    ],
+    events: []
+  },
+  {
+    id: 'liyu', name: '李煜', birth: 937, death: 978,
+    cat: 'scholar', dynasty: '五代', emoji: '🎭',
+    location: { lat: 32.0, lng: 118.8, place: '金陵（今江苏南京）' },
+    desc: '南唐最后一位国君，世称"南唐后主"，中国历史上最伟大的词人之一。在政治上软弱无能，975年南唐被宋所灭，李煜被俘至汴京，封违命侯。被囚期间写下《虞美人·春花秋月何时了》《浪淘沙令·帘外雨潺潺》等千古名篇，"问君能有几多愁？恰似一江春水向东流"传唱至今。978年被宋太宗赵光义以牵机药毒杀。',
+    achievements: ['千古词帝', '《虞美人》', '《浪淘沙令》', '婉约词宗'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'yilv_deguang', name: '耶律德光', birth: 902, death: 947,
+    cat: 'emperor', dynasty: '五代', emoji: '🏇',
+    location: { lat: 43.9, lng: 125.3, place: '上京临潢府（今内蒙古巴林左旗）' },
+    desc: '辽太宗，契丹族，耶律阿保机次子。936年支持石敬瑭建立后晋，获得燕云十六州。947年率军灭后晋，入开封改国号为"大辽"，但无法有效统治中原，北返途中病逝，内脏被取出盐腌保存，史称"帝羓"。其获取燕云十六州，使辽国实力大增，也使中原长期面临北方威胁。',
+    achievements: ['得燕云十六州', '灭后晋', '建大辽'],
+    relations: [
+      { id: 'shijing_tang', type: '臣属', label: '石敬瑭（儿皇帝）' }
+    ],
+    events: ['e_yanyun_cede']
+  },
+  {
+    id: 'qianliu', name: '钱镠', birth: 852, death: 932,
+    cat: 'emperor', dynasty: '五代', emoji: '🌊',
+    location: { lat: 30.3, lng: 120.2, place: '临安（今浙江杭州）' },
+    desc: '吴越国创建者，即吴越武肃王。盐贩出身，从军后逐步占据两浙之地，907年被后梁封为吴越王。在位期间修筑钱塘江海塘，治理太湖水患，发展农桑贸易，使吴越成为十国中最安定繁荣的地区。"陌上花开，可缓缓归矣"是其写给夫人的书信，传为佳话。',
+    achievements: ['修钱塘江海塘', '治太湖水患', '吴越繁荣', '"陌上花开"典故'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'wangjian', name: '王建', birth: 847, death: 918,
+    cat: 'emperor', dynasty: '五代', emoji: '👑',
+    location: { lat: 30.6, lng: 104.0, place: '许州舞阳（今河南舞阳）' },
+    desc: '前蜀开国皇帝，无赖出身，从军后入蜀割据。907年朱温灭唐后在成都称帝，建立前蜀。在位期间优待文人，蜀地文化繁荣，但晚年任用宦官，朝政腐败。其子王衍继位后荒淫无道，925年前蜀被后唐所灭。',
+    achievements: ['建前蜀', '蜀地文化繁荣'],
+    relations: [],
+    events: []
+  },
+
+  // ==================== 北宋 ====================
+  {
+    id: 'zhao_kuangyin', name: '宋太祖', birth: 927, death: 976,
+    cat: 'emperor', dynasty: '北宋', emoji: '👑',
+    location: { lat: 34.7, lng: 115.6, place: '涿州（今河北涿州）' },
+    desc: '宋朝开国皇帝。后周殿前都点检，960年陈桥兵变黄袍加身建立宋朝。杯酒释兵权解除武将兵权，重文抑武，奠定宋朝基本格局。先后平定荆南、武平、后蜀、南汉、南唐等割据政权，基本完成统一大业。976年"烛影斧声"中猝死，其死因至今成谜，弟赵光义继位。',
+    achievements: ['建立宋朝', '杯酒释兵权', '重文抑武', '基本统一中国', '削弱藩镇'],
+    relations: [
+      { id: 'zhao_guangyi', type: '兄弟', label: '赵光义（弟弟）' },
+      { id: 'chayi', type: '君臣', label: '柴荣（前朝君主）' },
+    ],
+    events: ['e_song_founded', 'e_beijiubing']
+  },
+  {
+    id: 'zhao_guangyi', name: '宋太宗', birth: 939, death: 997,
+    cat: 'emperor', dynasty: '北宋', emoji: '👑',
+    location: { lat: 34.7, lng: 114.3, place: '开封（今河南开封）' },
+    desc: '宋太祖赵匡胤之弟，宋朝第二位皇帝。976年继位，"烛影斧声"之谜使其即位合法性存疑。完成太祖未竟的统一事业，979年灭北汉，结束五代十国分裂。但两次伐辽均遭惨败（高梁河之战、雍熙北伐），从此宋朝对辽转为守势，确立了"守内虚外"的国策。在位期间扩大科举取士，编修《太平御览》《太平广记》等大型类书。',
+    achievements: ['灭北汉统一', '扩大科举', '编修类书', '雍熙北伐失败'],
+    relations: [
+      { id: 'zhao_kuangyin', type: '兄弟', label: '赵匡胤（哥哥）' },
+    ],
+    events: []
+  },
+  {
+    id: 'zhao_heng', name: '宋真宗', birth: 968, death: 1022,
+    cat: 'emperor', dynasty: '北宋', emoji: '👑',
+    location: { lat: 34.7, lng: 114.3, place: '开封（今河南开封）' },
+    desc: '宋朝第三位皇帝。1004年辽军大举南侵，真宗在宰相寇准力劝下亲征澶州，宋军射杀辽将萧挞凛，形势有利却签订"澶渊之盟"，每年向辽送银十万两、绢二十万匹，换得百年和平。后期沉迷祥瑞，封禅泰山，劳民伤财，被讥为"神道设教"。在位期间咸平之治使经济恢复，但奠定了宋朝对外妥协的基调。',
+    achievements: ['澶渊之盟', '咸平之治', '封禅泰山'],
+    relations: [
+      { id: 'kou_zhun', type: '君臣', label: '寇准（力劝亲征）' },
+    ],
+    events: ['e_chanyuan']
+  },
+  {
+    id: 'fan_zhongyan', name: '范仲淹', birth: 989, death: 1052,
+    cat: 'politician', dynasty: '北宋', emoji: '🏛️',
+    location: { lat: 34.5, lng: 110.1, place: '邠州（今陕西彬县）' },
+    desc: '北宋政治家、军事家、文学家。出身贫寒，断齑划粥苦读成才。"先天下之忧而忧，后天下之乐而乐"传颂千古。1040年主持西北防务抵御西夏，采取"屯田久守"策略稳固边防。1043年发起"庆历新政"，提出明黜陟、抑侥幸、精贡举等十项改革，因守旧派反对而失败。文学成就卓著，《岳阳楼记》为千古名篇。',
+    achievements: ['庆历新政', '抵御西夏', '《岳阳楼记》', '先忧后乐'],
+    relations: [
+      { id: 'wang_anshi', type: '传承', label: '王安石（后继改革）' },
+      { id: 'ou_yangxiu', type: '交游', label: '欧阳修（同道）' },
+    ],
+    events: ['e_qingli_xinzheng']
+  },
+  {
+    id: 'ou_yangxiu', name: '欧阳修', birth: 1007, death: 1072,
+    cat: 'scholar', dynasty: '北宋', emoji: '📖',
+    location: { lat: 27.8, lng: 114.4, place: '吉州庐陵（今江西吉安）' },
+    desc: '北宋文学家、史学家、政治家，"唐宋八大家"之一。领导北宋诗文革新运动，一扫五代浮靡文风。曾任枢密副使、参知政事，支持范仲淹庆历新政。著有《新五代史》《新唐书》（与宋祁合修），散文《醉翁亭记》为千古名篇。晚年自号"六一居士"。',
+    achievements: ['唐宋八大家', '诗文革新', '《醉翁亭记》', '《新五代史》', '庆历新政'],
+    relations: [
+      { id: 'fan_zhongyan', type: '交游', label: '范仲淹（同道）' },
+      { id: 'su_shi', type: '师承', label: '苏轼（门生）' },
+    ],
+    events: []
+  },
+  {
+    id: 'bao_zheng', name: '包拯', birth: 999, death: 1062,
+    cat: 'politician', dynasty: '北宋', emoji: '⚖️',
+    location: { lat: 31.8, lng: 117.3, place: '庐州合肥（今安徽合肥）' },
+    desc: '北宋名臣，以刚正不阿、执法如山著称，民间尊称"包青天"。任监察御史时弹劾贪官污吏，任开封知府时不畏权贵，"关节不到，有阎罗包老"。民间传说中他日审阳间、夜审阴间，铁面无私，三口铡刀（龙头铡、虎头铡、狗头铡）惩奸除恶，成为中国历史上公正廉明的象征。',
+    achievements: ['铁面无私', '执法如山', '包青天传说', '弹劾权贵'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'wang_anshi', name: '王安石', birth: 1021, death: 1086,
+    cat: 'politician', dynasty: '北宋', emoji: '⚖️',
+    location: { lat: 28.6, lng: 115.9, place: '临川（今江西抚州）' },
+    desc: '北宋政治家、文学家、思想家，"唐宋八大家"之一。1069年在宋神宗支持下推行"熙宁变法"，以"天变不足畏，祖宗不足法，人言不足恤"的"三不足"精神，推行青苗法、免役法、方田均税法、保甲法、市易法等新法。变法旨在富国强兵，但因用人不当、操之过急，加重百姓负担，在保守派（司马光等）反对下最终失败。两次拜相，两次罢相，晚年退居金陵，寄情诗文。',
+    achievements: ['王安石变法', '唐宋八大家', '《伤仲永》', '三不足精神', '青苗法'],
+    relations: [
+      { id: 'su_shi', type: '对立', label: '苏轼（旧党）' },
+      { id: 'sima_guang', type: '对立', label: '司马光（旧党领袖）' },
+      { id: 'fan_zhongyan', type: '传承', label: '范仲淹（改革先驱）' },
+    ],
+    events: ['e_xining_bianfa']
+  },
+  {
+    id: 'sima_guang', name: '司马光', birth: 1019, death: 1086,
+    cat: 'scholar', dynasty: '北宋', emoji: '📚',
+    location: { lat: 35.0, lng: 111.5, place: '陕州夏县（今山西夏县）' },
+    desc: '北宋政治家、史学家、文学家。反对王安石变法，为新法主要反对者。退居洛阳15年，主持编纂编年体史书巨著《资治通鉴》，上起周威烈王（前403年），下至五代后周世宗（959年），共294卷，历时19年完成，是中国第一部编年体通史。1086年哲宗即位后出任宰相，尽废新法，但同年病逝。"司马光砸缸"的故事家喻户晓。',
+    achievements: ['《资治通鉴》', '反对新法', '司马光砸缸', '编年体通史'],
+    relations: [
+      { id: 'wang_anshi', type: '对立', label: '王安石（政敌）' },
+    ],
+    events: ['e_zizhi_tongjian']
+  },
+  {
+    id: 'su_shi', name: '苏轼', birth: 1037, death: 1101,
+    cat: 'scholar', dynasty: '北宋', emoji: '✍️',
+    location: { lat: 30.6, lng: 116.3, place: '眉州眉山（今四川眉山）' },
+    desc: '北宋文学家、书法家、画家，号东坡居士，"唐宋八大家"之一。词风豪放，与辛弃疾并称"苏辛"，开豪放词派先河。因反对王安石变法，又不满旧党尽废新法，左右不逢源，一生屡遭贬谪——乌台诗案险丧命，先后被贬黄州、惠州、儋州（海南），却始终保持豁达。"日啖荔枝三百颗，不辞长作岭南人"是其乐观写照。代表作《赤壁赋》《水调歌头》《念奴娇·赤壁怀古》等。书法列"宋四家"之首，画作开文人画先河。',
+    achievements: ['唐宋八大家', '豪放词派', '《赤壁赋》', '《水调歌头》', '东坡肉', '书法宋四家'],
+    relations: [
+      { id: 'wang_anshi', type: '对立', label: '王安石（政见相左）' },
+      { id: 'ou_yangxiu', type: '师承', label: '欧阳修（座师）' },
+      { id: 'su_che', type: '兄弟', label: '苏辙（弟弟）' },
+    ],
+    events: ['e_wutai_shian']
+  },
+  {
+    id: 'su_che', name: '苏辙', birth: 1039, death: 1112,
+    cat: 'scholar', dynasty: '北宋', emoji: '📖',
+    location: { lat: 30.6, lng: 116.3, place: '眉州眉山（今四川眉山）' },
+    desc: '北宋文学家，苏轼之弟，"唐宋八大家"之一，与父苏洵、兄苏轼合称"三苏"。官至门下侍郎（副宰相），文学成就虽不及兄长，但政论文章见识深远。与兄感情深厚，苏轼乌台诗案时，苏辙上书愿削官赎兄之罪。代表作《黄州快哉亭记》等。',
+    achievements: ['唐宋八大家', '三苏', '《栾城集》'],
+    relations: [
+      { id: 'su_shi', type: '兄弟', label: '苏轼（哥哥）' },
+    ],
+    events: []
+  },
+  {
+    id: 'shen_kuo', name: '沈括', birth: 1031, death: 1095,
+    cat: 'scientist', dynasty: '北宋', emoji: '🔬',
+    location: { lat: 30.9, lng: 120.1, place: '杭州钱塘（今浙江杭州）' },
+    desc: '北宋科学家、政治家。被誉为"中国科学史上的坐标"（李约瑟语），所著《梦溪笔谈》涵盖天文、数学、物理、化学、生物、地质、地理、医学等众多领域，记录了活字印刷术、磁偏角、石油命名等重大发现。首次发现地磁偏角（比欧洲早400余年），改良浑天仪，提出十二气历。政治上参与王安石变法，出使辽国谈判边界，知延州抵御西夏。',
+    achievements: ['《梦溪笔谈》', '发现磁偏角', '活字印刷记录', '十二气历', '出使辽国'],
+    relations: [
+      { id: 'wang_anshi', type: '同盟', label: '王安石（变法同僚）' },
+    ],
+    events: []
+  },
+  {
+    id: 'bi_sheng', name: '毕昇', birth: 972, death: 1051,
+    cat: 'inventor', dynasty: '北宋', emoji: '🔧',
+    location: { lat: 30.3, lng: 115.6, place: '蕲州蕲水（今湖北英山）' },
+    desc: '北宋布衣发明家，约1040年发明胶泥活字印刷术，是印刷史上一次重大革命。活字印刷术比德国古登堡活字印刷早约400年，与造纸术、火药、指南针并称"四大发明"，深刻影响了世界文明进程。沈括《梦溪笔谈》详细记载了其发明。',
+    achievements: ['发明活字印刷术', '四大发明之一'],
+    relations: [
+      { id: 'shen_kuo', type: '传承', label: '沈括（记录其发明）' },
+    ],
+    events: []
+  },
+  {
+    id: 'zhao_ji', name: '宋徽宗', birth: 1082, death: 1135,
+    cat: 'emperor', dynasty: '北宋', emoji: '🎨',
+    location: { lat: 34.7, lng: 114.3, place: '开封（今河南开封）' },
+    desc: '北宋第八位皇帝，艺术天赋极高却治国无方。创"瘦金体"书法，工笔花鸟画冠绝当世，是古代帝王中最杰出的艺术家。设立翰林书画院，编《宣和画谱》《宣和书谱》。但任用蔡京、童贯等"六贼"，大搞花石纲，民不聊生，方腊、宋江起义此起彼伏。1125年金军南侵，仓促禅位给太子（钦宗）。1127年"靖康之变"中被金军俘虏北去，囚于五国城（今黑龙江依兰），受尽屈辱而死。',
+    achievements: ['瘦金体书法', '工笔花鸟画', '翰林书画院', '《宣和画谱》'],
+    relations: [
+      { id: 'zhao_huan', type: '父子', label: '宋钦宗（儿子）' },
+      { id: 'cai_jing', type: '君臣', label: '蔡京（宠臣）' },
+    ],
+    events: ['e_jingkang']
+  },
+  {
+    id: 'zhao_huan', name: '宋钦宗', birth: 1100, death: 1156,
+    cat: 'emperor', dynasty: '北宋', emoji: '👑',
+    location: { lat: 34.7, lng: 114.3, place: '开封（今河南开封）' },
+    desc: '北宋末代皇帝，宋徽宗长子。1125年金军南侵，徽宗禅位，钦宗即位后犹豫不决，在主战与主和间反复摇摆。虽罢免蔡京等"六贼"，但任用耿南仲等主和派，排挤李纲等主战派。1126年冬金军攻破开封，次年四月"靖康之变"，钦宗与徽宗同被俘虏北去，北宋灭亡。在金国囚禁近30年后死去，死讯数年后南宋方知。',
+    achievements: [],
+    relations: [
+      { id: 'zhao_ji', type: '父子', label: '宋徽宗（父亲）' },
+      { id: 'li_gang', type: '君臣', label: '李纲（主战派）' },
+    ],
+    events: ['e_jingkang']
+  },
+  {
+    id: 'li_gang', name: '李纲', birth: 1083, death: 1140,
+    cat: 'politician', dynasty: '北宋', emoji: '🏛️',
+    location: { lat: 26.1, lng: 119.3, place: '邵武（今福建邵武）' },
+    desc: '北宋末年抗金名臣。靖康之变前力主坚守开封，组织军民击退金军第一次围攻。但被主和派排挤罢相。南宋建立后一度出任宰相，提出抗金十策，但仅75天即被罢免。此后屡起屡落，壮志难酬。与宗泽同为南宋初期最坚定的主战派代表。',
+    achievements: ['坚守开封', '抗金十策', '主战派领袖'],
+    relations: [
+      { id: 'zhao_huan', type: '君臣', label: '宋钦宗' },
+      { id: 'zhao_gou', type: '君臣', label: '宋高宗' },
+    ],
+    events: []
+  },
+  {
+    id: 'cai_jing', name: '蔡京', birth: 1047, death: 1126,
+    cat: 'politician', dynasty: '北宋', emoji: '🙅',
+    location: { lat: 25.0, lng: 118.5, place: '兴化仙游（今福建仙游）' },
+    desc: '北宋权臣，"北宋六贼"之首。四次拜相，逢迎徽宗，推行花石纲，搜刮民脂民膏，大兴土木修建艮岳。书法造诣颇高，但因人品恶劣被列为"宋四家"之外的"第五家"。靖康之变后被贬谪，途中饿死于潭州（今长沙），百姓拒售食与之，实为可悲。',
+    achievements: ['书法造诣', '四次拜相'],
+    relations: [
+      { id: 'zhao_ji', type: '君臣', label: '宋徽宗（逢迎）' },
+    ],
+    events: []
+  },
+  {
+    id: 'zong_ze', name: '宗泽', birth: 1060, death: 1128,
+    cat: 'military', dynasty: '北宋', emoji: '⚔️',
+    location: { lat: 29.3, lng: 120.1, place: '婺州义乌（今浙江义乌）' },
+    desc: '北宋末年抗金名将。靖康之变时率军勤王，后镇守东京开封，整顿防务，多次击退金军进攻。岳飞在其麾下初露头角，宗泽慧眼识才加以提拔。连上20余道奏疏请求宋高宗还都开封、北伐收复中原，均被置之不理。临终前仍连呼"过河！过河！过河！"，含恨而逝，是南宋初年最悲壮的抗金英雄。',
+    achievements: ['镇守开封', '提拔岳飞', '连呼过河', '二十道奏疏'],
+    relations: [
+      { id: 'yue_fei', type: '师承', label: '岳飞（部将）' },
+    ],
+    events: []
+  },
+
+  // ==================== 南宋 ====================
+  {
+    id: 'zhao_gou', name: '宋高宗', birth: 1107, death: 1187,
+    cat: 'emperor', dynasty: '南宋', emoji: '👑',
+    location: { lat: 30.3, lng: 120.2, place: '临安（今浙江杭州）' },
+    desc: '南宋开国皇帝，宋徽宗第九子。靖康之变时在外地统兵，成为唯一未被俘的皇族，在应天府（今商丘）即位。金军追击下南逃至温州海上，是历史上出名的"逃跑皇帝"。后定都临安（杭州），偏安江南。为保住皇位，不惜向金称臣求和，默许秦桧杀害岳飞。1162年禅位给养子宋孝宗，当太上皇25年，是历史上在位最长的太上皇。',
+    achievements: ['建立南宋', '偏安江南'],
+    relations: [
+      { id: 'qin_hui', type: '君臣', label: '秦桧（倚重）' },
+      { id: 'yue_fei', type: '对立', label: '岳飞（忌惮）' },
+      { id: 'zhao_ji', type: '父子', label: '宋徽宗（父亲）' },
+    ],
+    events: ['e_nansong_founded']
+  },
+  {
+    id: 'yue_fei', name: '岳飞', birth: 1103, death: 1142,
+    cat: 'military', dynasty: '南宋', emoji: '⚔️',
+    location: { lat: 34.8, lng: 113.6, place: '相州汤阴（今河南汤阴）' },
+    desc: '南宋名将，中国历史上最著名的民族英雄。字鹏举，出身农家，从军后屡建战功。组建"岳家军"，军纪严明，"冻死不拆屋，饿死不掳掠"。郾城大捷中大破金兀术的"铁浮屠"和"拐子马"，金军哀叹"撼山易，撼岳家军难"。正欲乘胜北伐、直捣黄龙之际，被宋高宗连下十二道金牌召回。秦桧以"莫须有"罪名将其害死于风波亭，年仅39岁。临终前写下"天日昭昭，天日昭昭"八字绝笔。',
+    achievements: ['精忠报国', '郾城大捷', '岳家军', '《满江红》', '十二道金牌'],
+    relations: [
+      { id: 'qin_hui', type: '对立', label: '秦桧（陷害者）' },
+      { id: 'zhao_gou', type: '对立', label: '宋高宗（忌惮）' },
+      { id: 'zong_ze', type: '师承', label: '宗泽（老上司）' },
+    ],
+    events: ['e_yancheng_dajie', 'e_yue_fei_si']
+  },
+  {
+    id: 'qin_hui', name: '秦桧', birth: 1090, death: 1155,
+    cat: 'politician', dynasty: '南宋', emoji: '🙅',
+    location: { lat: 32.0, lng: 118.8, place: '江宁（今江苏南京）' },
+    desc: '南宋权相，中国历史上最著名的奸臣。靖康之变中被俘北去，后声称杀监逃回，实为金国细作之说流传甚广。两度出任宰相共19年，专权擅政，卖国求和，以"莫须有"罪名杀害岳飞，排斥主战派。死后谥"忠献"，后改谥"缪丑"。其与妻王氏的铁铸跪像至今跪于杭州岳王庙前，受千古唾骂。',
+    achievements: [],
+    relations: [
+      { id: 'yue_fei', type: '对立', label: '岳飞（陷害对象）' },
+      { id: 'zhao_gou', type: '君臣', label: '宋高宗' },
+    ],
+    events: ['e_yue_fei_si']
+  },
+  {
+    id: 'han_shizhong', name: '韩世忠', birth: 1089, death: 1151,
+    cat: 'military', dynasty: '南宋', emoji: '⚔️',
+    location: { lat: 35.1, lng: 107.6, place: '延安（今陕西延安）' },
+    desc: '南宋名将，与岳飞、张俊、刘光世并称"中兴四将"。黄天荡之战中以8000水军阻击10万金军48天，虽未全胜但极大地鼓舞了抗金士气。妻子梁红玉亲自击鼓助战，传为佳话。岳飞遇害后，韩世忠当面质问秦桧"莫须有三字何以服天下"，后愤而辞职，自号"清凉居士"，绝口不言兵。',
+    achievements: ['黄天荡之战', '中兴四将', '质问秦桧', '梁红玉击鼓'],
+    relations: [
+      { id: 'qin_hui', type: '对立', label: '秦桧' },
+      { id: 'yue_fei', type: '交游', label: '岳飞（战友）' },
+    ],
+    events: ['e_huangtiandang']
+  },
+  {
+    id: 'xin_qiji', name: '辛弃疾', birth: 1140, death: 1207,
+    cat: 'scholar', dynasty: '南宋', emoji: '⚔️',
+    location: { lat: 36.8, lng: 118.3, place: '济南历城（今山东济南）' },
+    desc: '南宋词人、军事家，豪放词派代表，与苏轼并称"苏辛"。21岁时率50骑突入5万金军大营，擒叛徒张安国南归，壮举震惊朝野。但南归后长期不被重用，"把吴钩看了，栏杆拍遍，无人会，登临意"。其词慷慨悲壮，"醉里挑灯看剑，梦回吹角连营""了却君王天下事，赢得生前身后名"等名句传颂千古。',
+    achievements: ['豪放词派', '苏辛并称', '50骑擒叛', '《稼轩词》'],
+    relations: [
+      { id: 'su_shi', type: '传承', label: '苏轼（词风传承）' },
+      { id: 'lu_you', type: '交游', label: '陆游（同道）' },
+    ],
+    events: []
+  },
+  {
+    id: 'lu_you', name: '陆游', birth: 1125, death: 1210,
+    cat: 'scholar', dynasty: '南宋', emoji: '✍️',
+    location: { lat: 30.0, lng: 120.6, place: '越州山阴（今浙江绍兴）' },
+    desc: '南宋爱国诗人，现存诗9300余首，是中国古代存诗最多的诗人。一生矢志北伐收复中原，"王师北定中原日，家祭无忘告乃翁"是临终绝笔。与唐婉的爱情悲剧令人唏嘘——"红酥手，黄縢酒，满城春色宫墙柳"的《钗头凤》写尽刻骨相思与悔恨。诗歌风格雄浑悲壮，亦工词，与辛弃疾并称南宋爱国词人双璧。',
+    achievements: ['存诗9300首', '《钗头凤》', '爱国诗人', '《剑南诗稿》'],
+    relations: [
+      { id: 'xin_qiji', type: '交游', label: '辛弃疾（同道）' },
+    ],
+    events: []
+  },
+  {
+    id: 'wen_tianxiang', name: '文天祥', birth: 1236, death: 1283,
+    cat: 'politician', dynasty: '南宋', emoji: '🌟',
+    location: { lat: 26.9, lng: 115.4, place: '吉州庐陵（今江西吉安）' },
+    desc: '南宋末年抗元名臣、民族英雄。1256年中状元，1275年元军南侵时散尽家财起兵勤王。1278年在五坡岭被俘，元将张弘范逼他写信招降张世杰，他写下《过零丁洋》以明志——"人生自古谁无死，留取丹心照汗青"。被押送大都（北京）后，忽必烈亲自劝降，许以宰相之位，文天祥坚贞不屈，从容就义。狱中所作《正气歌》浩然正气，为千古绝唱。',
+    achievements: ['《过零丁洋》', '《正气歌》', '抗元不屈', '散尽家财勤王'],
+    relations: [
+      { id: 'kublai_khan', type: '对立', label: '忽必烈（拒降）' },
+    ],
+    events: ['e_yaesahn_bingbian']
+  },
+  {
+    id: 'zhao_bing', name: '宋帝昺', birth: 1272, death: 1279,
+    cat: 'emperor', dynasty: '南宋', emoji: '👑',
+    location: { lat: 22.2, lng: 113.6, place: '崖山（今广东新会）' },
+    desc: '南宋末代皇帝，即位时年仅6岁。1279年元军进攻崖山，宋军大败。丞相陆秀夫背小皇帝跳海殉国，随行十余万军民亦跳海殉难，南宋灭亡。崖山海战是中国历史上最悲壮的亡国之战，"崖山之后无中国"之说虽争议颇大，但确标志着古典中华文明的重大转折。',
+    achievements: [],
+    relations: [],
+    events: ['e_yashan']
+  },
+  {
+    id: 'lu_xiufu', name: '陆秀夫', birth: 1237, death: 1279,
+    cat: 'politician', dynasty: '南宋', emoji: '🏛️',
+    location: { lat: 33.4, lng: 120.1, place: '楚州盐城（今江苏盐城）' },
+    desc: '南宋末年丞相、民族英雄。崖山海战失败后，背8岁小皇帝赵昺跳海殉国，宁死不降。与文天祥、张世杰并称"宋末三杰"。在南宋流亡朝廷中，陆秀夫以非凡毅力维持朝政，即使在最艰难的逃亡途中仍坚持朝仪。',
+    achievements: ['负帝蹈海', '宋末三杰', '坚持朝仪'],
+    relations: [
+      { id: 'wen_tianxiang', type: '交游', label: '文天祥（宋末三杰）' },
+      { id: 'zhang_shijie', type: '交游', label: '张世杰（宋末三杰）' },
+    ],
+    events: ['e_yashan']
+  },
+  {
+    id: 'zhang_shijie', name: '张世杰', birth: 1236, death: 1279,
+    cat: 'military', dynasty: '南宋', emoji: '⚔️',
+    location: { lat: 35.4, lng: 115.9, place: '涿州范阳（今河北涿州）' },
+    desc: '南宋末年抗元名将，与文天祥、陆秀夫并称"宋末三杰"。先后拥立端宗赵昰、帝昺赵昺，在海上坚持抗元。崖山海战中率残部突围，后遇飓风翻船溺死。虽最终失败，但其忠贞不屈的精神为后人所敬仰。',
+    achievements: ['宋末三杰', '拥立二帝', '海上抗元'],
+    relations: [
+      { id: 'wen_tianxiang', type: '交游', label: '文天祥' },
+      { id: 'lu_xiufu', type: '交游', label: '陆秀夫' },
+    ],
+    events: ['e_yashan']
+  },
+
+  // ==================== 元朝 ====================
+  {
+    id: 'genghis_khan', name: '成吉思汗', birth: 1162, death: 1227,
+    cat: 'emperor', dynasty: '元', emoji: '🐴',
+    location: { lat: 47.9, lng: 106.9, place: '斡难河畔（今蒙古国肯特省）' },
+    desc: '蒙古帝国奠基者，名铁木真。幼年丧父，部众离散，历经磨难统一蒙古各部。1206年在斡难河畔召开忽里勒台大会，被尊为"成吉思汗"（海洋般的大汗）。此后发动三次大规模西征：第一次灭花剌子模，征服中亚；第二次征钦察、俄罗斯；第三次征西夏。建立横跨欧亚的蒙古帝国，是人类历史上疆域最大的连续帝国。1227年征西夏时病逝，死因成谜。其"千年风云第一人"的称号当之无愧。',
+    achievements: ['统一蒙古', '建立蒙古帝国', '三次西征', '《大札撒》法典', '千户制'],
+    relations: [
+      { id: 'kublai_khan', type: '祖孙', label: '忽必烈（孙子）' },
+      { id: 'wo_kuotai', type: '父子', label: '窝阔台（三子）' },
+      { id: 'tuo_lei', type: '父子', label: '拖雷（四子）' },
+    ],
+    events: ['e_mongol_xiqin']
+  },
+  {
+    id: 'wo_kuotai', name: '窝阔台', birth: 1186, death: 1241,
+    cat: 'emperor', dynasty: '元', emoji: '👑',
+    location: { lat: 47.9, lng: 106.9, place: '蒙古高原' },
+    desc: '蒙古帝国第二任大汗，成吉思汗第三子。1229年继位后继续扩张：灭金朝（1234年）、发动第二次西征（"长子西征"），征服俄罗斯、东欧，蒙古铁骑横扫欧洲至匈牙利。在中原设行省、立税制，任用耶律楚材推行汉法，使蒙古从游牧军事集团向正规帝国转变。但晚年嗜酒荒淫，1241年暴死于饮酒过度。',
+    achievements: ['灭金朝', '长子西征', '推行汉法', '设立行省'],
+    relations: [
+      { id: 'genghis_khan', type: '父子', label: '成吉思汗（父亲）' },
+      { id: 'yelv_chucai', type: '君臣', label: '耶律楚材（谋臣）' },
+    ],
+    events: []
+  },
+  {
+    id: 'tuo_lei', name: '拖雷', birth: 1193, death: 1232,
+    cat: 'military', dynasty: '元', emoji: '⚔️',
+    location: { lat: 47.9, lng: 106.9, place: '蒙古高原' },
+    desc: '成吉思汗第四子，蒙古帝国杰出军事统帅。成吉思汗生前将精锐部队交其统率，是蒙古军事力量的核心。1232年三峰山之战大败金军主力，为灭金奠定基础。同年病死（一说被窝阔台毒杀），年仅39岁。其子蒙哥、忽必烈、旭烈兀分别成为大汗和伊利汗国创建者，拖雷家族最终夺取蒙古帝国最高权力。',
+    achievements: ['三峰山之战', '统率精锐', '拖雷家族奠基'],
+    relations: [
+      { id: 'genghis_khan', type: '父子', label: '成吉思汗（父亲）' },
+      { id: 'kublai_khan', type: '父子', label: '忽必烈（四子）' },
+      { id: 'mengge', type: '父子', label: '蒙哥（长子）' },
+    ],
+    events: []
+  },
+  {
+    id: 'mengge', name: '蒙哥汗', birth: 1209, death: 1259,
+    cat: 'emperor', dynasty: '元', emoji: '👑',
+    location: { lat: 47.9, lng: 106.9, place: '蒙古高原' },
+    desc: '蒙古帝国第四任大汗，拖雷长子。1251年通过忽里勒台大会即位，结束了窝阔台系对汗位的垄断。在位期间派弟弟忽必烈征大理（云南）、灭大理国，派旭烈兀西征征服波斯、巴格达（灭阿拔斯王朝）。1258年亲率大军攻南宋，围攻钓鱼城（今重庆合川）时被炮石击中身亡（一说病死），其死引发忽必烈与阿里不哥的汗位争夺，蒙古帝国走向分裂。',
+    achievements: ['灭大理', '旭烈兀西征', '攻宋之战', '钓鱼城阵亡'],
+    relations: [
+      { id: 'tuo_lei', type: '父子', label: '拖雷（父亲）' },
+      { id: 'kublai_khan', type: '兄弟', label: '忽必烈（弟弟）' },
+    ],
+    events: []
+  },
+  {
+    id: 'kublai_khan', name: '忽必烈', birth: 1215, death: 1294,
+    cat: 'emperor', dynasty: '元', emoji: '👑',
+    location: { lat: 39.9, lng: 116.4, place: '大都（今北京）' },
+    desc: '元朝开国皇帝，成吉思汗之孙，拖雷第四子。1253年奉命远征大理，灭大理国。蒙哥汗死后与弟阿里不哥争位，1260年即大汗位，1264年平定阿里不哥。1271年建国号"大元"，取《易经》"大哉乾元"之意，定都大都（北京）。1279年崖山海战灭南宋，统一中国。在位期间推行行省制度，开凿会通河，发行纸币，促进中外交流。马可·波罗在其朝中服务17年，《马可·波罗游记》即为记录。但后期两次远征日本均因台风失败（"神风"之源），征安南、爪哇亦无功而返。',
+    achievements: ['建立元朝', '统一中国', '行省制度', '远征日本', '马可·波罗来华'],
+    relations: [
+      { id: 'genghis_khan', type: '祖孙', label: '成吉思汗（祖父）' },
+      { id: 'tuo_lei', type: '父子', label: '拖雷（父亲）' },
+      { id: 'wen_tianxiang', type: '对立', label: '文天祥（拒降）' },
+    ],
+    events: ['e_yuan_founded', 'e_yashan']
+  },
+  {
+    id: 'yelv_chucai', name: '耶律楚材', birth: 1190, death: 1244,
+    cat: 'politician', dynasty: '元', emoji: '🏛️',
+    location: { lat: 39.9, lng: 116.4, place: '燕京（今北京）' },
+    desc: '契丹族政治家，辽朝皇族后裔。成吉思汗攻占金中都后召其为幕僚，窝阔台汗时更受倚重。力劝蒙古贵族放弃"汉人无用，不如尽杀之"的提议，以"可征税充军资"说服其保留汉地百姓。推行税收制度、设置十路征收课税使，使中原经济得以恢复。保护汉族文化，开科取士，修编历法。被誉为"元朝第一谋臣"，是蒙古从游牧征服者向中原王朝转变的关键人物。',
+    achievements: ['保护汉地百姓', '推行税制', '开科取士', '元朝第一谋臣'],
+    relations: [
+      { id: 'wo_kuotai', type: '君臣', label: '窝阔台（倚重）' },
+      { id: 'genghis_khan', type: '君臣', label: '成吉思汗（老臣）' },
+    ],
+    events: []
+  },
+  {
+    id: 'guo_shoujing', name: '郭守敬', birth: 1231, death: 1316,
+    cat: 'scientist', dynasty: '元', emoji: '🔬',
+    location: { lat: 37.1, lng: 114.5, place: '顺德邢台（今河北邢台）' },
+    desc: '元朝天文学家、数学家、水利学家。编制《授时历》，以365.2425天为一年，与现代公历完全一致，比西方格里高利历早300年。主持元大都水利建设，开凿通惠河使大运河直达北京，设计改造简仪、仰仪等天文仪器。精通历算、水利、测绘，是中国古代最伟大的科学家之一。',
+    achievements: ['《授时历》', '365.2425天/年', '开凿通惠河', '天文仪器改革'],
+    relations: [],
+    events: ['e_shoushi_li']
+  },
+  {
+    id: 'zhu_dao', name: '关汉卿', birth: 1219, death: 1301,
+    cat: 'artist', dynasty: '元', emoji: '🎭',
+    location: { lat: 39.9, lng: 116.4, place: '大都（今北京）' },
+    desc: '元曲四大家之首，被誉为"东方莎士比亚"。代表作《窦娥冤》是中国古典悲剧巅峰，"六月飞雪"的典故出自此处。一生创作杂剧60余种，题材广泛，深刻揭露社会黑暗，同情底层人民。自述"我是个蒸不烂、煮不熟、捶不扁、炒不爆、响珰珰一粒铜豌豆"，可见其刚直不屈的性格。',
+    achievements: ['《窦娥冤》', '元曲四大家', '杂剧60余种', '东方莎士比亚'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'huang_daopo', name: '黄道婆', birth: 1245, death: 1330,
+    cat: 'inventor', dynasty: '元', emoji: '🧵',
+    location: { lat: 31.1, lng: 121.5, place: '松江乌泥泾（今上海）' },
+    desc: '元代棉纺织技术革新家。少年时流落崖州（海南），向黎族学习棉纺织技术。约1295年返回故乡松江乌泥泾，改良纺车、织机，发明三锭脚踏纺车，使纺纱效率提高三倍。推广"错纱配色，综线挈花"技术，松江棉布"衣被天下"，松江成为中国棉纺织中心。是中国古代少有的女性技术革新者。',
+    achievements: ['改良棉纺技术', '三锭脚踏纺车', '松江棉布', '衣被天下'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'zhao_mengfu', name: '赵孟頫', birth: 1254, death: 1322,
+    cat: 'artist', dynasty: '元', emoji: '🎨',
+    location: { lat: 30.9, lng: 120.1, place: '吴兴（今浙江湖州）' },
+    desc: '元朝书画大家，宋太祖赵匡胤十一世孙。出仕元朝备受争议，但艺术成就冠绝一代。书法集晋唐之大成，篆隶真行草无不精通，与欧阳询、颜真卿、柳公权并称"楷书四大家"。绘画开创元代文人画新风，主张"书画同源"，山水、人物、花鸟、竹石无所不精。妻子管道昇亦是著名书画家，"你侬我侬"的《我侬词》传为佳话。',
+    achievements: ['楷书四大家', '书画同源', '元代文人画', '赵体书法'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'tuo_tuo', name: '脱脱', birth: 1314, death: 1355,
+    cat: 'politician', dynasty: '元', emoji: '🏛️',
+    location: { lat: 42.0, lng: 121.7, place: '蒙古乞颜部' },
+    desc: '元朝末年权相，字大用。1340年发动政变推翻权臣伯颜，推行"脱脱更化"：恢复科举、平反冤狱、减免赋税、修辽金宋三史，一度使元朝出现中兴希望。1344年黄河决口，脱脱征发17万民夫治河，但加重了百姓负担。1351年红巾军起义爆发，脱脱率军镇压屡有战功，却遭朝中政敌诬陷，被削职流放，1355年被毒死。其死后元朝再无人能挽救危局，13年后元亡。',
+    achievements: ['脱脱更化', '恢复科举', '修辽金宋三史', '治理黄河'],
+    relations: [],
+    events: ['e_tuotuo_genghua']
+  },
+  {
+    id: 'zhu_yuanzhang_yuan', name: '韩山童', birth: 1310, death: 1351,
+    cat: 'politician', dynasty: '元', emoji: '🔥',
+    location: { lat: 34.0, lng: 115.0, place: '颍州（今安徽阜阳）' },
+    desc: '元末红巾军起义领袖。以白莲教聚众，口号"石人一只眼，挑动黄河天下反"深入人心。1351年与刘福通在颍州起义，头裹红巾号称"红巾军"，建立"大宋"政权。但起义不久即被元军捕获杀害。其子韩林儿被拥立为"小明王"，后为朱元璋所害。红巾军起义虽未成功，但敲响了元朝丧钟。',
+    achievements: ['红巾军起义', '白莲教聚众', '反元先驱'],
+    relations: [
+      { id: 'zhu_yuanzhang', type: '同盟', label: '朱元璋（后继者）' },
+    ],
+    events: ['e_hongjin_qiyi']
+  },
+
+  // 明
+  {
+    id: 'zhu_yuanzhang', name: '朱元璋', birth: 1328, death: 1398,
+    cat: 'emperor', dynasty: '明', emoji: '👑',
+    location: { lat: 33.0, lng: 118.3, place: '濠州钟离（今安徽凤阳）' },
+    desc: '明朝开国皇帝（明太祖），出身贫苦，由乞丐、和尚、起义军一步步成为皇帝，推翻元朝，建立大明。废丞相，加强皇权，大杀功臣。',
+    achievements: ['建立明朝', '废除丞相', '推翻蒙古统治'],
+    relations: [
+      { id: 'liu_ji', type: '君臣', label: '刘伯温（谋士）' },
+      { id: 'yongle', type: '父子', label: '朱棣（儿子）' }
+    ],
+    events: ['e_ming_founded']
+  },
+  {
+    id: 'liu_ji', name: '刘伯温', birth: 1311, death: 1375,
+    cat: 'philosopher', dynasty: '明', emoji: '🔮',
+    location: { lat: 28.0, lng: 120.6, place: '处州青田（今浙江青田）' },
+    desc: '明朝开国功臣，著名政治家、军事家、文学家，精通天文地理、兵法数学，辅助朱元璋建立明朝，被誉为"前知五百年，后知五百年"的神算子。',
+    achievements: ['辅助建明', '著《烧饼歌》（传说）', '精通天文兵法'],
+    relations: [{ id: 'zhu_yuanzhang', type: '君臣', label: '朱元璋（君主）' }],
+    events: ['e_ming_founded']
+  },
+  {
+    id: 'yongle', name: '明成祖朱棣', birth: 1360, death: 1424,
+    cat: 'emperor', dynasty: '明', emoji: '👑',
+    location: { lat: 39.9, lng: 116.4, place: '北平/北京' },
+    desc: '明朝第三位皇帝，通过靖难之役夺取侄子建文帝的皇位。迁都北京，命郑和下西洋，编修《永乐大典》，开创永乐盛世。',
+    achievements: ['迁都北京', '郑和下西洋', '《永乐大典》', '靖难之役'],
+    relations: [
+      { id: 'zhu_yuanzhang', type: '父子', label: '朱元璋（父亲）' },
+      { id: 'zheng_he', type: '君臣', label: '郑和（派遣下西洋）' }
+    ],
+    events: ['e_yongle_qianba', 'e_zhenghe_voyage']
+  },
+  {
+    id: 'zheng_he', name: '郑和', birth: 1371, death: 1433,
+    cat: 'politician', dynasty: '明', emoji: '⚓',
+    location: { lat: 24.4, lng: 118.1, place: '昆阳州（今云南昆明）' },
+    desc: '明朝航海家、外交家，七下西洋，最远到达非洲东海岸和红海沿岸，是世界航海史上的壮举，比哥伦布发现美洲早了近百年。',
+    achievements: ['七下西洋', '促进东西方交流', '最远到达非洲'],
+    relations: [{ id: 'yongle', type: '君臣', label: '朱棣（遣派出使）' }],
+    events: ['e_zhenghe_voyage']
+  },
+  {
+    id: 'wang_yangming', name: '王阳明', birth: 1472, death: 1529,
+    cat: 'philosopher', dynasty: '明', emoji: '💡',
+    location: { lat: 29.8, lng: 121.5, place: '余姚（今浙江余姚）' },
+    desc: '明代著名哲学家、军事家、政治家，心学集大成者。提出"心即理""知行合一""致良知"等哲学命题，影响了东亚哲学数百年。龙场悟道开宗立派，平定宁王之乱展现军事奇才，一生文武兼备，是中国历史上罕见的立德、立功、立言"三不朽"之人。',
+    achievements: ['心学集大成', '知行合一', '龙场悟道', '平定宁王之乱', '致良知'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'jianwen', name: '建文帝朱允炆', birth: 1377, death: 1402,
+    cat: 'emperor', dynasty: '明', emoji: '👑',
+    location: { lat: 32.0, lng: 118.8, place: '南京' },
+    desc: '明朝第二位皇帝，朱元璋之孙。即位后推行削藩，引发燕王朱棣起兵反抗，靖难之役中兵败，南京城破后下落不明，成为明史最大谜案之一。有说法其化装僧人逃出，云游四方。',
+    achievements: ['推行削藩', '宽政爱民'],
+    relations: [{ id: 'yongle', type: '叔侄', label: '朱棣（叔父）' }],
+    events: ['e_jingnan']
+  },
+  {
+    id: 'xu_da', name: '徐达', birth: 1332, death: 1385,
+    cat: 'general', dynasty: '明', emoji: '⚔️',
+    location: { lat: 34.2, lng: 117.1, place: '濠州钟离（今安徽凤阳）' },
+    desc: '明朝开国第一功臣，与朱元璋同乡，自参加红巾军起追随朱元璋，南征北战。率军北伐，攻克元大都（北京），推翻元朝统治。为人谨慎，善于治军，被誉为"大明第一名将"，朱元璋称其为"万里长城"。',
+    achievements: ['攻克元大都', '北伐灭元', '大明第一名将', '万里长城'],
+    relations: [{ id: 'zhu_yuanzhang', type: '君臣', label: '朱元璋（君主）' }],
+    events: ['e_ming_founded']
+  },
+  {
+    id: 'chang_yuchun', name: '常遇春', birth: 1330, death: 1369,
+    cat: 'general', dynasty: '明', emoji: '⚔️',
+    location: { lat: 33.6, lng: 117.9, place: '怀远（今安徽怀远）' },
+    desc: '明朝开国名将，勇冠三军，自称"能将十万众，横行天下"，军中称"常十万"。鄱阳湖大战中射杀陈友谅头号猛将张定边，北伐中屡建奇功，暴卒于军中，年仅39岁。',
+    achievements: ['鄱阳湖大战立功', '北伐先锋', '常十万'],
+    relations: [{ id: 'zhu_yuanzhang', type: '君臣', label: '朱元璋（君主）' }, { id: 'xu_da', type: '同盟', label: '徐达（搭档）' }],
+    events: ['e_ming_founded']
+  },
+  {
+    id: 'yu_qian', name: '于谦', birth: 1398, death: 1457,
+    cat: 'politician', dynasty: '明', emoji: '🏛️',
+    location: { lat: 30.3, lng: 120.2, place: '钱塘（今浙江杭州）' },
+    desc: '明朝名臣、民族英雄。土木堡之变后，力排众议坚守北京，拥立景帝，组织北京保卫战，击退瓦剌也先大军，挽救了大明王朝。后遭英宗复辟冤杀，"千锤万凿出深山，烈火焚烧若等闲"，其《石灰吟》恰如其一生。',
+    achievements: ['北京保卫战', '力挽狂澜', '《石灰吟》'],
+    relations: [],
+    events: ['e_tumubao']
+  },
+  {
+    id: 'ming_yingzong', name: '明英宗朱祁镇', birth: 1427, death: 1464,
+    cat: 'emperor', dynasty: '明', emoji: '👑',
+    location: { lat: 39.9, lng: 116.4, place: '北京紫禁城' },
+    desc: '明朝第六位皇帝，宠信太监王振，御驾亲征瓦剌，在土木堡被俘，史称"土木堡之变"。被俘一年后获释回京，被软禁南宫七年。发动夺门之变复辟，冤杀于谦，但废除了残酷的殉葬制度。',
+    achievements: ['废除殉葬制度'],
+    relations: [{ id: 'yu_qian', type: '对立', label: '于谦（冤杀）' }],
+    events: ['e_tumubao', 'e_duomen']
+  },
+  {
+    id: 'zhang_juzheng', name: '张居正', birth: 1525, death: 1582,
+    cat: 'politician', dynasty: '明', emoji: '🏛️',
+    location: { lat: 30.4, lng: 112.2, place: '江陵（今湖北荆州）' },
+    desc: '明朝最杰出的改革家、政治家，万历初年内阁首辅。推行"一条鞭法"改革赋税，清丈田地，整顿吏治实行"考成法"，使国库充盈，太仓积粟可支十年。但作风专断，死后遭万历清算抄家，改革成果逐渐被废。',
+    achievements: ['一条鞭法', '考成法', '万历中兴', '清丈田地'],
+    relations: [],
+    events: ['e_wanli_zhongxing']
+  },
+  {
+    id: 'hai_rui', name: '海瑞', birth: 1514, death: 1587,
+    cat: 'politician', dynasty: '明', emoji: '⚖️',
+    location: { lat: 19.9, lng: 110.3, place: '琼山（今海南海口）' },
+    desc: '明朝著名清官，人称"海青天""南包公"。任户部主事时上疏《治安疏》痛斥嘉靖帝，被下狱论死，嘉靖死后获释。任应天巡抚时推行退田还民、严惩贪腐，遭权贵排挤去职。一生清贫，死时家无余财，百姓沿街哭泣送行。',
+    achievements: ['上疏痛斥嘉靖', '海青天', '《治安疏》'],
+    relations: [{ id: 'zhang_juzheng', type: '对立', label: '张居正（政敌）' }],
+    events: []
+  },
+  {
+    id: 'qi_jiguang', name: '戚继光', birth: 1528, death: 1588,
+    cat: 'general', dynasty: '明', emoji: '⚔️',
+    location: { lat: 37.5, lng: 121.4, place: '登州（今山东蓬莱）' },
+    desc: '明朝抗倭名将、军事家。在东南沿海抗击倭寇十余年，创立"鸳鸯阵"，组建训练有素的"戚家军"，大小百余战未尝败绩。后镇守北疆，修筑蓟镇长城，抵御蒙古。著有《纪效新书》《练兵实纪》，是中国古代军事理论重要遗产。',
+    achievements: ['平定倭患', '创立鸳鸯阵', '戚家军', '《纪效新书》'],
+    relations: [{ id: 'zhang_juzheng', type: '同盟', label: '张居正（支持者）' }],
+    events: ['e_anti_wako']
+  },
+  {
+    id: 'ming_shenzong', name: '万历帝朱翊钧', birth: 1563, death: 1620,
+    cat: 'emperor', dynasty: '明', emoji: '👑',
+    location: { lat: 39.9, lng: 116.4, place: '北京紫禁城' },
+    desc: '明朝在位时间最长的皇帝（48年），前十年在张居正辅政下出现"万历中兴"。亲政后清算张居正，因立储之争与群臣对抗，长达28年不上朝，被称为"怠政皇帝"。万历三大征虽全胜，但国库耗尽，为明朝灭亡埋下伏笔。"明亡于万历"成为后世共识。',
+    achievements: ['万历三大征', '万历中兴（前期）'],
+    relations: [{ id: 'zhang_juzheng', type: '君臣', label: '张居正（首辅）' }],
+    events: ['e_wanli_zhongxing', 'e_wanli_three_war']
+  },
+  {
+    id: 'li_zicheng', name: '李自成', birth: 1606, death: 1645,
+    cat: 'general', dynasty: '明', emoji: '✊',
+    location: { lat: 38.3, lng: 109.8, place: '米脂（今陕西榆林）' },
+    desc: '明末农民起义领袖，号称"闯王"。提出"均田免赋"口号，深得民心，"迎闯王，不纳粮"。1644年攻入北京，推翻明朝，建立大顺政权。但因纵容部下烧杀抢掠，失尽民心，山海关之战败于吴三桂与清军联军，退出北京，后在湖北九宫山被乡民击杀。',
+    achievements: ['推翻明朝', '均田免赋', '建立大顺'],
+    relations: [{ id: 'zhu_yuanzhang', type: '传承', label: '朱元璋（同为起义建政）' }],
+    events: ['e_ming_fall']
+  },
+  {
+    id: 'chongzhen', name: '崇祯帝朱由检', birth: 1611, death: 1644,
+    cat: 'emperor', dynasty: '明', emoji: '👑',
+    location: { lat: 39.9, lng: 116.4, place: '北京紫禁城' },
+    desc: '明朝末代皇帝，即位后铲除魏忠贤阉党，欲振兴大明。但生性多疑，刚愎自用，17年间更换50位内阁首辅。内有李自成、张献忠起义，外有后金（清）入侵，加之天灾不断，回天无力。李自成攻入北京，崇祯在煤山（景山）自缢殉国，明朝灭亡，遗书"朕非亡国之君，臣皆亡国之臣"。',
+    achievements: ['铲除阉党', '殉国煤山'],
+    relations: [],
+    events: ['e_ming_fall']
+  },
+  {
+    id: 'tang_xianzu', name: '汤显祖', birth: 1550, death: 1616,
+    cat: 'artist', dynasty: '明', emoji: '🎭',
+    location: { lat: 27.9, lng: 116.3, place: '临川（今江西抚州）' },
+    desc: '明代戏曲家、文学家，被誉为"东方莎士比亚"。代表作《牡丹亭》写杜丽娘与柳梦梅生死之恋，"情不知所起，一往而深，生者可以死，死可以生"成为千古名句。与莎士比亚同年去世。',
+    achievements: ['《牡丹亭》', '临川四梦', '东方莎士比亚'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'song_yingxing', name: '宋应星', birth: 1587, death: 1666,
+    cat: 'scientist', dynasty: '明', emoji: '🔬',
+    location: { lat: 27.7, lng: 115.6, place: '奉新（今江西宜春）' },
+    desc: '明代科学家，编著《天工开物》，系统记录了农业和手工业生产技术，涵盖种植、纺织、冶炼、陶瓷等18个门类，被誉为"中国17世纪的工艺百科全书"，比西方类似著作早约一个世纪。',
+    achievements: ['《天工开物》', '中国工艺百科全书'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'li_shizhen', name: '李时珍', birth: 1518, death: 1593,
+    cat: 'scientist', dynasty: '明', emoji: '🌿',
+    location: { lat: 30.2, lng: 115.4, place: '蕲州（今湖北蕲春）' },
+    desc: '明代医药学家，历时27年三易其稿，编著《本草纲目》，收录药物1892种、方剂11096首，附图1160幅，是中国古代最伟大的药物学著作，被达尔文称为"中国古代的百科全书"。',
+    achievements: ['《本草纲目》', '药物学巨著', '收录1892种药物'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'wei_zhongxian', name: '魏忠贤', birth: 1568, death: 1627,
+    cat: 'politician', dynasty: '明', emoji: '🕷️',
+    location: { lat: 39.9, lng: 116.4, place: '北京' },
+    desc: '明末权阉，号称"九千岁"，天启年间把持朝政，迫害东林党人，全国各地为其建生祠。崇祯帝即位后将其铲除，阉党覆灭，但明朝元气已大伤，加速了灭亡进程。',
+    achievements: [],
+    relations: [{ id: 'chongzhen', type: '对立', label: '崇祯帝（铲除者）' }],
+    events: []
+  },
+  {
+    id: 'yan_song', name: '严嵩', birth: 1480, death: 1567,
+    cat: 'politician', dynasty: '明', emoji: '🕷️',
+    location: { lat: 27.8, lng: 114.4, place: '分宜（今江西新余）' },
+    desc: '明朝权臣，专国政近二十年，贪污腐败，排斥异己，杀害忠良夏言、杨继盛等。其子严世蕃更为跋扈，卖官鬻爵。最终被邹应龙弹劾倒台，严世蕃伏诛，严嵩寄食墓舍而死。',
+    achievements: [],
+    relations: [],
+    events: []
+  },
+
+  // 清
+  {
+    id: 'nurhachi', name: '努尔哈赤', birth: 1559, death: 1626,
+    cat: 'emperor', dynasty: '清', emoji: '🏹',
+    location: { lat: 41.8, lng: 123.4, place: '费阿拉城（今辽宁新宾）' },
+    desc: '后金开国之君，女真族领袖。以"七大恨"告天起兵，统一女真各部，建立八旗制度，是清朝的奠基者，创立满文。',
+    achievements: ['统一女真', '建立八旗', '建立后金', '创满文'],
+    relations: [{ id: 'hong_taiji', type: '父子', label: '皇太极（儿子）' }],
+    events: ['e_houjin_jianguo']
+  },
+  {
+    id: 'hong_taiji', name: '皇太极', birth: 1592, death: 1643,
+    cat: 'emperor', dynasty: '清', emoji: '👑',
+    location: { lat: 41.8, lng: 123.4, place: '盛京（今辽宁沈阳）' },
+    desc: '清朝第二位君主，努尔哈赤之子。改国号为清，改族名为满洲，多次入关劫掠，为清军入主中原奠定基础。',
+    achievements: ['改国号为清', '改族名满洲', '为入关奠基'],
+    relations: [
+      { id: 'nurhachi', type: '父子', label: '努尔哈赤（父亲）' },
+      { id: 'shunzhi', type: '父子', label: '顺治帝（儿子）' }
+    ],
+    events: ['e_qing_gaohao']
+  },
+  {
+    id: 'kangxi', name: '康熙帝', birth: 1654, death: 1722,
+    cat: 'emperor', dynasty: '清', emoji: '👑',
+    location: { lat: 39.9, lng: 116.4, place: '北京紫禁城' },
+    desc: '清朝第四位皇帝，在位61年，是中国历史上在位时间最长的皇帝。平三藩、收台湾、驱沙俄、亲征准噶尔，开创"康乾盛世"。',
+    achievements: ['平三藩', '收台湾', '抵御沙俄', '康熙字典', '在位最长'],
+    relations: [
+      { id: 'yongzheng', type: '父子', label: '雍正帝（儿子）' },
+    ],
+    events: ['e_santai', 'e_taiwan_tongyi']
+  },
+  {
+    id: 'yongzheng', name: '雍正帝', birth: 1678, death: 1735,
+    cat: 'emperor', dynasty: '清', emoji: '👑',
+    location: { lat: 39.9, lng: 116.4, place: '北京紫禁城' },
+    desc: '清朝第五位皇帝，以铁腕手段整顿吏治，推行摊丁入亩、火耗归公等改革，国库充实，为乾隆盛世奠定基础。',
+    achievements: ['整顿吏治', '摊丁入亩', '秘密立储制'],
+    relations: [
+      { id: 'kangxi', type: '父子', label: '康熙（父亲）' },
+      { id: 'qianlong', type: '父子', label: '乾隆（儿子）' }
+    ],
+    events: []
+  },
+  {
+    id: 'qianlong', name: '乾隆帝', birth: 1711, death: 1799,
+    cat: 'emperor', dynasty: '清', emoji: '👑',
+    location: { lat: 39.9, lng: 116.4, place: '北京紫禁城' },
+    desc: '清朝第六位皇帝，在位60年，实际掌权长达63年。十全武功，编修《四库全书》，晚年宠信和珅，闭关锁国，清朝由盛转衰。',
+    achievements: ['十全武功', '《四库全书》', '平定准噶尔', '乾隆盛世'],
+    relations: [
+      { id: 'yongzheng', type: '父子', label: '雍正（父亲）' },
+      { id: 'heshen', type: '君臣', label: '和珅（宠臣）' }
+    ],
+    events: ['e_siku_quanshu']
+  },
+  {
+    id: 'heshen', name: '和珅', birth: 1750, death: 1799,
+    cat: 'politician', dynasty: '清', emoji: '💰',
+    location: { lat: 39.9, lng: 116.4, place: '北京' },
+    desc: '清乾隆朝权臣，中国历史上最大的贪官，聚敛财富相当于清朝15年财政收入。乾隆死后被嘉庆帝赐死，"和珅跌倒，嘉庆吃饱"。',
+    achievements: [],
+    relations: [
+      { id: 'qianlong', type: '君臣', label: '乾隆（宠爱者）' },
+    ],
+    events: ['e_heshen_huo']
+  },
+  {
+    id: 'cao_xueqin', name: '曹雪芹', birth: 1715, death: 1763,
+    cat: 'scholar', dynasty: '清', emoji: '📖',
+    location: { lat: 39.9, lng: 116.4, place: '江宁（今江苏南京），后居北京西郊' },
+    desc: '清代小说家，著有《红楼梦》，中国古典小说的巅峰之作，是中国四大名著之首，影响了无数后世读者和研究者。曹家原为江南织造，曾煊赫一时，后遭抄家败落。曹雪芹以自身家族兴衰为蓝本，"批阅十载，增删五次"创作此书，终因贫病交加而逝，未完稿。',
+    achievements: ['著《红楼梦》', '中国古典文学巅峰', '批阅十载增删五次'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'shunzhi', name: '顺治帝福临', birth: 1638, death: 1661,
+    cat: 'emperor', dynasty: '清', emoji: '👑',
+    location: { lat: 39.9, lng: 116.4, place: '北京紫禁城' },
+    desc: '清朝入关后第一位皇帝，6岁即位，由摄政王多尔衮辅政。多尔衮死后亲政，推行满汉融合政策。笃信佛教，宠信董鄂妃，董鄂妃死后悲痛欲绝，不久驾崩（一说出家为僧），年仅24岁。',
+    achievements: ['入关定鼎', '满汉融合'],
+    relations: [{ id: 'hong_taiji', type: '父子', label: '皇太极（父亲）' }, { id: 'kangxi', type: '父子', label: '康熙帝（儿子）' }],
+    events: []
+  },
+  {
+    id: 'duoergun', name: '多尔衮', birth: 1612, death: 1650,
+    cat: 'politician', dynasty: '清', emoji: '🏛️',
+    location: { lat: 41.8, lng: 123.4, place: '盛京（今辽宁沈阳）' },
+    desc: '清朝摄政王，努尔哈赤第十四子。统率清军入关，定鼎中原，是清朝统一中国的关键人物。但在位期间推行剃发易服、圈地等高压政策，激起汉族强烈反抗。死后被追夺封号，掘墓鞭尸。',
+    achievements: ['统军入关', '定鼎中原', '摄政'],
+    relations: [{ id: 'hong_taiji', type: '兄弟', label: '皇太极（兄长）' }],
+    events: []
+  },
+  {
+    id: 'shi_lang', name: '施琅', birth: 1621, death: 1696,
+    cat: 'general', dynasty: '清', emoji: '⚔️',
+    location: { lat: 24.7, lng: 118.6, place: '晋江（今福建泉州）' },
+    desc: '清初将领，原为郑成功部下，后降清。康熙二十二年（1683年）率清军渡海攻克台湾，建议设台湾府，使台湾正式纳入清朝版图，对中国统一有重大贡献。',
+    achievements: ['攻克台湾', '建议设台湾府'],
+    relations: [{ id: 'kangxi', type: '君臣', label: '康熙帝（派遣者）' }],
+    events: ['e_taiwan_tongyi']
+  },
+  {
+    id: 'nian_gengyao', name: '年羹尧', birth: 1679, death: 1726,
+    cat: 'general', dynasty: '清', emoji: '⚔️',
+    location: { lat: 36.6, lng: 117.0, place: '合肥（今安徽）' },
+    desc: '清朝将领，雍正帝心腹，官至抚远大将军。平定青海罗卜藏丹津叛乱，威震西北，权倾一时。但恃功骄横，被雍正帝以92条大罪赐死，从炙手可热到身首异处仅两年，"功高震主"的典型。',
+    achievements: ['平定青海叛乱', '抚远大将军'],
+    relations: [{ id: 'yongzheng', type: '君臣', label: '雍正帝（赐死者）' }],
+    events: []
+  },
+  {
+    id: 'ji_xiaolan', name: '纪晓岚', birth: 1724, death: 1805,
+    cat: 'scholar', dynasty: '清', emoji: '📖',
+    location: { lat: 36.6, lng: 115.9, place: '献县（今河北沧州）' },
+    desc: '清代学者、文学家，官至礼部尚书、协办大学士。曾任《四库全书》总纂官，历时十余年编成，并著《四库全书总目提要》。以才思敏捷、幽默风趣闻名，民间传说中与和珅斗智的故事广为流传。',
+    achievements: ['《四库全书》总纂', '《阅微草堂笔记》', '文坛领袖'],
+    relations: [{ id: 'qianlong', type: '君臣', label: '乾隆帝（君主）' }, { id: 'heshen', type: '对立', label: '和珅（政敌）' }],
+    events: ['e_siku_quanshu']
+  },
+  {
+    id: 'lin_zexu', name: '林则徐', birth: 1785, death: 1850,
+    cat: 'politician', dynasty: '清', emoji: '🚬',
+    location: { lat: 26.0, lng: 119.3, place: '福建福州' },
+    desc: '清朝后期政治家，道光年间主导"虎门销烟"，销毁英国走私鸦片，引发第一次鸦片战争，是中国近代史上抵抗外辱的第一人。被誉为"开眼看世界的第一人"，编译《四洲志》，倡导向西方学习。',
+    achievements: ['虎门销烟', '抵御外辱', '开眼看世界', '编译《四洲志》'],
+    relations: [],
+    events: ['e_humen_xiaoyian', 'e_yapian_war']
+  },
+  {
+    id: 'hong_xiuquan', name: '洪秀全', birth: 1814, death: 1864,
+    cat: 'politician', dynasty: '清', emoji: '✊',
+    location: { lat: 23.4, lng: 113.2, place: '广东花县' },
+    desc: '太平天国运动领袖，创立拜上帝会，自称天父次子、耶稣之弟。1851年金田起义，建太平天国，1853年占领南京改名天京。但定都后迅速腐化，天京事变屠杀杨秀清等，元气大伤，最终在天京城破前自尽。',
+    achievements: ['建立太平天国', '金田起义', '《天朝田亩制度》'],
+    relations: [{ id: 'zeng_guofan', type: '对立', label: '曾国藩（镇压者）' }],
+    events: ['e_taiping']
+  },
+  {
+    id: 'zeng_guofan', name: '曾国藩', birth: 1811, death: 1872,
+    cat: 'politician', dynasty: '清', emoji: '📚',
+    location: { lat: 27.9, lng: 112.9, place: '湖南长沙' },
+    desc: '清朝中兴名臣，组建湘军镇压太平天国运动，推动洋务运动，培养了大量人才，是近代中国最有影响力的人物之一。以"结硬寨，打呆仗"著称，一生奉行理学，修身律己，被誉为"千古第一完人"。',
+    achievements: ['组建湘军', '平定太平天国', '推动洋务运动', '《曾国藩家书》'],
+    relations: [
+      { id: 'li_hongzhang', type: '师生', label: '李鸿章（门生）' },
+      { id: 'zuo_zongtang', type: '同盟', label: '左宗棠（同僚）' },
+    ],
+    events: ['e_yangwu', 'e_taiping']
+  },
+  {
+    id: 'li_hongzhang', name: '李鸿章', birth: 1823, death: 1901,
+    cat: 'politician', dynasty: '清', emoji: '🤝',
+    location: { lat: 31.8, lng: 117.2, place: '安徽合肥' },
+    desc: '清朝重臣，洋务运动领袖，建立北洋舰队，主张"中体西用"。甲午战争惨败后代表清廷签订《马关条约》，背负历史骂名。一生签下30多个不平等条约，被梁启超评价为"吾敬李鸿章之才，吾惜李鸿章之识，吾悲李鸿章之遇"。',
+    achievements: ['洋务运动', '建北洋水师', '创办江南制造局'],
+    relations: [
+      { id: 'zeng_guofan', type: '师生', label: '曾国藩（老师）' },
+    ],
+    events: ['e_yangwu', 'e_jiawu', 'e_maguan']
+  },
+  {
+    id: 'zuo_zongtang', name: '左宗棠', birth: 1812, death: 1885,
+    cat: 'general', dynasty: '清', emoji: '⚔️',
+    location: { lat: 27.9, lng: 113.0, place: '湘阴（今湖南岳阳）' },
+    desc: '清朝名将、洋务派代表人物。力排众议，抬棺西征，率军收复新疆，粉碎阿古柏政权和沙俄侵略，保住中国六分之一国土。创办福州船政局等洋务企业，与曾国藩并称"曾左"。"天下不可一日无湖南，湖南不可一日无左宗棠"。',
+    achievements: ['收复新疆', '抬棺西征', '创办福州船政局'],
+    relations: [{ id: 'zeng_guofan', type: '同盟', label: '曾国藩（同僚）' }, { id: 'li_hongzhang', type: '对立', label: '李鸿章（政敌）' }],
+    events: ['e_yangwu', 'e_xinjiang']
+  },
+  {
+    id: 'ci_xi', name: '慈禧太后', birth: 1835, death: 1908,
+    cat: 'politician', dynasty: '清', emoji: '👸',
+    location: { lat: 39.9, lng: 116.4, place: '北京紫禁城' },
+    desc: '晚清实际统治者，通过辛酉政变垂帘听政，掌控清朝近半个世纪。同治、光绪两朝幕后掌权，扼杀戊戌变法，发动庚子拳乱后签《辛丑条约》，以"量中华之物力，结与国之欢心"闻名。一生穷奢极欲，挪用海军军费修颐和园，加速了清朝灭亡。',
+    achievements: [],
+    relations: [],
+    events: ['e_wuxu', 'e_gengzi']
+  },
+  {
+    id: 'guangxu', name: '光绪帝载湉', birth: 1871, death: 1908,
+    cat: 'emperor', dynasty: '清', emoji: '👑',
+    location: { lat: 39.9, lng: 116.4, place: '北京紫禁城' },
+    desc: '清朝第十一位皇帝，4岁即位，由慈禧太后垂帘听政。亲政后支持康有为、梁启超推行戊戌变法（百日维新），但被慈禧发动政变镇压，被囚禁于瀛台至死。死前一日慈禧去世，死因成谜（2008年证实死于砒霜中毒）。',
+    achievements: ['支持戊戌变法', '百日维新'],
+    relations: [{ id: 'ci_xi', type: '对立', label: '慈禧太后（囚禁者）' }],
+    events: ['e_wuxu']
+  },
+  {
+    id: 'zhang_zhidong', name: '张之洞', birth: 1837, death: 1909,
+    cat: 'politician', dynasty: '清', emoji: '🏭',
+    location: { lat: 30.6, lng: 114.3, place: '南皮（今河北沧州）' },
+    desc: '晚清名臣、洋务运动后起之秀，提出"中学为体，西学为用"。创办汉阳铁厂、湖北枪炮厂、织布局等，修筑卢汉铁路，推动中国近代工业发展。兴办新式学堂，派遣留学生，对中国教育近代化贡献巨大。与曾国藩、李鸿章、左宗棠并称"晚清四大名臣"。',
+    achievements: ['中体西用', '创办汉阳铁厂', '兴办新学', '晚清四大名臣'],
+    relations: [{ id: 'li_hongzhang', type: '同盟', label: '李鸿章（同僚）' }],
+    events: ['e_yangwu']
+  },
+  {
+    id: 'jiaqing', name: '嘉庆帝颙琰', birth: 1760, death: 1820,
+    cat: 'emperor', dynasty: '清', emoji: '👑',
+    location: { lat: 39.9, lng: 116.4, place: '北京紫禁城' },
+    desc: '清朝第七位皇帝，即位后铲除权臣和珅，"和珅跌倒，嘉庆吃饱"，抄没财产约八亿两白银。但嘉庆朝吏治腐败日深，白莲教起义此起彼伏，天理教徒曾攻入紫禁城，清朝由盛转衰的趋势不可逆转。',
+    achievements: ['铲除和珅'],
+    relations: [{ id: 'qianlong', type: '父子', label: '乾隆帝（父亲）' }, { id: 'heshen', type: '对立', label: '和珅（赐死者）' }],
+    events: ['e_heshen_huo']
+  },
+  {
+    id: 'dao_guang', name: '道光帝旻宁', birth: 1782, death: 1850,
+    cat: 'emperor', dynasty: '清', emoji: '👑',
+    location: { lat: 39.9, lng: 116.4, place: '北京紫禁城' },
+    desc: '清朝第八位皇帝，以节俭著称，龙袍打补丁。但节俭治国未能挽救国运，鸦片战争惨败，签订《南京条约》，割让香港岛，开启中国近代百年屈辱史。一生勤政却无力回天，是中国从古代社会沦为半殖民地半封建社会的转折时期的皇帝。',
+    achievements: [],
+    relations: [{ id: 'jiaqing', type: '父子', label: '嘉庆帝（父亲）' }],
+    events: ['e_yapian_war']
+  },
+
+  // ===== 民国时期人物 =====
+  {
+    id: 'sun_zhongshan', name: '孙中山', birth: 1866, death: 1925,
+    cat: 'politician', dynasty: '民国', emoji: '🌟',
+    location: { lat: 22.5, lng: 113.6, place: '香山（今广东中山）' },
+    desc: '中国民主革命先行者，中华民国国父。创立兴中会、同盟会，提出"三民主义"（民族、民权、民生），领导辛亥革命推翻清朝，结束两千余年帝制。历任中华民国临时大总统、大元帅。一生奔走革命，"革命尚未成功，同志仍须努力"为临终遗言。',
+    achievements: ['创立三民主义', '领导辛亥革命', '建立中华民国', '创建同盟会', '改组国民党'],
+    relations: [{ id: 'yuan_shikai', type: '对立', label: '袁世凯（窃取果实）' }, { id: 'huang_xing', type: '同盟', label: '黄兴（战友）' }],
+    events: ['e_xinhai', 'e_minguo_jianguo']
+  },
+  {
+    id: 'huang_xing', name: '黄兴', birth: 1874, death: 1916,
+    cat: 'general', dynasty: '民国', emoji: '⚔️',
+    location: { lat: 28.2, lng: 112.9, place: '善化（今湖南长沙）' },
+    desc: '辛亥革命元勋，与孙中山并称"孙黄"。多次亲临前线指挥起义，武昌起义后任战时总司令，领导阳夏保卫战。"无公则无民国，有史必有斯人"是对其最高评价。一生坦荡无私，功成不居。',
+    achievements: ['指挥武昌起义', '阳夏保卫战', '创建华兴会', '孙黄并称', '二次革命'],
+    relations: [{ id: 'sun_zhongshan', type: '同盟', label: '孙中山（战友）' }],
+    events: ['e_xinhai']
+  },
+  {
+    id: 'yuan_shikai', name: '袁世凯', birth: 1859, death: 1916,
+    cat: 'politician', dynasty: '民国', emoji: '🏛️',
+    location: { lat: 34.0, lng: 113.7, place: '项城（今河南周口）' },
+    desc: '北洋军阀创始人，中华民国首位正式大总统。小站练兵编练新军，逼清帝退位又窃取革命果实。1915年称帝，改国号"中华帝国"，遭全国反对，83天后被迫取消帝制，不久病死。一生权谋善变，既有推动近代化之功，又有复辟帝制之过。',
+    achievements: ['小站练兵', '逼清帝退位', '建立北洋体系'],
+    relations: [{ id: 'sun_zhongshan', type: '对立', label: '孙中山（政敌）' }, { id: 'li_hongzhang', type: '传承', label: '李鸿章（前辈）' }],
+    events: ['e_minguo_jianguo']
+  },
+  {
+    id: 'song_jiaoren', name: '宋教仁', birth: 1882, death: 1913,
+    cat: 'politician', dynasty: '民国', emoji: '📖',
+    location: { lat: 29.4, lng: 111.7, place: '桃源（今湖南常德）' },
+    desc: '中国宪政先驱，国民党实际缔造者。同盟会核心成员，民国成立后改组国民党，主张责任内阁制，限制总统权力。1913年国民党大选获胜，即将组阁之际，在上海火车站遇刺身亡，年仅31岁。临终遗言："诸公皆当勉力进行，勿以我为念。"其死引发二次革命。',
+    achievements: ['缔造国民党', '推动宪政', '主张责任内阁制'],
+    relations: [{ id: 'sun_zhongshan', type: '同盟', label: '孙中山（同志）' }, { id: 'yuan_shikai', type: '对立', label: '袁世凯（被其暗杀）' }],
+    events: []
+  },
+  {
+    id: 'cai_e', name: '蔡锷', birth: 1882, death: 1916,
+    cat: 'general', dynasty: '民国', emoji: '⚔️',
+    location: { lat: 26.7, lng: 111.6, place: '邵阳（今湖南）' },
+    desc: '护国将军，再造共和第一人。云南起义领导人，率先反对袁世凯称帝，组织护国军北伐，迫使袁取消帝制。与小凤仙的传奇故事流传甚广。积劳成疾，病逝日本，年仅34岁。孙中山挽联："平生慷慨班都护，万里间关马伏波。"',
+    achievements: ['发动护国战争', '反对袁世凯称帝', '再造共和', '云南起义'],
+    relations: [{ id: 'yuan_shikai', type: '对立', label: '袁世凯（讨伐对象）' }],
+    events: []
+  },
+  {
+    id: 'lu_xun', name: '鲁迅', birth: 1881, death: 1936,
+    cat: 'scholar', dynasty: '民国', emoji: '✍️',
+    location: { lat: 30.0, lng: 120.6, place: '绍兴（今浙江）' },
+    desc: '中国现代文学奠基人，"民族魂"。原名周树人，弃医从文，以笔为枪。1918年发表《狂人日记》，中国第一篇白话小说。代表作《阿Q正传》《祝福》《孔乙己》等深刻批判国民性。杂文如匕首投枪，直刺社会黑暗面。毛泽东评价："鲁迅的方向，就是中华民族新文化的方向。"',
+    achievements: ['《狂人日记》开白话小说先河', '《阿Q正传》', '中国现代文学奠基', '左翼文化旗帜', '《呐喊》《彷徨》'],
+    relations: [],
+    events: ['e_wusi']
+  },
+  {
+    id: 'chen_duxiu', name: '陈独秀', birth: 1879, death: 1942,
+    cat: 'scholar', dynasty: '民国', emoji: '📢',
+    location: { lat: 30.4, lng: 117.0, place: '安庆（今安徽）' },
+    desc: '新文化运动旗手，中国共产党主要创始人。1915年创办《新青年》，高举"民主"与"科学"大旗，发动新文化运动。与李大钊"南陈北李"相约建党，任中共一至五届总书记。后因路线分歧被开除党籍，晚年流寓四川江津，贫病而终。',
+    achievements: ['创办《新青年》', '领导新文化运动', '创建中国共产党', '南陈北李建党'],
+    relations: [{ id: 'lu_xun', type: '交游', label: '鲁迅（同道）' }, { id: 'li_dazhao', type: '同盟', label: '李大钊（南陈北李）' }],
+    events: ['e_wusi']
+  },
+  {
+    id: 'li_dazhao', name: '李大钊', birth: 1889, death: 1927,
+    cat: 'scholar', dynasty: '民国', emoji: '💡',
+    location: { lat: 39.6, lng: 118.2, place: '乐亭（今河北唐山）' },
+    desc: '中国共产主义运动先驱，中国共产党主要创始人之一。中国最早传播马克思主义者，发表《庶民的胜利》《我的马克思主义观》。与陈独秀"南陈北李"相约建党，推动国共合作。1927年被张作霖逮捕，英勇就义，年仅38岁。"铁肩担道义，妙手著文章"是其一生写照。',
+    achievements: ['最早传播马克思主义', '中共创始人之一', '推动国共合作', '《庶民的胜利》'],
+    relations: [{ id: 'chen_duxiu', type: '同盟', label: '陈独秀（南陈北李）' }],
+    events: ['e_wusi']
+  },
+  {
+    id: 'hu_shi', name: '胡适', birth: 1891, death: 1962,
+    cat: 'scholar', dynasty: '民国', emoji: '📚',
+    location: { lat: 29.9, lng: 118.3, place: '绩溪（今安徽宣城）' },
+    desc: '新文化运动领袖，白话文运动倡导者。留美归来提倡白话文，发表《文学改良刍议》，推动白话文取代文言文。主张"大胆假设，小心求证"的实证精神。曾任北大校长、驻美大使。一生倡导自由主义，与鲁迅从战友到论敌。',
+    achievements: ['倡导白话文运动', '《文学改良刍议》', '推动新文化运动', '大胆假设小心求证', '驻美大使'],
+    relations: [{ id: 'chen_duxiu', type: '交游', label: '陈独秀（战友后分道）' }, { id: 'lu_xun', type: '交游', label: '鲁迅（从同道到论敌）' }],
+    events: ['e_wusi']
+  },
+  {
+    id: 'cai_yuanpei', name: '蔡元培', birth: 1868, death: 1940,
+    cat: 'scholar', dynasty: '民国', emoji: '🎓',
+    location: { lat: 30.0, lng: 120.6, place: '绍兴（今浙江）' },
+    desc: '中国现代教育之父，北大精神缔造者。任北大校长期间，提出"思想自由，兼容并包"方针，使北大成为新文化运动中心。支持学生运动，保护进步师生。四度留学欧洲，将西方大学制度引入中国。清正廉洁，一生两袖清风。',
+    achievements: ['改革北京大学', '思想自由兼容并包', '中国现代教育奠基', '支持五四运动', '中央研究院首任院长'],
+    relations: [{ id: 'lu_xun', type: '交游', label: '鲁迅（同乡知交）' }, { id: 'chen_duxiu', type: '交游', label: '陈独秀（聘为北大文科学长）' }],
+    events: ['e_wusi']
+  },
+  {
+    id: 'zhang_taiyan', name: '章太炎', birth: 1869, death: 1936,
+    cat: 'scholar', dynasty: '民国', emoji: '📜',
+    location: { lat: 30.2, lng: 120.2, place: '余杭（今浙江杭州）' },
+    desc: '国学大师，革命思想家。清末因《驳康有为论革命书》和邹容《革命军》案入狱三年。同盟会早期核心成员，后与孙中山分道。学问渊博，精于小学、经学、佛学，门下弟子众多：黄侃、鲁迅、周作人、钱玄同等。"章疯子"之名，是其不随流俗的写照。',
+    achievements: ['国学大师', '《驳康有为论革命书》', '门下弟子众多', '精研小学经学'],
+    relations: [{ id: 'lu_xun', type: '师承', label: '鲁迅（弟子）' }, { id: 'sun_zhongshan', type: '同盟', label: '孙中山（后分道）' }],
+    events: []
+  },
+  {
+    id: 'qiu_jin', name: '秋瑾', birth: 1875, death: 1907,
+    cat: 'politician', dynasty: '清', emoji: '🗡️',
+    location: { lat: 30.0, lng: 120.6, place: '绍兴（今浙江）' },
+    desc: '巾帼英雄，中国女权和女学倡导者。自号"鉴湖女侠"，留学日本期间参加同盟会。回国后创办《中国女报》，组织光复军准备起义，事泄被捕，从容就义于绍兴轩亭口，年仅32岁。"秋风秋雨愁煞人"为其绝笔。是近代中国为革命牺牲的第一位女性。',
+    achievements: ['鉴湖女侠', '倡导女权女学', '同盟会成员', '创办《中国女报》'],
+    relations: [{ id: 'sun_zhongshan', type: '同盟', label: '孙中山（同志）' }],
+    events: ['e_xinhai']
+  },
+  {
+    id: 'lin_jueming', name: '林觉民', birth: 1887, death: 1911,
+    cat: 'politician', dynasty: '清', emoji: '💌',
+    location: { lat: 26.1, lng: 119.3, place: '闽县（今福建福州）' },
+    desc: '黄花岗七十二烈士之一。1911年参加广州起义，事前写下绝笔《与妻书》："吾充吾爱汝之心，助天下人爱其所爱"，以天下为己任，舍小家为大家。起义中受伤被捕，从容就义，年仅24岁。《与妻书》情真意切，是近代最感人的家书。',
+    achievements: ['黄花岗烈士', '《与妻书》', '广州起义'],
+    relations: [],
+    events: ['e_xinhai']
+  },
+  {
+    id: 'yan_xishan', name: '阎锡山', birth: 1883, death: 1960,
+    cat: 'politician', dynasty: '民国', emoji: '🏔️',
+    location: { lat: 38.4, lng: 112.7, place: '五台（今山西忻州）' },
+    desc: '山西军阀，统治山西近四十年，人称"山西王"。同盟会出身，辛亥革命时发动太原起义。统治山西期间推行"村本政治"和"用民政治"，兴办实业、教育，山西成为"模范省"。在军阀混战中左右逢源，抗日时期坚持"守土抗战"，内战后去台湾。',
+    achievements: ['统治山西近四十年', '推行村本政治', '山西模范省'],
+    relations: [{ id: 'yuan_shikai', type: '君臣', label: '袁世凯（依附）' }],
+    events: []
+  },
+  {
+    id: 'feng_yuxiang', name: '冯玉祥', birth: 1882, death: 1948,
+    cat: 'general', dynasty: '民国', emoji: '⚔️',
+    location: { lat: 34.7, lng: 115.3, place: '巢县（今安徽合肥）' },
+    desc: '"基督将军"，著名爱国将领。1924年发动北京政变，驱逐溥仪出宫，推翻曹锟贿选政府。北伐战争中率部参战，中原大战后隐居。抗战时期坚持抗日，反对内战。1948年归国途中在黑海遇难。一生信奉基督教，要求士兵洗礼，生活简朴。',
+    achievements: ['北京政变', '驱逐溥仪出宫', '基督将军', '坚持抗日'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'zhang_xueliang', name: '张学良', birth: 1901, death: 2001,
+    cat: 'general', dynasty: '民国', emoji: '🏳️',
+    location: { lat: 41.8, lng: 123.4, place: '海城（今辽宁鞍山）' },
+    desc: '"少帅"，东北军阀张作霖之子。1928年"东北易帜"，服从南京国民政府，实现国家形式统一。1936年发动"西安事变"，兵谏蒋介石联共抗日，改变中国历史进程。事变后陪蒋回南京，被软禁长达54年，1990年重获自由，2001年病逝于夏威夷，享年100岁。',
+    achievements: ['东北易帜', '西安事变', '兵谏联共抗日'],
+    relations: [{ id: 'feng_yuxiang', type: '同盟', label: '冯玉祥（中原大战盟友）' }],
+    events: ['e_xian_bianshi']
+  },
+  {
+    id: 'cai_tingkai', name: '蔡廷锴', birth: 1892, death: 1968,
+    cat: 'general', dynasty: '民国', emoji: '⚔️',
+    location: { lat: 22.3, lng: 112.7, place: '罗定（今广东云浮）' },
+    desc: '抗日名将，"一二八"淞沪抗战英雄。1932年率十九路军在上海英勇抗击日军进攻33天，名震中外。后参加福建事变反蒋，失败后流亡海外。抗战爆发后重返抗日战场。一生爱国，从军阀将领到共和国国防委员会副主席。',
+    achievements: ['一二八淞沪抗战', '十九路军', '福建事变'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'li_zongren', name: '李宗仁', birth: 1891, death: 1969,
+    cat: 'general', dynasty: '民国', emoji: '⚔️',
+    location: { lat: 24.4, lng: 110.1, place: '临桂（今广西桂林）' },
+    desc: '桂系首领，抗日名将。统一广西后成为新桂系核心，与白崇禧合称"李白"。1938年指挥台儿庄战役，歼灭日军精锐万余人，取得抗战以来正面战场首次重大胜利。1948年当选副总统，1949年代理总统。1965年从美国回到祖国。',
+    achievements: ['台儿庄大捷', '桂系首领', '统一广西'],
+    relations: [],
+    events: ['e_kangzhan']
+  },
+  {
+    id: 'bai_chongxi', name: '白崇禧', birth: 1893, death: 1966,
+    cat: 'general', dynasty: '民国', emoji: '⚔️',
+    location: { lat: 24.4, lng: 110.1, place: '临桂（今广西桂林）' },
+    desc: '"小诸葛"，新桂系核心人物，国民党军著名战略家。北伐时率部从广东打到北京，抗战期间指挥多场大战。足智多谋，用兵灵活，被日军称为"战神"。与李宗仁合称"李白"，共同经营桂系二十余年。内战后去台湾，郁郁而终。',
+    achievements: ['小诸葛', '北伐名将', '抗战战略家', '桂系核心'],
+    relations: [{ id: 'li_zongren', type: '同盟', label: '李宗仁（李白组合）' }],
+    events: ['e_kangzhan']
+  },
+  {
+    id: 'xue_yue', name: '薛岳', birth: 1896, death: 1998,
+    cat: 'general', dynasty: '民国', emoji: '⚔️',
+    location: { lat: 24.5, lng: 114.1, place: '乐昌（今广东韶关）' },
+    desc: '"战神"，抗日第一名将。抗战期间指挥四次长沙会战，前三次均大败日军，独创"天炉战法"，歼灭日军十余万人，是抗战歼敌最多的中国将领。万家岭大捷全歼日军第106师团。一生战功赫赫，内战后去台湾，高寿102岁。',
+    achievements: ['长沙会战三捷', '天炉战法', '万家岭大捷', '抗战歼敌最多', '四战长沙'],
+    relations: [],
+    events: ['e_kangzhan']
+  },
+  {
+    id: 'zhang_zizhong', name: '张自忠', birth: 1891, death: 1940,
+    cat: 'general', dynasty: '民国', emoji: '⚔️',
+    location: { lat: 36.2, lng: 116.0, place: '临清（今山东聊城）' },
+    desc: '抗日殉国最高将领，民族英雄。曾因与日军周旋被诬为"汉奸"，忍辱负重，誓以死明志。1940年枣宜会战中，身先士卒，身中数弹仍不退却，最终壮烈殉国，年仅49岁。牺牲前留书："国家到了如此地步，除我等为其死，毫无其他办法。"国民政府追授其为陆军上将。',
+    achievements: ['枣宜会战殉国', '抗日殉国最高将领', '临沂大捷'],
+    relations: [],
+    events: ['e_kangzhan']
+  },
+  {
+    id: 'dai_jitao', name: '戴安澜', birth: 1904, death: 1942,
+    cat: 'general', dynasty: '民国', emoji: '⚔️',
+    location: { lat: 31.3, lng: 117.3, place: '无为（今安徽芜湖）' },
+    desc: '中国远征军名将，抗日殉国英雄。1942年率第200师远征缅甸，在同古保卫战中以9000人抗击4万日军12天，后收复棠吉。撤退途中遭日军伏击，身负重伤，在缅北茅邦村殉国，年仅38岁。美国政府追授懋绩勋章，是首位获此殊荣的中国军人。',
+    achievements: ['远征缅甸', '同古保卫战', '收复棠吉', '获美国懋绩勋章'],
+    relations: [],
+    events: ['e_kangzhan']
+  },
+  {
+    id: 'mao_dun', name: '茅盾', birth: 1896, death: 1981,
+    cat: 'scholar', dynasty: '民国', emoji: '📖',
+    location: { lat: 30.8, lng: 120.5, place: '桐乡（今浙江嘉兴）' },
+    desc: '中国现代文学巨匠，文学评论家。代表作《子夜》全景式描绘1930年代上海社会，《春蚕》《林家铺子》反映农村和城镇经济崩溃。曾任文化部部长，创办《小说月报》。临终捐出25万元稿费设立"茅盾文学奖"，是中国最重要的文学奖项。',
+    achievements: ['《子夜》', '《春蚕》', '茅盾文学奖', '文学评论家'],
+    relations: [{ id: 'lu_xun', type: '交游', label: '鲁迅（同道）' }],
+    events: []
+  },
+  {
+    id: 'lao_she', name: '老舍', birth: 1899, death: 1966,
+    cat: 'scholar', dynasty: '民国', emoji: '📖',
+    location: { lat: 39.9, lng: 116.4, place: '北京' },
+    desc: '人民艺术家，京味文学大师。原名舒庆春，代表作《骆驼祥子》《四世同堂》《茶馆》等。《骆驼祥子》写人力车夫悲剧，《茶馆》浓缩半个世纪社会变迁。语言幽默生动，京味浓郁，被誉为"语言大师"。文革中不堪凌辱，自沉太平湖。',
+    achievements: ['《骆驼祥子》', '《茶馆》', '《四世同堂》', '人民艺术家', '京味文学大师'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'bing_xin', name: '冰心', birth: 1900, death: 1999,
+    cat: 'scholar', dynasty: '民国', emoji: '🌸',
+    location: { lat: 26.1, lng: 119.3, place: '长乐（今福建福州）' },
+    desc: '中国现代文学先驱，儿童文学奠基人。原名谢婉莹，代表作《繁星》《春水》开创小诗体，《寄小读者》是中国儿童文学经典。一生宣扬"爱的哲学"，"有了爱便有了一切"。1999年逝世，享年99岁，与世纪同龄。',
+    achievements: ['《繁星》《春水》', '《寄小读者》', '儿童文学奠基', '爱的哲学'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'xu_zhimo', name: '徐志摩', birth: 1897, death: 1931,
+    cat: 'scholar', dynasty: '民国', emoji: '✈️',
+    location: { lat: 30.3, lng: 120.3, place: '海宁（今浙江嘉兴）' },
+    desc: '新月派代表诗人，浪漫主义文学先驱。代表作《再别康桥》"轻轻的我走了，正如我轻轻的来"传诵至今。创办新月社，主编《诗刊》，推动新诗格律化。与林徽因、陆小曼的感情故事为人津津乐道。1931年乘飞机失事遇难，年仅34岁。',
+    achievements: ['《再别康桥》', '新月派创始人', '推动新诗格律化', '《志摩的诗》'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'wen_yiduo', name: '闻一多', birth: 1899, death: 1946,
+    cat: 'scholar', dynasty: '民国', emoji: '🔥',
+    location: { lat: 30.5, lng: 115.4, place: '浠水（今湖北黄冈）' },
+    desc: '诗人、学者、民主斗士。代表作《红烛》《死水》是现代诗经典。后潜心学术，研究《楚辞》《诗经》卓然成家。抗战胜利后积极投身民主运动，1946年在昆明悼念李公朴大会上发表《最后一次讲演》，当天回家途中遭国民党特务暗杀，年仅47岁。',
+    achievements: ['《红烛》《死水》', '《最后一次讲演》', '楚辞研究', '民主斗士'],
+    relations: [{ id: 'lu_xun', type: '传承', label: '鲁迅（精神传承）' }],
+    events: []
+  },
+  {
+    id: 'zhu_ziqing', name: '朱自清', birth: 1898, death: 1948,
+    cat: 'scholar', dynasty: '民国', emoji: '📝',
+    location: { lat: 32.4, lng: 119.4, place: '东海（今江苏连云港）' },
+    desc: '现代散文大师，语文教育家。代表作《背影》《荷塘月色》是中学课本必选名篇。散文感情真挚，文字清丽。抗战后身患重病，仍拒绝领取美国救济粮，"宁可饿死，不领美国救济粮"。1948年病逝，年仅50岁。毛泽东称赞其"表现了我们民族的英雄气概"。',
+    achievements: ['《背影》', '《荷塘月色》', '拒绝美国救济粮', '散文大师'],
+    relations: [],
+    events: []
+  },
+  {
+    id: 'mei_lanfang', name: '梅兰芳', birth: 1894, death: 1961,
+    cat: 'artist', dynasty: '民国', emoji: '🎭',
+    location: { lat: 39.9, lng: 116.4, place: '北京' },
+    desc: '京剧艺术大师，"四大名旦"之首。创立梅派艺术，将京剧推向世界舞台。抗战期间蓄须明志，拒绝为日伪演出，八年辍演以示民族气节。三次访日、访美、访苏演出，使京剧成为世界三大戏剧体系之一。周恩来说："梅兰芳这位伟大的艺术家，不仅是属于中国的，更是属于世界的。"',
+    achievements: ['梅派艺术', '四大名旦之首', '蓄须明志', '京剧走向世界'],
+    relations: [],
+    events: []
+  },
+];
+
+// 重要事件
+const EVENTS = [
+  { id: 'e_banquanzhan', year: -2697, name: '阪泉之战', type: 'war', desc: '黄帝与炎帝的战争，最终炎黄联合，奠定华夏民族基础。' },
+  { id: 'e_zhuoluzhan', year: -2690, name: '涿鹿之战', type: 'war', desc: '黄帝联合炎帝大败蚩尤，确立华夏族主导地位。' },
+  { id: 'e_shanrang_yao', year: -2260, name: '尧禅让舜', type: 'politics', desc: '上古禅让制的典范，尧将帝位传给德行高尚的舜。' },
+  { id: 'e_shanrang_shun', year: -2206, name: '舜禅让禹', type: 'politics', desc: '舜因大禹治水有功，将帝位禅让给禹。' },
+  { id: 'e_zhishui', year: -2100, name: '大禹治水', type: 'science', desc: '大禹带领民众治理洪水，三过家门而不入，历时13年终于成功。' },
+  { id: 'e_xia_founded', year: -2070, name: '夏朝建立', type: 'politics', desc: '大禹建立中国历史上第一个王朝——夏朝，世袭制取代禅让制。' },
+
+  // 夏朝事件
+  { id: 'e_gan_zhanyi', year: -2050, name: '甘之战', type: 'war', desc: '夏启平定有扈氏叛乱，在甘地（今河南洛阳西南）击败有扈氏，巩固新生政权，正式确立世袭制。' },
+  { id: 'e_taikang_shiguo', year: -2030, name: '太康失国', type: 'politics', desc: '太康沉迷狩猎，后羿趁虚而入夺取夏政，太康流亡，史称"太康失国"，为夏朝首次中断。' },
+  { id: 'e_houyi_daixia', year: -2020, name: '后羿代夏', type: 'war', desc: '后羿取代夏政，但不久被寒浞所杀，寒浞建立寒国，夏朝中断约40年。' },
+  { id: 'e_shaodi_ticheng', year: -1960, name: '少康中兴', type: 'politics', desc: '少康在有虞氏帮助下复国，灭寒浞，恢复夏朝统治，史称"少康中兴"，夏朝进入稳定发展期。' },
+  { id: 'e_xia_baishou', year: -1800, name: '夏王朝鼎盛', type: 'culture', desc: '夏朝在少康复国后进入鼎盛期，经济文化都有较大发展，农业生产进步，青铜器开始使用。' },
+  { id: 'e_xia_miewang', year: -1600, name: '鸣条之战/夏朝灭亡', type: 'war', desc: '商汤在鸣条（今河南封丘东）大败夏桀军队，夏朝灭亡，商朝建立。桀被流放于南巢，最终饿死。' },
+
+  // 商朝事件
+  { id: 'e_shang_founded', year: -1600, name: '商朝建立', type: 'politics', desc: '商汤灭夏后在亳（今河南商丘）建立商朝，定都于此。重用伊尹为相，制定《汤刑》，商朝成为中国第二个统一王朝。' },
+  { id: 'e_wu_yi_luan', year: -1500, name: '五世之乱', type: 'war', desc: '商朝中期的动荡期，王位争夺激烈，多次迁都，国力衰退。伊尹曾放逐太甲，安定商政。' },
+  { id: 'e_pangeng_qianyin', year: -1300, name: '盘庚迁殷', type: 'politics', desc: '盘庚为摆脱旧贵族势力，将都城从奄（今山东曲阜）迁至殷（今河南安阳），推行新政，商朝复兴。' },
+  { id: 'e_wuding_zhongxing', year: -1250, name: '武丁中兴', type: 'politics', desc: '武丁在位59年，重用傅说为相，对外征伐四方，征服西北羌方、鬼方、荆楚，商朝达到极盛。' },
+  { id: 'e_wu_ding_war', year: -1200, name: '武丁征伐', type: 'war', desc: '武丁对外大规模用兵，征服周边方国，扩展商朝版图，奠定商朝鼎盛时期的疆域。' },
+  { id: 'e_shang_baoshan', year: -1100, name: '商朝日渐衰落', type: 'politics', desc: '商朝后期，历代君主渐趋腐败，祖甲之后连续出现昏君，国力持续下降，周边方国渐生叛心。' },
+  { id: 'e_tao_tang_pohuai', year: -1070, name: '纣王暴政', type: 'politics', desc: '商纣王造鹿台、酒池肉林，宠爱妲己，滥用酷刑，残害忠良，比干被剖心，箕子被囚，微子出逃。' },
+  { id: 'e_muye', year: -1046, name: '牧野之战', type: 'war', desc: '周武王率诸侯联军在牧野（今河南淇县南）大败商纣王军队，纣王兵败自焚，商朝灭亡，西周建立。' },
+
+  // 西周事件
+  { id: 'e_zhoushi_fenfeng', year: -1043, name: '周朝分封', type: 'politics', desc: '周武王灭商后大规模分封诸侯，将土地和人民分封给宗室、功臣和先贤后裔，建立藩屏周室的封建制度。' },
+  { id: 'e_wuwang_shi', year: -1043, name: '武王逝世', type: 'politics', desc: '周武王灭商后两年病逝，年约五十，太子诵即位，是为周成王。因成王年幼，由周公旦摄政。' },
+  { id: 'e_zhougongshezheng', year: -1042, name: '周公摄政', type: 'politics', desc: '周公旦辅佐成王，平定管叔、蔡叔、霍叔联合纣王之子武庚的叛乱，制礼作乐，奠定周朝典章制度基础。' },
+  { id: 'e_guangong_zhidu', year: -1020, name: '成康之治', type: 'politics', desc: '周成王与周康王父子相承，继承周公制定的礼乐制度，四十年不用刑罚，天下太平，是西周最繁盛时期。' },
+  { id: 'e_zhaowang_nansheng', year: -977, name: '昭王南征', type: 'war', desc: '周昭王率军南征荆楚，在汉水遭楚人伏击，船覆溺死，周朝精锐损失殆尽，是周朝由盛转衰的转折点。' },
+  { id: 'e_muwang_xiyun', year: -964, name: '穆王西巡', type: 'culture', desc: '周穆王西巡至西王母之国，会见西王母，是古代中西交流的传说记录。《穆天子传》记载此事，亦有"穆王西巡"之说。' },
+  { id: 'e_muwang_zhengxu', year: -930, name: '穆王东征', type: 'war', desc: '周穆王东征徐偃王，徐偃王起兵叛周，穆王率军平定，将徐国迁往彭城（今江苏徐州）。' },
+  { id: 'e_li_wang_zhuanli', year: -850, name: '厉王专利', type: 'politics', desc: '周厉王实行"专利"政策，将山林川泽收归王室垄断，禁止百姓采猎，导致民怨沸腾。' },
+  { id: 'e_daoli', year: -842, name: '道路以目', type: 'culture', desc: '厉王派人监视百姓言论，百姓相见不敢交谈，只能以目示意。厉王说："我就能制止诽谤！"召公警告："防民之口甚于防川。"' },
+  { id: 'e_guo_baodong', year: -841, name: '国人暴动', type: 'war', desc: '公元前841年，国都镐京爆发大规模暴动，厉王出逃至彘（今山西霍州），太子静躲入召公家，史称"国人暴动"。这一年是中国历史有确切纪年的开始。' },
+  { id: 'e_gonghe', year: -841, name: '共和行政', type: 'politics', desc: '厉王出逃后，共伯和被推为摄政，代行天子之职，历时14年，直至厉王死于彘，周宣王即位。共和行政是中国历史第一次多人执政。' },
+  { id: 'e_xuanwang_fuxing', year: -827, name: '宣王中兴', type: 'politics', desc: '周宣王即位后，励精图治，重用尹吉甫、方叔等贤臣，对外征伐狁、淮夷、徐国，恢复周朝国势，史称"宣王中兴"。' },
+  { id: 'e_youwang_baoyan', year: -779, name: '烽火戏诸侯', type: 'culture', desc: '周幽王为博褒姒一笑，多次点燃烽火戏弄诸侯，诸侯以为有敌入侵，率军赶来，却发现并无敌兵。褒姒终于大笑，幽王遂数举烽火，诸侯渐不信任。' },
+  { id: 'e_fenghuo_xizhhou', year: -771, name: '犬戎破周', type: 'war', desc: '申侯联合犬戎攻入镐京，幽王再次点燃烽火，诸侯无人来救，幽王被杀于骊山脚下，褒姒被掳。' },
+  { id: 'e_xizhou_miewang', year: -771, name: '西周灭亡', type: 'politics', desc: '犬戎攻破镐京杀死幽王，西周灭亡。申侯等立幽王太子宜臼为周平王，郑、秦、晋等诸侯护送平王东迁洛邑。' },
+  { id: 'e_dongzhou_licheng', year: -770, name: '东周建立', type: 'politics', desc: '周平王在洛邑（今河南洛阳）即位，建立东周。周天子权威衰落，诸侯开始争霸，春秋时代开始。' },
+
+  { id: 'e_yuligu', year: -1060, name: '文王拘羑里', type: 'culture', desc: '周文王被商纣王拘禁于羑里，期间演推《周易》，完成传世之作。' },
+  { id: 'e_zhougongshezheng', year: -1042, name: '周公摄政', type: 'politics', desc: '周公旦辅佐成王，平定叛乱，制礼作乐，奠定周朝制度基础。' },
+  { id: 'e_sunzi_bingfa', year: -512, name: '《孙子兵法》成书', type: 'culture', desc: '孙子著成《孙子兵法》十三篇，是世界上最早最完整的军事著作。' },
+  { id: 'e_kongzi_zhongyou', year: -497, name: '孔子周游列国', type: 'culture', desc: '孔子率弟子周游列国，宣扬仁义礼乐，历时14年未能实现政治抱负。' },
+  { id: 'e_kongzi_bianwen', year: -479, name: '孔子整理六经', type: 'culture', desc: '孔子晚年整理《诗》《书》《礼》《乐》《易》《春秋》六经，传授后学。' },
+  { id: 'e_laozi_chujian', year: -500, name: '《道德经》成书', type: 'culture', desc: '老子出函谷关，应关令尹喜之请著《道德经》五千言，道家思想奠基之作。' },
+  { id: 'e_quyuan_tujian', year: -278, name: '屈原投汨罗江', type: 'culture', desc: '屈原因楚国被秦攻破，悲愤投汨罗江自尽，后世设端午节纪念。' },
+  { id: 'e_liuguotongyi', year: -221, name: '秦统一六国', type: 'politics', desc: '秦王嬴政历时10年，先后灭韩、赵、魏、楚、燕、齐六国，建立中国历史上第一个统一的中央集权国家。' },
+  { id: 'e_changcheng', year: -214, name: '修建长城', type: 'politics', desc: '秦始皇连接原有燕、赵、秦长城，修建万里长城，防御匈奴南侵。' },
+  { id: 'e_julu', year: -207, name: '巨鹿之战', type: 'war', desc: '项羽破釜沉舟，以五万楚军大败秦军四十万，是秦末起义的决定性战役。' },
+  { id: 'e_chuhanzhanzheng', year: -206, name: '楚汉之争', type: 'war', desc: '刘邦与项羽争夺天下，历时4年，最终刘邦胜出，建立汉朝。' },
+  { id: 'e_wujiang', year: -202, name: '项羽乌江自刎', type: 'war', desc: '楚汉之争末期，项羽被围垓下，霸王别姬，突围至乌江，拒绝渡江自刎而死。' },
+  { id: 'e_han_founded', year: -202, name: '汉朝建立', type: 'politics', desc: '刘邦在楚汉之争中取得胜利，建立汉朝，定都长安，是中国历史上第二个统一王朝。' },
+  { id: 'e_xiongnu_war', year: -119, name: '漠北之战', type: 'war', desc: '汉武帝派卫青、霍去病深入漠北，歼灭匈奴主力，解除匈奴对汉朝的威胁。' },
+  { id: 'e_silkroad', year: -119, name: '张骞通西域', type: 'economy', desc: '张骞两次出使西域，开辟丝绸之路，建立起中西方贸易和文化交流的通道。' },
+  { id: 'e_shiji', year: -91, name: '《史记》成书', type: 'culture', desc: '司马迁忍受腐刑之苦，历时14年完成《史记》，中国第一部纪传体通史。' },
+  { id: 'e_chibi', year: 208, name: '赤壁之战', type: 'war', desc: '孙刘联军以约五万兵力火烧赤壁，大败曹操约二十万大军，奠定三国鼎立格局。' },
+  { id: 'e_guandu', year: 200, name: '官渡之战', type: 'war', desc: '曹操以少胜多，大败袁绍，奠定统一北方的基础，是中国历史上著名的以弱胜强战役。' },
+  { id: 'e_shu_founded', year: 221, name: '蜀汉建立', type: 'politics', desc: '刘备在成都称帝，建立蜀汉，与曹魏、东吴形成三国鼎立局面。' },
+  { id: 'e_beifa', year: 228, name: '诸葛亮六出祁山', type: 'war', desc: '诸葛亮六次率军出祁山北伐曹魏，鞠躬尽瘁，最终病逝五丈原，星落秋风五丈原。' },
+  { id: 'e_tang_founded', year: 618, name: '唐朝建立', type: 'politics', desc: '李渊在长安称帝，建立唐朝，是中国历史上最强盛的王朝之一。' },
+  { id: 'e_xuanwumen', year: 626, name: '玄武门之变', type: 'politics', desc: '李世民发动政变，杀太子李建成和齐王李元吉，逼迫李渊退位，自立为帝。' },
+  { id: 'e_zhenguan', year: 627, name: '贞观之治', type: 'politics', desc: '唐太宗开创贞观盛世，虚心纳谏，轻徭薄赋，国泰民安，是中国历史上的治世典范。' },
+  { id: 'e_wu_jidi', year: 690, name: '武周建立', type: 'politics', desc: '武则天改唐为周，称帝登基，成为中国历史上唯一正式的女皇帝。' },
+  { id: 'e_kaiyuan', year: 713, name: '开元盛世', type: 'politics', desc: '唐玄宗开元年间，国家强盛，经济繁荣，人口达巅峰，是唐朝鼎盛时期。' },
+  { id: 'e_anshi', year: 755, name: '安史之乱', type: 'war', desc: '安禄山、史思明发动叛乱，历时8年，是唐朝由盛转衰的转折点，造成大量人口死亡。' },
+
+  // 晚唐事件
+  { id: 'e_yuanhe_zhongxing', year: 806, name: '元和中兴', type: 'politics', desc: '唐宪宗即位后，决心削藩，先后平定西川、镇海、淮西、淄青等藩镇叛乱，一度恢复中央权威，史称"元和中兴"。' },
+  { id: 'e_ganlu_zhibian', year: 835, name: '甘露之变', type: 'politics', desc: '唐文宗与李训、郑注密谋，以观甘露为名企图诛杀权阉仇士良。事泄失败，朝臣千余人被杀，文宗沦为傀儡，宦官完全掌控朝政。' },
+  { id: 'e_huichang_miefo', year: 845, name: '会昌灭佛', type: 'politics', desc: '唐武宗在宰相李德裕支持下大规模灭佛，拆毁寺院4600余所，没收寺院土地，强迫僧尼还俗26万余人，铸钱充实国库。' },
+  { id: 'e_dazhong_zhizhi', year: 847, name: '大中之治', type: 'politics', desc: '唐宣宗即位后勤政爱民，纠正会昌弊政，恢复佛教，贬斥李德裕，出现短暂的治世局面，但无法逆转唐朝衰亡大势。' },
+  { id: 'e_huangchao_qiyi', year: 875, name: '黄巢起义', type: 'war', desc: '王仙芝、黄巢发动农民大起义，880年黄巢攻入长安，建大齐政权。起义虽最终失败，但彻底动摇了唐朝根基，加速了唐朝灭亡。' },
+  { id: 'e_zhuwen_tangmiewang', year: 907, name: '朱温篡唐', type: 'politics', desc: '朱温废唐哀帝，自立为帝，建立后梁，定都开封。立国289年的唐朝正式灭亡，五代十国时代开始。' },
+
+  // 五代事件
+  { id: 'e_houtang_founded', year: 923, name: '后唐灭梁', type: 'war', desc: '李存勖率军攻入开封，灭后梁，建立后唐。后唐一度是五代疆域最大的政权，但李存勖沉迷戏曲，在位仅3年被杀。' },
+  { id: 'e_yanyun_cede', year: 936, name: '割让燕云十六州', type: 'politics', desc: '石敬瑭为换取契丹支持称帝，割让燕云十六州予契丹，并认耶律德光为父。此举使中原失去北方屏障，遗祸四百年，直至明初才收复。' },
+  { id: 'e_liao_mie_jin', year: 947, name: '辽灭后晋', type: 'war', desc: '耶律德光率契丹军南下灭后晋，入开封改国号大辽，但因统治不善引发中原反抗，北返途中病逝。' },
+  { id: 'e_gaoping_battle', year: 954, name: '高平之战', type: 'war', desc: '周世宗柴荣即位之初，北汉与辽联军南下，柴荣亲征大败敌军。此战奠定了后周的军事优势，也让赵匡胤崭露头角。' },
+  { id: 'e_chenqiao_bingbian', year: 960, name: '陈桥兵变', type: 'politics', desc: '赵匡胤在陈桥驿被部下黄袍加身，率军回开封夺取后周政权，建立宋朝，五代十国走向终结。' },
+  { id: 'e_song_founded', year: 960, name: '宋朝建立', type: 'politics', desc: '赵匡胤陈桥兵变，黄袍加身，建立宋朝，结束五代十国分裂局面。' },
+  { id: 'e_beijiubing', year: 961, name: '杯酒释兵权', type: 'politics', desc: '宋太祖以宴会方式，说服手握重兵的将领交出兵权，解决了藩镇割据问题。' },
+  { id: 'e_chanyuan', year: 1005, name: '澶渊之盟', type: 'politics', desc: '辽军南侵，宋真宗在寇准力劝下亲征澶州，宋军射杀辽将萧挞凛。但真宗求和心切，签订盟约：宋每年送辽银10万两、绢20万匹，双方约为兄弟之国。换得百年和平，但开启了宋朝对外妥协的先河。' },
+  { id: 'e_qingli_xinzheng', year: 1043, name: '庆历新政', type: 'politics', desc: '范仲淹主持改革，提出明黜陟、抑侥幸、精贡举等十项措施，意在整顿吏治、富国强兵。但因守旧派反对，改革仅一年余即失败，范仲淹等被排挤出朝。' },
+  { id: 'e_xining_bianfa', year: 1069, name: '王安石变法', type: 'politics', desc: '王安石在宋神宗支持下推行熙宁变法，包括青苗法、免役法、方田均税法、保甲法、市易法等，旨在富国强兵。但因用人不当、操之过急，加重百姓负担，引发新旧党争长达数十年，最终失败。' },
+  { id: 'e_wutai_shian', year: 1079, name: '乌台诗案', type: 'politics', desc: '御史中丞李定等人弹劾苏轼以诗文讥讽新法，苏轼被捕入乌台（御史台）受审，险遭处死。后因太皇太后等人营救，被贬为黄州团练副使。此案是北宋党争中最著名文字狱。' },
+  { id: 'e_zizhi_tongjian', year: 1084, name: '《资治通鉴》成书', type: 'culture', desc: '司马光历时19年编纂完成《资治通鉴》，上起周威烈王二十三年（前403年），下至后周世宗显德六年（959年），共294卷，是中国第一部编年体通史巨著。' },
+  { id: 'e_huashigang', year: 1105, name: '花石纲之役', type: 'politics', desc: '宋徽宗为修建艮岳园林，在东南大规模搜罗奇花异石，经水路运往开封，称"花石纲"。蔡京等借机盘剥百姓，致使民不聊生，方腊起义即以此为导火索。' },
+  { id: 'e_jingkang', year: 1127, name: '靖康之变', type: 'war', desc: '金军攻破开封，俘虏宋徽宗、宋钦宗及后妃、宗室、大臣等3000余人北去，掠走大量珍宝典籍。北宋灭亡，史称"靖康之耻"，是中国历史上最屈辱的事件之一。' },
+  { id: 'e_nansong_founded', year: 1127, name: '南宋建立', type: 'politics', desc: '宋徽宗第九子赵构在应天府（今商丘）即位，是为宋高宗，建立南宋。后定都临安（杭州），偏安江南，与金隔淮对峙。' },
+  { id: 'e_yancheng_dajie', year: 1140, name: '郾城大捷', type: 'war', desc: '岳飞率岳家军在郾城大破金兀术精锐"铁浮屠"和"拐子马"，金军哀叹"撼山易，撼岳家军难"。岳飞正欲乘胜北伐，却被十二道金牌召回。' },
+  { id: 'e_yue_fei_si', year: 1142, name: '岳飞遇害', type: 'war', desc: '秦桧以"莫须有"罪名，在宋高宗默许下，将抗金名将岳飞杀害于风波亭。岳飞临终写下"天日昭昭"，千古奇冤令后人扼腕。' },
+  { id: 'e_huangtiandang', year: 1130, name: '黄天荡之战', type: 'war', desc: '韩世忠以8000水军在黄天荡阻击金军10万大军48天，梁红玉亲自击鼓助战。虽最终未能全歼金军，但极大地遏制了金军南侵势头，鼓舞了抗金士气。' },
+  { id: 'e_mongol_xiqin', year: 1206, name: '成吉思汗建国', type: 'politics', desc: '铁木真统一蒙古各部，在斡难河畔召开忽里勒台大会，被尊为"成吉思汗"，建立蒙古帝国，开启大规模扩张时代。' },
+  { id: 'e_mongol_miejin', year: 1234, name: '蒙古灭金', type: 'war', desc: '蒙古与南宋联合攻灭金朝，金哀宗自缢。但南宋未能收复河南，反而引蒙古南侵，"端平入洛"失败后宋蒙战争全面爆发。' },
+  { id: 'e_yuan_founded', year: 1271, name: '元朝建立', type: 'politics', desc: '忽必烈正式建国号"大元"，取《易经》"大哉乾元"之意，定都大都（今北京），是中国历史上版图最大的王朝。' },
+  { id: 'e_xiangyang', year: 1273, name: '襄樊之战', type: 'war', desc: '元军围攻襄阳、樊城6年，使用回回炮（巨型投石机）轰破樊城，襄阳守将吕文焕力竭投降。此战是元灭南宋的关键转折，襄阳一失，南宋门户大开。' },
+  { id: 'e_yashan', year: 1279, name: '崖山海战', type: 'war', desc: '元军在崖山（今广东新会）全歼南宋最后的水军，丞相陆秀夫背8岁小皇帝赵昺跳海殉国，十万军民蹈海赴死，南宋灭亡。这是中国历史上最悲壮的亡国之战。' },
+  { id: 'e_shoushi_li', year: 1281, name: '《授时历》颁行', type: 'science', desc: '郭守敬编制的《授时历》正式颁行，以365.2425天为一年，与现代公历完全一致，比西方格里高利历早300年，是中国古代最精确的历法。' },
+  { id: 'e_yuan_faruibin', year: 1281, name: '元征日本失败', type: 'war', desc: '忽必烈两次远征日本（1274年、1281年），均因台风袭击而惨败。日本人称台风为"神风"，二战时"神风特攻队"即取此典故。' },
+  { id: 'e_tuotuo_genghua', year: 1340, name: '脱脱更化', type: 'politics', desc: '元顺帝时丞相脱脱推行改革：恢复科举、平反冤狱、减免赋税、修辽金宋三史，一度使元朝出现中兴希望。但治河加重百姓负担，红巾军起义爆发后脱脱被政敌诬陷流放致死。' },
+  { id: 'e_hongjin_qiyi', year: 1351, name: '红巾军起义', type: 'war', desc: '韩山童、刘福通以白莲教聚众，"石人一只眼，挑动黄河天下反"，头裹红巾起义。红巾军起义席卷全国，敲响元朝丧钟，最终朱元璋脱颖而出，建立明朝。' },
+  { id: 'e_ming_founded', year: 1368, name: '明朝建立', type: 'politics', desc: '朱元璋推翻元朝，建立明朝，定都南京，后迁都北京，汉族重新掌握政权。' },
+  { id: 'e_jingnan', year: 1399, name: '靖难之役', type: 'war', desc: '燕王朱棣以"清君侧"为名起兵，历时4年攻入南京，建文帝下落不明，朱棣即位为明成祖。这是中国历史上唯一藩王造反成功的案例。' },
+  { id: 'e_zhenghe_voyage', year: 1405, name: '郑和下西洋', type: 'economy', desc: '郑和率领庞大船队七次下西洋（1405-1433），最远到达非洲东海岸和红海，是世界航海史上的壮举，比哥伦布发现美洲早了近百年。船队最大时200余艘、27000余人，展示了明朝的强大国力。' },
+  { id: 'e_yongle_dadian', year: 1408, name: '《永乐大典》编成', type: 'culture', desc: '明成祖命解缙等编修《永乐大典》，全书22877卷，约3.7亿字，是中国古代规模最大的类书，也是当时世界上最大的百科全书。收录上自先秦、下至明初的图书七八千种。' },
+  { id: 'e_yongle_qianba', year: 1421, name: '迁都北京', type: 'politics', desc: '明成祖朱棣将都城从南京迁至北京，建造紫禁城，奠定此后500年的政治格局。' },
+  { id: 'e_tumubao', year: 1449, name: '土木堡之变', type: 'war', desc: '明英宗宠信太监王振，御驾亲征瓦剌，在土木堡（今河北怀来）遭遇惨败，英宗被俘，随驾文武百官几乎全部战死，明朝精锐损失殆尽，是明朝由盛转衰的转折点。' },
+  { id: 'e_beijing_baowei', year: 1449, name: '北京保卫战', type: 'war', desc: '土木堡之变后，于谦力排众议，拥立景帝，拒绝南迁，亲自指挥北京保卫战。瓦剌也先大军围攻北京，于谦调兵遣将，激战五日击退敌军，挽救了大明王朝。' },
+  { id: 'e_duomen', year: 1457, name: '夺门之变', type: 'politics', desc: '明英宗趁景帝病重，联合石亨、徐有贞等发动政变，攻入宫门复辟，改元天顺。复辟后冤杀于谦等景帝重臣，但废除了残酷的殉葬制度。' },
+  { id: 'e_anti_wako', year: 1561, name: '平定倭患', type: 'war', desc: '戚继光在东南沿海抗击倭寇，台州九战九捷，又在福建、广东等地连战连捷，基本平定了困扰明朝数十年的倭患问题。' },
+  { id: 'e_wanli_zhongxing', year: 1573, name: '万历中兴', type: 'politics', desc: '张居正任内阁首辅期间推行改革：清丈田地、推行一条鞭法、实行考成法整顿吏治，国库充盈，太仓积粟可支十年，出现了明朝最后的治世。' },
+  { id: 'e_wanli_three_war', year: 1592, name: '万历三大征', type: 'war', desc: '万历年间明朝三次大规模用兵：平定宁夏哱拜叛乱、抗击日本丰臣秀吉入侵朝鲜（壬辰倭乱）、平定播州杨应龙叛乱。三战皆胜，但国库耗尽，为明朝灭亡埋下伏笔。' },
+  { id: 'e_ming_fall', year: 1644, name: '明朝灭亡', type: 'war', desc: '李自成率农民军攻入北京，崇祯帝在煤山自缢殉国，立国276年的明朝灭亡。随即吴三桂引清军入关，击败李自成，清朝入主中原。' },
+  { id: 'e_houjin_jianguo', year: 1616, name: '后金建国', type: 'politics', desc: '努尔哈赤统一女真各部，建立后金，是清朝的前身。' },
+  { id: 'e_qing_ruguan', year: 1644, name: '清军入关', type: 'war', desc: '吴三桂引清军入山海关，击败李自成大顺军。多尔衮率清军入主北京，开始了清朝对中国的统治。随后南下征服南明，血洗扬州、嘉定、江阴，制造"扬州十日""嘉定三屠"等惨案。' },
+  { id: 'e_qing_gaohao', year: 1636, name: '清朝建立', type: 'politics', desc: '皇太极改国号后金为大清，改族名为满洲，正式建立清朝。' },
+  { id: 'e_santai', year: 1673, name: '三藩之乱', type: 'war', desc: '吴三桂、尚可喜、耿精忠三藩起兵反清，吴三桂称帝，占据半壁江山。康熙帝力排众议坚决平叛，历时8年终获全胜，进一步巩固了中央集权。' },
+  { id: 'e_taiwan_tongyi', year: 1683, name: '统一台湾', type: 'politics', desc: '康熙帝派施琅率军攻克台湾，设台湾府，台湾正式纳入清朝版图。' },
+  { id: 'e_nerchinsk', year: 1689, name: '《尼布楚条约》', type: 'politics', desc: '清与沙俄签订《尼布楚条约》，划定中俄东段边界，是中国历史上第一份与西方国家签订的平等条约，确认了黑龙江和乌苏里江流域属中国。' },
+  { id: 'e_kangxi_dict', year: 1716, name: '《康熙字典》编成', type: 'culture', desc: '张玉书、陈廷敬等奉旨编纂《康熙字典》，收录汉字47035个，是中国古代收字最全的字典，沿用了近三百年。' },
+  { id: 'e_siku_quanshu', year: 1782, name: '《四库全书》编成', type: 'culture', desc: '乾隆帝主持编纂《四库全书》，收书3500余种，79000余卷，约8亿字，是中国最大的丛书，也被批评借修书之名销毁了许多不利于清朝统治的书籍。' },
+  { id: 'e_heshen_huo', year: 1799, name: '和珅被抄家', type: 'politics', desc: '乾隆帝去世，嘉庆帝赐死和珅，查抄其家产约八亿两白银，相当于清廷十余年财政收入。"和珅跌倒，嘉庆吃饱"流传至今。' },
+  { id: 'e_bailianjiao', year: 1796, name: '白莲教起义', type: 'war', desc: '川楚陕白莲教大起义，历时9年才被镇压，清廷耗银两亿两，清朝由盛转衰的标志。' },
+  { id: 'e_humen_xiaoyian', year: 1839, name: '虎门销烟', type: 'politics', desc: '林则徐在虎门将英国走私鸦片约二百万斤全部销毁，成为鸦片战争导火索。' },
+  { id: 'e_yapian_war', year: 1840, name: '第一次鸦片战争', type: 'war', desc: '英国以虎门销烟为由发动战争，清朝战败，签订《南京条约》，割让香港岛，开放五口通商，赔款2100万银元。这是中国近代史的开端，开始了百年屈辱。' },
+  { id: 'e_taiping', year: 1851, name: '太平天国运动', type: 'war', desc: '洪秀全领导的农民起义，建立太平天国，历时14年，波及18省，造成数千万人死亡，是中国历史上规模最大、伤亡最惨重的农民战争。' },
+  { id: 'e_yapian_war2', year: 1856, name: '第二次鸦片战争', type: 'war', desc: '英法联军侵华，1860年攻入北京，火烧圆明园。签订《北京条约》，割九龙半岛，增开通商口岸，鸦片贸易合法化。' },
+  { id: 'e_yangwu', year: 1861, name: '洋务运动', type: 'economy', desc: '曾国藩、李鸿章、左宗棠、张之洞等人推动洋务运动，引进西方技术，建立军工企业、民用企业、新式学堂，是中国近代化的开端。以"中体西用"为指导思想。' },
+  { id: 'e_xinjiang', year: 1878, name: '左宗棠收复新疆', type: 'war', desc: '左宗棠力排众议，抬棺西征，率军收复新疆全境，粉碎阿古柏政权和沙俄侵略。1884年新疆正式建省，保住中国六分之一国土。' },
+  { id: 'e_jiawu', year: 1894, name: '甲午战争', type: 'war', desc: '中日甲午战争，清朝惨败，北洋舰队在威海卫全军覆没。签订《马关条约》，割让台湾及澎湖列岛，赔偿白银两亿两，中国彻底沦为半殖民地半封建社会。' },
+  { id: 'e_maguan', year: 1895, name: '《马关条约》', type: 'politics', desc: '中日甲午战争后签订的不平等条约，割让台湾及澎湖列岛，赔偿两亿两白银，开放沙市、重庆、苏州、杭州为通商口岸，加速了清朝衰亡。' },
+  { id: 'e_wuxu', year: 1898, name: '戊戌变法', type: 'politics', desc: '康有为、梁启超主导，光绪帝推行维新变法，历时103天（"百日维新"），推行新政。被慈禧太后发动政变扼杀，谭嗣同等六君子被杀，光绪帝被囚禁于瀛台。' },
+  { id: 'e_gengzi', year: 1900, name: '庚子国变', type: 'war', desc: '义和团运动兴起，慈禧向十一国宣战，八国联军攻入北京，慈禧携光绪帝西逃。签订《辛丑条约》，赔款4.5亿两白银（本息合计9.8亿两），中国彻底沦为半殖民地。' },
+  { id: 'e_xinhai', year: 1911, name: '辛亥革命', type: 'politics', desc: '孙中山领导的资产阶级民主革命，武昌起义为导火索，推翻清朝统治，结束2000年帝制。' },
+  { id: 'e_minguo_jianguo', year: 1912, name: '中华民国成立', type: 'politics', desc: '孙中山在南京宣誓就任中华民国临时大总统，中华民国正式成立，亚洲第一个共和国。' },
+  { id: 'e_changzheng', year: 1934, name: '长征', type: 'war', desc: '中国工农红军进行战略转移，历时两年，行程约二万五千里，是中国革命史上的伟大壮举。' },
+  { id: 'e_kangzhan', year: 1937, name: '全面抗日战争', type: 'war', desc: '七七事变后，中国全面抗击日本侵略，历时8年，付出了巨大牺牲，最终取得抗战胜利。' },
+
+  // 民国事件
+  { id: 'e_wusi', year: 1919, name: '五四运动', type: 'politics', desc: '巴黎和会上中国外交失败，北京学生率先走上街头，高喊"外争国权，内惩国贼"。运动迅速扩展至全国，工人罢工、商人罢市，最终迫使北洋政府拒绝在和约上签字。新文化运动由此走向高潮，马克思主义在中国广泛传播。' },
+  { id: 'e_cpc_founded', year: 1921, name: '中国共产党成立', type: 'politics', desc: '7月23日，中国共产党第一次全国代表大会在上海法租界召开，后转移至浙江嘉兴南湖，13位代表出席，代表全国50多名党员。这是中国历史上开天辟地的大事变，从此中国革命有了新的领导力量。' },
+  { id: 'e_gongbei', year: 1924, name: '第一次国共合作', type: 'politics', desc: '在中国共产党和共产国际推动下，孙中山改组国民党，实行"联俄、联共、扶助农工"三大政策。国共合作后共同发动北伐战争，基本推翻北洋军阀统治。但孙中山逝世后，国共矛盾日益尖锐。' },
+  { id: 'e_beifa', year: 1926, name: '北伐战争', type: 'war', desc: '国民革命军从广东出发北伐，总司令蒋介石。不到一年，先后击败吴佩孚、孙传芳等军阀，势力扩展至长江流域。北伐极大地推动了革命形势发展，但1927年蒋介石发动"四一二"政变，国共合作破裂。' },
+  { id: 'e_siyier', year: 1927, name: '四一二政变', type: 'politics', desc: '4月12日，蒋介石在上海发动反革命政变，大肆屠杀共产党人和工人群众。随后汪精卫在武汉"分共"，第一次国共合作彻底破裂，大革命失败。中国共产党由此走上武装反抗的道路。' },
+  { id: 'e_nanchang_qiyi', year: 1927, name: '南昌起义', type: 'war', desc: '8月1日，周恩来、贺龙、叶挺、朱德、刘伯承等领导北伐军两万余人在南昌起义，打响了武装反抗国民党反动派的第一枪。这一天后来成为中国人民解放军的建军节。' },
+  { id: 'e_jiuiba', year: 1931, name: '九一八事变', type: 'war', desc: '9月18日，日本关东军炸毁南满铁路柳条湖段，反诬中国军队所为，随即攻占沈阳。东北军奉蒋介石"不抵抗"命令撤入关内，日军仅用4个月便占领东北三省。九一八是日本侵华的开端，也是14年抗战的起点。' },
+  { id: 'e_xian_bianshi', year: 1936, name: '西安事变', type: 'politics', desc: '12月12日，张学良、杨虎城在西安扣留蒋介石，逼其"停止内战，联共抗日"。经周恩来等斡旋，蒋介石接受停止内战、联共抗日主张，西安事变和平解决。十年内战基本结束，抗日民族统一战线初步形成。' },
+  { id: 'e_qiqi', year: 1937, name: '七七事变', type: 'war', desc: '7月7日夜，日军在卢沟桥附近进行军事演习，借口一名士兵"失踪"，要求进入宛平城搜查，遭拒后即向中国驻军发动进攻。中国守军奋起抵抗，全面抗日战争由此开始。' },
+  { id: 'e_nanjin_datusha', year: 1937, name: '南京大屠杀', type: 'war', desc: '12月13日日军攻陷南京后，进行了长达六周的大规模屠杀、强奸和抢劫。遇难者达30万人以上，是人类历史上最惨烈的大屠杀之一。这是中华民族永远不能忘记的国耻。' },
+  { id: 'e_taierzhuang', year: 1938, name: '台儿庄大捷', type: 'war', desc: '3-4月，第五战区司令李宗仁指挥中国军队在台儿庄地区与日军激战，歼灭日军精锐万余人。这是抗战以来正面战场取得的首次重大胜利，极大振奋了全国抗战信心。' },
+  { id: 'e_baituan_dazhan', year: 1940, name: '百团大战', type: 'war', desc: '8-12月，八路军在彭德怀指挥下出动105个团，对日军发动大规模破袭战，破坏铁路公路、攻克据点，歼灭日伪军2.5万余人。百团大战是抗战中八路军规模最大的战役，振奋了全国人民抗战信心。' },
+  { id: 'e_kangzhan_shengli', year: 1945, name: '抗日战争胜利', type: 'politics', desc: '8月15日，日本天皇宣布无条件投降。9月2日，日本正式签署投降书。经过14年艰苦卓绝的抗战，中国人民终于取得了抗日战争的伟大胜利。这是近代以来中华民族反抗外敌入侵第一次取得完全胜利。' },
+];
