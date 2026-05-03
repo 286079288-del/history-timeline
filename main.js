@@ -406,7 +406,7 @@ function renderWorldTimeline() {
     if (x2 - x1 > 40) {
       const label = document.createElement('div');
       label.className = 'dynasty-label';
-      label.style.cssText = 'left:' + (x1+(x2-x1)/2) + 'px;transform:translateX(-50%);';
+      label.style.cssText = 'left:' + x1 + 'px;';
       label.textContent = era.name;
       bandsEl.appendChild(label);
     }
@@ -525,7 +525,7 @@ function renderJapanTimeline() {
     if (x2 - x1 > 40) {
       const label = document.createElement('div');
       label.className = 'dynasty-label';
-      label.style.cssText = 'left:' + (x1+(x2-x1)/2) + 'px;transform:translateX(-50%);';
+      label.style.cssText = 'left:' + x1 + 'px;';
       label.textContent = era.name;
       bandsEl.appendChild(label);
     }
@@ -640,7 +640,7 @@ function renderKoreaTimeline() {
     if (x2 - x1 > 40) {
       const label = document.createElement('div');
       label.className = 'dynasty-label';
-      label.style.cssText = 'left:' + (x1+(x2-x1)/2) + 'px;transform:translateX(-50%);';
+      label.style.cssText = 'left:' + x1 + 'px;';
       label.textContent = era.name;
       bandsEl.appendChild(label);
     }
@@ -730,8 +730,8 @@ function renderDynastyBands(axisTop, totalW) {
     if (bandWidth > 40) {
       const label = document.createElement('div');
       label.className = 'dynasty-label';
-      const lx = x1 + bandWidth / 2;
-      label.style.cssText = `left:${lx}px;transform:translateX(-50%);`;
+      const lx = x1;
+      label.style.cssText = `left:${lx}px;`;
       label.textContent = d.name;
       container.appendChild(label);
     }

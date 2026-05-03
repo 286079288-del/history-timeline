@@ -337,18 +337,23 @@ body {
 }
 .dynasty-band:hover { opacity: 0.12; }
 .dynasty-label {
-  position: absolute;
+  position: sticky;
+  left: 6px;
   top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateY(-50%);
   font-size: 13px;
   font-weight: 500;
-  color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.45);
   white-space: nowrap;
   writing-mode: horizontal-tb;
   user-select: none;
   pointer-events: none;
   text-shadow: 0 2px 8px rgba(0,0,0,0.8);
   letter-spacing: 0.15em;
+  z-index: 5;
+  background: linear-gradient(90deg, rgba(11,15,25,0.95) 0%, rgba(11,15,25,0.7) 70%, transparent 100%);
+  padding: 2px 20px 2px 4px;
+  border-radius: 4px 0 0 4px;
 }
 
 /* 主轴 */
@@ -1944,10 +1949,15 @@ body {
   display: flex;
   align-items: center;
   padding: 0 16px;
-  background: rgba(0,0,0,0.25);
+  background: rgba(11,15,25,0.95);
   border-bottom: 1px solid var(--border);
   gap: 12px;
   flex-shrink: 0;
+  position: sticky;
+  left: 0;
+  z-index: 20;
+  min-width: max-content;
+  backdrop-filter: blur(6px);
 }
 .block-title {
   font-size: 14px;
