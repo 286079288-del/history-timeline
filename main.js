@@ -1288,39 +1288,46 @@ function exitEditMode() {
   document.getElementById('panelEditActions').classList.add('hidden');
 }
 
-// 绑定编辑按钮事件
-document.getElementById('panelEditBtn').addEventListener('click', () => {
+// 绑定编辑按钮事件（仅主页存在这些元素）
+if (document.getElementById('panelEditBtn')) {
+  document.getElementById('panelEditBtn').addEventListener('click', () => {
   if (isEditMode) return;
-  enterEditMode();
-});
-document.getElementById('editSaveBtn').addEventListener('click', saveEdit);
-document.getElementById('editCancelBtn').addEventListener('click', cancelEdit);
+        enterEditMode();
+      });
+      document.getElementById('editSaveBtn').addEventListener('click', saveEdit);
+      document.getElementById('editCancelBtn').addEventListener('click', cancelEdit);
+    }
 
-// ---- 删除人物功能 ----
-document.getElementById('panelDeleteBtn').addEventListener('click', () => {
-  if (!selectedPersonId || isEditMode) return;
-  const p = PERSONS.find(x => x.id === selectedPersonId);
-  if (!p) return;
-  document.getElementById('deletePersonName').textContent = p.name;
-  document.getElementById('deletePersonModal').classList.remove('hidden');
-});
+    // ---- 删除人物功能 ----
+    if (document.getElementById('panelDeleteBtn')) {
+      document.getElementById('panelDeleteBtn').addEventListener('click', () => {
+        if (!selectedPersonId || isEditMode) return;
+        const p = PERSONS.find(x => x.id === selectedPersonId);
+        if (!p) return;
+        document.getElementById('deletePersonName').textContent = p.name;
+        document.getElementById('deletePersonModal').classList.remove('hidden');
+      });
+    }
 
-document.getElementById('deletePersonClose').addEventListener('click', closeDeleteModal);
-document.getElementById('deletePersonCancel').addEventListener('click', closeDeleteModal);
-document.getElementById('deletePersonModal').addEventListener('click', (e) => {
-  if (e.target === e.currentTarget) closeDeleteModal();
-});
-
-function closeDeleteModal() {
-  document.getElementById('deletePersonModal').classList.add('hidden');
+if (document.getElementById('deletePersonClose')) {
+  document.getElementById('deletePersonClose').addEventListener('click', closeDeleteModal);
+  document.getElementById('deletePersonCancel').addEventListener('click', closeDeleteModal);
+  document.getElementById('deletePersonModal').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeDeleteModal();
+  });
+  document.getElementById('deletePersonConfirm').addEventListener('click', () => {
+    if (!selectedPersonId) return;
+    deletePerson(selectedPersonId);
+    closeDeleteModal();
+  });
 }
 
-document.getElementById('deletePersonConfirm').addEventListener('click', () => {
-  if (!selectedPersonId) return;
-  const p = PERSONS.find(x => x.id === selectedPersonId);
-  const name = p ? p.name : '';
+function closeDeleteModal() {
+  if (document.getElementById('deletePersonModal'))
+    document.getElementById('deletePersonModal').classList.add('hidden');
+}
 
-  // 1. 从所有其他人物的关联中移除该人物
+function deletePerson(personId) {
   PERSONS.forEach(person => {
     if (person.relations) {
       person.relations = person.relations.filter(r => r.id !== selectedPersonId);
@@ -2083,9 +2090,12 @@ function zoomReset() {
   updateStats();
 }
 
-document.getElementById('zoomIn').addEventListener('click', zoomIn);
-document.getElementById('zoomOut').addEventListener('click', zoomOut);
-document.getElementById('zoomReset').addEventListener('click', zoomReset);
+if (document.getElementById('zoomIn')) {
+  document.getElementById('zoomIn').addEventListener('click', zoomIn);
+  document.getElementById('zoomOut').addEventListener('click', zoomOut);
+}
+if (document.getElementById('zoomReset'))
+  document.getElementById('zoomReset').addEventListener('click', zoomReset);
 
 // 鼠标滚轮缩放（以鼠标位置为中心）
 const throttledWheel = throttle((e) => {
