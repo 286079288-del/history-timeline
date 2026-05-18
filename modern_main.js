@@ -356,10 +356,11 @@ function buildFilterBtns() {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       activeCat = btn.dataset.cat;
-      applyFilter();
-      updateStats();
       renderTimeline();
       renderWorldTimeline();
+      renderJapanTimeline();
+      applyFilter();
+      updateStats();
   
     });
   });
