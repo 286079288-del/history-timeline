@@ -3,10 +3,12 @@
 // =============================================
 
 // ---- 配置 ----
-const YEAR_START = -2697;
-const YEAR_END   = 2025;
-const PX_PER_YEAR_DEFAULT = 0.6;
-let pxPerYear = PX_PER_YEAR_DEFAULT;
+if (typeof YEAR_START === 'undefined') {
+  var YEAR_START = -2697;
+  var YEAR_END   = 2025;
+  var PX_PER_YEAR_DEFAULT = 0.6;
+  var pxPerYear = PX_PER_YEAR_DEFAULT;
+}
 const AXIS_TOP_RATIO = 0.5;
 
 // 颜色映射（扩展更多分类）
