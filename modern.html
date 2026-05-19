@@ -35,6 +35,9 @@ body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background:
 .person-name { max-width: 120px; overflow: hidden; text-overflow: ellipsis; color: rgba(255,255,255,0.7); }
 .person-row:hover .person-name { color: #f0c040; }
 .person-emoji { font-size: 12px; }
+.timeline-canvas { position: relative; overflow: visible; }
+.events-above, .events-below { position: absolute; left: 0; width: 100%; pointer-events: none; }
+.persons-above, .persons-below { position: absolute; left: 0; width: 100%; }
 </style>
 </head>
 <body>
