@@ -3,113 +3,292 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>近代历史人物图谱 (1800-至今)</title>
-<meta name="description" content="中国/日本/世界近代史三轴对比">
-<link rel="stylesheet" href="style.css?v=20260519b">
+<title>近代历史人物图谱</title>
+<link rel="stylesheet" href="style.css?v=20260519c">
+<style>
+body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: #0b0f19; color: #e0e0e0; overflow: hidden; }
+#app { display: flex; flex-direction: column; height: 100vh; }
+#header { height: 44px; display: flex; align-items: center; padding: 0 16px; background: #141b2d; border-bottom: 1px solid #2a3a5c; gap: 12px; }
+.logo { font-size: 16px; font-weight: 700; color: #f0c040; }
+#mainContainer { flex: 1; overflow-x: auto; overflow-y: hidden; position: relative; }
+.dual-flex { display: flex; flex-direction: column; }
+.timeline-block { flex: 1; min-height: 120px; position: relative; border-bottom: 1px solid #2a3a5c; }
+.block-header { height: 32px; display: flex; align-items: center; padding: 0 12px; background: rgba(11,15,25,0.95); border-bottom: 1px solid #2a3a5c; gap: 8px; position: sticky; left: 0; z-index: 20; backdrop-filter: blur(6px); }
+.block-title { font-size: 13px; font-weight: 600; color: #f0c040; }
+.btn-collapse { background: none; border: 1px solid #2a3a5c; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+.btn-collapse:hover { color: #f0c040; border-color: #f0c040; }
+.timeline-canvas { position: relative; height: calc(100% - 32px); overflow: hidden; }
+.dynasty-band { position: absolute; top: 0; bottom: 0; opacity: 0.08; }
+.dynasty-label { position: absolute; top: 50%; transform: translate(-50%,-50%); font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.18); white-space: nowrap; pointer-events: none; text-shadow: 0 2px 8px rgba(0,0,0,0.8); letter-spacing: 0.12em; }
+.axis-line { position: absolute; left: 0; width: 100%; border-top: 1px solid rgba(255,255,255,0.15); z-index: 2; pointer-events: none; }
+.tick-mark { position: absolute; z-index: 2; pointer-events: none; }
+.tick-line { width: 1px; background: rgba(255,255,255,0.1); }
+.tick-label { font-size: 9px; color: rgba(255,255,255,0.15); transform: translateX(-50%); white-space: nowrap; }
+.event-node { position: absolute; z-index: 5; cursor: help; }
+.event-dot { width: 8px; height: 8px; border-radius: 50%; border: 2px solid; margin: 0 auto; background: rgba(11,15,25,0.8); }
+.event-line { width: 1px; margin: 0 auto; }
+.event-label { font-size: 10px; color: rgba(255,255,255,0.4); text-align: center; white-space: nowrap; max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
+.event-label:hover { color: #fff; }
+.person-row { position: absolute; display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 11px; white-space: nowrap; z-index: 10; padding: 1px 4px; border-radius: 3px; transition: background 0.15s; }
+.person-row:hover { background: rgba(240,192,64,0.12); }
+.person-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.person-name { max-width: 120px; overflow: hidden; text-overflow: ellipsis; color: rgba(255,255,255,0.7); }
+.person-row:hover .person-name { color: #f0c040; }
+.person-emoji { font-size: 12px; }
+</style>
 </head>
 <body>
 <div id="app">
-  <header id="header">
-    <div class="header-left">
-      <div class="logo">
-        <span class="logo-icon">⬡</span>
-        <span class="logo-text">近代历史人物图谱</span>
-      </div>
-    </div>
-    <div class="header-center">
-      <div class="era-tabs" id="eraTabs"></div>
-    </div>
-    <div class="header-right">
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="搜索近代人物…" />
-        <span class="search-icon">🔍</span>
-      </div>
-      <span class="header-hint">滚轮缩放 · 拖拽滚动 · 点击人物查看详情</span>
-    </div>
+  <header id="header" style="height:40px;padding:0 12px;">
+    <div class="logo">近代历史人物图谱</div>
+    <span style="font-size:11px;color:#888;margin-left:auto">滚轮缩放 · 拖拽平移 · 点击详情</span>
   </header>
-  <nav id="filterBar">
-    <span class="filter-label">筛选：</span>
-    <button class="filter-btn active" data-cat="all">全部</button>
-    <button class="filter-btn" data-cat="emperor">帝王</button>
-    <button class="filter-btn" data-cat="military">将领</button>
-    <button class="filter-btn" data-cat="scholar">学者</button>
-    <button class="filter-btn" data-cat="philosopher">思想家</button>
-    <button class="filter-btn" data-cat="scientist">科学家</button>
-    <button class="filter-btn" data-cat="artist">艺术家</button>
-    <button class="filter-btn" data-cat="politician">政治家</button>
-  </nav>
   <main id="mainContainer">
-    <div id="dualTimelineContainer">
-      <div id="chinaBlock" class="timeline-block">
-        <div class="block-header">
-          <span class="block-title">📜 中国史</span>
-          <div class="zoom-controls">
-            <button class="btn-collapse" id="collapseChina" title="折叠/展开">▲</button>
-            <button id="zoomReset" title="重置缩放">↺</button>
-          </div>
-        </div>
-        <div id="timelineWrapper">
-          <div id="dynastyBands"></div>
-          <div id="axisLine"></div>
-          <div id="axisTicks"></div>
-          <div id="eventsAbove"></div>
-          <div id="eventsBelow"></div>
-          <div id="personsAbove"></div>
-          <div id="personsBelow"></div>
+    <div class="dual-flex" id="dualFlex">
+      <div class="timeline-block" id="chinaBlock" style="flex:5">
+        <div class="block-header"><span class="block-title">📜 中国史</span><button class="btn-collapse">▲</button></div>
+        <div class="timeline-canvas" id="chinaCanvas">
+          <div class="dynasty-bands" id="chinaBands"></div>
+          <div class="axis-line" id="chinaAxis" style="top:50%"></div>
+          <div class="tick-container" id="chinaTicks"></div>
+          <div class="events-above" id="chinaEvtA"></div>
+          <div class="events-below" id="chinaEvtB"></div>
+          <div class="persons-above" id="chinaPerA"></div>
+          <div class="persons-below" id="chinaPerB"></div>
         </div>
       </div>
-      <div class="resize-handle" data-above="chinaBlock" data-below="japanBlock"></div>
-      <div id="japanBlock" class="timeline-block">
-        <div class="block-header">
-          <span class="block-title">🏯 日本史</span>
-          <button class="btn-collapse" id="collapseJapan" title="折叠/展开">▲</button>
-        </div>
-        <div id="japanTimelineWrapper">
-          <div id="japanDynastyBands"></div>
-          <div id="japanAxisLine"></div>
-          <div id="japanAxisTicks"></div>
-          <div id="japanEventsAbove"></div>
-          <div id="japanEventsBelow"></div>
-          <div id="japanPersonsAbove"></div>
-          <div id="japanPersonsBelow"></div>
+      <div class="timeline-block" id="japanBlock" style="flex:3">
+        <div class="block-header"><span class="block-title">🏯 日本史</span><button class="btn-collapse">▲</button></div>
+        <div class="timeline-canvas" id="japanCanvas">
+          <div class="dynasty-bands" id="japanBands"></div>
+          <div class="axis-line" id="japanAxis" style="top:50%"></div>
+          <div class="tick-container" id="japanTicks"></div>
+          <div class="events-above" id="japanEvtA"></div>
+          <div class="events-below" id="japanEvtB"></div>
+          <div class="persons-above" id="japanPerA"></div>
+          <div class="persons-below" id="japanPerB"></div>
         </div>
       </div>
-      <div class="resize-handle" data-above="japanBlock" data-below="worldBlock"></div>
-      <div id="worldBlock" class="timeline-block">
-        <div class="block-header">
-          <span class="block-title">🌍 世界史</span>
-          <button class="btn-collapse" id="collapseWorld" title="折叠/展开">▲</button>
-        </div>
-        <div id="worldTimelineWrapper">
-          <div id="worldDynastyBands"></div>
-          <div id="worldAxisLine"></div>
-          <div id="worldAxisTicks"></div>
-          <div id="worldEventsAbove"></div>
-          <div id="worldEventsBelow"></div>
-          <div id="worldPersonsAbove"></div>
-          <div id="worldPersonsBelow"></div>
+      <div class="timeline-block" id="worldBlock" style="flex:2">
+        <div class="block-header"><span class="block-title">🌍 世界史</span><button class="btn-collapse">▲</button></div>
+        <div class="timeline-canvas" id="worldCanvas">
+          <div class="dynasty-bands" id="worldBands"></div>
+          <div class="axis-line" id="worldAxis" style="top:50%"></div>
+          <div class="tick-container" id="worldTicks"></div>
+          <div class="events-above" id="worldEvtA"></div>
+          <div class="events-below" id="worldEvtB"></div>
+          <div class="persons-above" id="worldPerA"></div>
+          <div class="persons-below" id="worldPerB"></div>
         </div>
       </div>
     </div>
   </main>
-  <aside id="detailPanel" class="panel hidden">
-    <div class="panel-header-bar">
-      <button class="panel-close" id="panelClose">✕</button>
-    </div>
-    <div class="panel-content">
-      <div class="panel-avatar" id="panelAvatar">👤</div>
-      <div class="panel-name" id="panelName"></div>
-      <div class="panel-meta" id="panelMeta"></div>
-      <div class="panel-desc" id="panelDesc"></div>
-      <div class="panel-achievements" id="panelAchievements"></div>
-      <div class="panel-relations" id="panelRelations"></div>
-      <div class="panel-events" id="panelEvents"></div>
-    </div>
-  </aside>
 </div>
-<div id="eventTooltip" class="event-tooltip hidden"></div>
-<div id="statsBar" class="stats-bar"></div>
-<script src="modern_data.js?v=20260519b"></script>
-<script src="main.js?v=20260519b"></script>
+<script>
+// ===== 配置 =====
+const YS = 1800, YE = 2026, PPY = 4;
+let pxPerYear = PPY;
+const CAT_COLORS = { emperor:'#e74c3c', military:'#e67e22', scholar:'#3498db', philosopher:'#9b59b6', scientist:'#2ecc71', artist:'#f39c12', politician:'#1abc9c', sage:'#f1c40f', diplomat:'#ff6b6b', general:'#e67e22', inventor:'#00b894' };
+
+const ERA_GROUPS = [
+  { name:'晚清', start:1800, end:1912, color:'#2c3e50' },
+  { name:'民国/二战', start:1912, end:1949, color:'#3498db' },
+  { name:'当代', start:1949, end:2026, color:'#e74c3c' },
+];
+
+// ===== 工具函数 =====
+function x(year) { return (year - YS) * pxPerYear; }
+function totalWidth() { return (YE - YS) * pxPerYear + 200; }
+
+// ===== 数据加载 =====
+function loadData() {
+  const s = document.createElement('script');
+  s.src = 'modern_data.js?v=20260519c';
+  s.onload = () => setTimeout(initTimelines, 50);
+  document.head.appendChild(s);
+}
+
+// ===== 渲染函数 =====
+function renderBlock(idPrefix, data, events, eras) {
+  const canvas = document.getElementById(idPrefix + 'Canvas');
+  if (!canvas) return;
+  const w = totalWidth();
+  canvas.style.width = w + 'px';
+  const axisTop = canvas.clientHeight * 0.5;
+
+  // Bands
+  const bandsEl = document.getElementById(idPrefix + 'Bands');
+  if (bandsEl && eras) {
+    bandsEl.innerHTML = '';
+    eras.forEach(era => {
+      const x1 = x(era.start), x2 = x(era.end);
+      const b = document.createElement('div');
+      b.className = 'dynasty-band';
+      b.style.cssText = `left:${x1}px;width:${Math.max(x2-x1,2)}px;background:${era.color};`;
+      bandsEl.appendChild(b);
+      if (x2 - x1 > 40) {
+        const l = document.createElement('div');
+        l.className = 'dynasty-label';
+        l.style.cssText = `left:${x1+(x2-x1)/2}px;`;
+        l.textContent = era.name;
+        bandsEl.appendChild(l);
+      }
+    });
+  }
+
+  // Axis
+  const axisEl = document.getElementById(idPrefix + 'Axis');
+  if (axisEl) axisEl.style.cssText = `top:${axisTop}px;left:0;width:${w}px;`;
+  const axisLine = axisTop;
+
+  // Ticks
+  const ticksEl = document.getElementById(idPrefix + 'Ticks');
+  if (ticksEl) {
+    ticksEl.innerHTML = '';
+    const ms = pxPerYear < 1 ? 100 : pxPerYear < 3 ? 50 : 25;
+    for (let y = Math.ceil(YS/ms)*ms; y <= YE; y += ms) {
+      const isMajor = y % (ms*5) === 0;
+      const px = x(y);
+      const t = document.createElement('div');
+      t.className = 'tick-mark';
+      t.style.cssText = `left:${px}px;top:${axisLine - (isMajor?8:4)}px;`;
+      const ln = document.createElement('div');
+      ln.className = 'tick-line';
+      ln.style.height = (isMajor?16:8) + 'px';
+      t.appendChild(ln);
+      if (isMajor) {
+        const lb = document.createElement('div');
+        lb.className = 'tick-label';
+        lb.textContent = '' + y;
+        t.appendChild(lb);
+      }
+      ticksEl.appendChild(t);
+    }
+  }
+
+  // Events
+  const evtA = document.getElementById(idPrefix + 'EvtA');
+  const evtB = document.getElementById(idPrefix + 'EvtB');
+  if (evtA) { evtA.innerHTML = ''; evtA.style.top = '0'; }
+  if (evtB) { evtB.innerHTML = ''; evtB.style.top = axisLine + 'px'; }
+  if (events) {
+    events.forEach((ev, i) => {
+      const px = x(ev.year);
+      const above = i % 2 === 0;
+      const c = above ? evtA : evtB;
+      if (!c) return;
+      const colors = { war:'#e74c3c', politics:'#3498db', culture:'#f39c12', economy:'#2ecc71', science:'#9b59b6' };
+      const col = colors[ev.type] || '#888';
+      const n = document.createElement('div');
+      n.className = 'event-node ' + (above ? 'above' : 'below');
+      n.style.cssText = `left:${px}px;${above?'bottom:0;':'top:0;'}`;
+      n.innerHTML = `<div class="event-dot" style="border-color:${col}"></div><div class="event-line" style="height:${20+(i%5)*8}px;background:${col}"></div><div class="event-label">${ev.name}</div>`;
+      c.appendChild(n);
+    });
+  }
+
+  // Persons
+  const perA = document.getElementById(idPrefix + 'PerA');
+  const perB = document.getElementById(idPrefix + 'PerB');
+  if (perA) { perA.innerHTML = ''; perA.style.top = '0'; }
+  if (perB) { perB.innerHTML = ''; perB.style.top = axisLine + 'px'; }
+  if (data) {
+    const sorted = [...data].sort((a,b) => a.birth - b.birth);
+    // 分组
+    const groupA = sorted.filter((_,i) => i % 2 === 0);
+    const groupB = sorted.filter((_,i) => i % 2 !== 0);
+    [groupA, groupB].forEach((grp, idx) => {
+      const container = idx === 0 ? perA : perB;
+      if (!container) return;
+      const rowH = 28;
+      grp.forEach((p, i) => {
+        const px = x(p.birth);
+        const top = axisLine + (idx === 0 ? -(i+1)*rowH : 10 + i*rowH);
+        if (top < 0) return; // above viewport
+        const col = CAT_COLORS[p.cat] || '#888';
+        const row = document.createElement('div');
+        row.className = 'person-row';
+        row.style.cssText = `left:${px}px;top:${(idx===0?top-18:top)}px;`;
+        row.innerHTML = `<span class="person-emoji">${p.emoji||'👤'}</span><span class="person-name" style="border-left:2px solid ${col};padding-left:3px">${p.name}</span>`;
+        row.title = `${p.name} (${p.birth}-${p.death})\n${p.desc}`;
+        container.appendChild(row);
+      });
+    });
+    // Wrapper height
+    const maxRows = Math.ceil(data.length / 2) + 2;
+    const h = axisLine + maxRows * rowH + 40 + 'px';
+    canvas.style.minHeight = h;
+  }
+}
+
+function initTimelines() {
+  if (typeof PERSONS === 'undefined') { console.error('Data not loaded'); return; }
+
+  // 设置容器宽度
+  const w = totalWidth();
+  document.getElementById('mainContainer').style.width = Math.max(w, window.innerWidth) + 'px';
+
+  renderBlock('china', PERSONS, EVENTS, ERA_GROUPS);
+  renderBlock('japan', JAPAN_PERSONS, JAPAN_EVENTS, [
+    { name:'江户末', start:1800, end:1868, color:'#2a2a5a' },
+    { name:'明治', start:1868, end:1912, color:'#c0392b' },
+    { name:'大正', start:1912, end:1926, color:'#8e44ad' },
+    { name:'昭和', start:1926, end:1989, color:'#2980b9' },
+    { name:'平成/令和', start:1989, end:2026, color:'#27ae60' },
+  ]);
+  renderBlock('world', WORLD_PERSONS, WORLD_EVENTS, [
+    { name:'拿破仑', start:1800, end:1815, color:'#8B0000' },
+    { name:'殖民帝国', start:1815, end:1918, color:'#2c3e50' },
+    { name:'战间期', start:1918, end:1939, color:'#7f8c8d' },
+    { name:'冷战', start:1947, end:1991, color:'#34495e' },
+    { name:'后冷战', start:1991, end:2026, color:'#2980b9' },
+  ]);
+}
+
+// 折叠按钮
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-collapse');
+  if (!btn) return;
+  const block = btn.closest('.timeline-block');
+  block.classList.toggle('collapsed');
+  if (block.classList.contains('collapsed')) {
+    btn.textContent = '▼';
+  } else {
+    btn.textContent = '▲';
+  }
+});
+
+// 拖拽滚动
+(function() {
+  const mc = document.getElementById('mainContainer');
+  let isDown = false, startX, scrollLeft;
+  mc.addEventListener('mousedown', (e) => {
+    if (e.target.closest('.person-row')) return;
+    isDown = true; startX = e.pageX - mc.offsetLeft; scrollLeft = mc.scrollLeft;
+    mc.style.cursor = 'grabbing';
+  });
+  document.addEventListener('mouseup', () => { isDown = false; mc.style.cursor = 'grab'; });
+  document.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    mc.scrollLeft = scrollLeft - (e.pageX - mc.offsetLeft - startX) * 2;
+  });
+  mc.style.cursor = 'grab';
+})();
+
+// 滚轮缩放
+document.getElementById('mainContainer').addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const rect = document.getElementById('mainContainer').getBoundingClientRect();
+  const mouseX = e.clientX - rect.left + document.getElementById('mainContainer').scrollLeft;
+  const targetYear = YS + mouseX / pxPerYear;
+  pxPerYear *= (e.deltaY > 0 ? 0.85 : 1.18);
+  pxPerYear = Math.max(1, Math.min(50, pxPerYear));
+  initTimelines();
+  document.getElementById('mainContainer').scrollLeft = (targetYear - YS) * pxPerYear - (e.clientX - rect.left);
+}, { passive: false });
+
+loadData();
+</script>
 </body>
 </html>
