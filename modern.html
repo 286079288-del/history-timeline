@@ -3,475 +3,280 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>近代历史人物图谱</title>
-<link rel="stylesheet" href="style.css?v=20260519c">
-<style>
-body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: #0b0f19; color: #e0e0e0; overflow: hidden; }
-#app { display: flex; flex-direction: column; height: 100vh; }
-#header { height: 44px; display: flex; align-items: center; padding: 0 16px; background: #141b2d; border-bottom: 1px solid #2a3a5c; gap: 12px; }
-.logo { font-size: 16px; font-weight: 700; color: #f0c040; }
-#mainContainer { flex: 1; overflow-x: auto; overflow-y: hidden; position: relative; }
-.dual-flex { display: flex; flex-direction: column; }
-.timeline-block { flex: 1; min-height: 120px; position: relative; border-bottom: 1px solid #2a3a5c; }
-.block-header { height: 32px; display: flex; align-items: center; padding: 0 12px; background: rgba(11,15,25,0.95); border-bottom: 1px solid #2a3a5c; gap: 8px; position: sticky; left: 0; z-index: 20; backdrop-filter: blur(6px); }
-.block-title { font-size: 13px; font-weight: 600; color: #f0c040; }
-.btn-collapse { background: none; border: 1px solid #2a3a5c; color: #888; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; }
-.btn-collapse:hover { color: #f0c040; border-color: #f0c040; }
-.timeline-canvas { position: relative; height: calc(100% - 32px); overflow: hidden; }
-.dynasty-band { position: absolute; top: 0; bottom: 0; opacity: 0.08; }
-.dynasty-label { position: absolute; top: 50%; transform: translate(-50%,-50%); font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.18); white-space: nowrap; pointer-events: none; text-shadow: 0 2px 8px rgba(0,0,0,0.8); letter-spacing: 0.12em; }
-.axis-line { position: absolute; left: 0; width: 100%; border-top: 1px solid rgba(255,255,255,0.15); z-index: 2; pointer-events: none; }
-.tick-mark { position: absolute; z-index: 2; pointer-events: none; }
-.tick-line { width: 1px; background: rgba(255,255,255,0.1); }
-.tick-label { font-size: 9px; color: rgba(255,255,255,0.15); transform: translateX(-50%); white-space: nowrap; }
-.event-node { position: absolute; z-index: 5; cursor: help; }
-.event-dot { width: 8px; height: 8px; border-radius: 50%; border: 2px solid; margin: 0 auto; background: rgba(11,15,25,0.8); }
-.event-line { width: 1px; margin: 0 auto; }
-.event-label { font-size: 10px; color: rgba(255,255,255,0.4); text-align: center; white-space: nowrap; max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
-.event-label:hover { color: #fff; }
-.person-row { position: absolute; display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 11px; white-space: nowrap; z-index: 10; padding: 1px 4px; border-radius: 3px; transition: background 0.15s; }
-.person-row:hover { background: rgba(240,192,64,0.12); }
-.person-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.person-name { max-width: 120px; overflow: hidden; text-overflow: ellipsis; color: rgba(255,255,255,0.7); }
-.person-row:hover .person-name { color: #f0c040; }
-.person-emoji { font-size: 12px; }
-.timeline-canvas { position: relative; overflow: visible; }
-.events-above, .events-below { position: absolute; left: 0; width: 100%; pointer-events: none; }
-.persons-above, .persons-below { position: absolute; left: 0; width: 100%; }
-</style>
+<title>近代历史人物图谱 (1800-至今)</title>
+<meta name="description" content="中华历史人物时间轴 - 中国/日本/世界近代史三轴对比">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="style.css?v=20260519">
 </head>
 <body>
+
 <div id="app">
-  <header id="header" style="height:40px;padding:0 12px;">
-    <div class="logo">近代历史人物图谱</div>
-    <span style="font-size:11px;color:#888;margin-left:auto">滚轮缩放 · 拖拽平移 · 点击详情</span>
-  </header>
-  <main id="mainContainer">
-    <div class="dual-flex" id="dualFlex">
-      <div class="timeline-block" id="chinaBlock" style="flex:5">
-        <div class="block-header"><span class="block-title">📜 中国史</span><button class="btn-collapse">▲</button></div>
-        <div class="timeline-canvas" id="chinaCanvas">
-          <div class="dynasty-bands" id="chinaBands"></div>
-          <div class="axis-line" id="chinaAxis" style="top:50%"></div>
-          <div class="tick-container" id="chinaTicks"></div>
-          <div class="events-above" id="chinaEvtA"></div>
-          <div class="events-below" id="chinaEvtB"></div>
-          <div class="persons-above" id="chinaPerA"></div>
-          <div class="persons-below" id="chinaPerB"></div>
-        </div>
-      </div>
-      <div class="timeline-block" id="japanBlock" style="flex:3">
-        <div class="block-header"><span class="block-title">🏯 日本史</span><button class="btn-collapse">▲</button></div>
-        <div class="timeline-canvas" id="japanCanvas">
-          <div class="dynasty-bands" id="japanBands"></div>
-          <div class="axis-line" id="japanAxis" style="top:50%"></div>
-          <div class="tick-container" id="japanTicks"></div>
-          <div class="events-above" id="japanEvtA"></div>
-          <div class="events-below" id="japanEvtB"></div>
-          <div class="persons-above" id="japanPerA"></div>
-          <div class="persons-below" id="japanPerB"></div>
-        </div>
-      </div>
-      <div class="timeline-block" id="worldBlock" style="flex:2">
-        <div class="block-header"><span class="block-title">🌍 世界史</span><button class="btn-collapse">▲</button></div>
-        <div class="timeline-canvas" id="worldCanvas">
-          <div class="dynasty-bands" id="worldBands"></div>
-          <div class="axis-line" id="worldAxis" style="top:50%"></div>
-          <div class="tick-container" id="worldTicks"></div>
-          <div class="events-above" id="worldEvtA"></div>
-          <div class="events-below" id="worldEvtB"></div>
-          <div class="persons-above" id="worldPerA"></div>
-          <div class="persons-below" id="worldPerB"></div>
-        </div>
+  <!-- 顶部导航 -->
+  <header id="header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">近代历史人物图谱 (1800-至今)</span>
       </div>
     </div>
+    <div class="header-center">
+      <div class="era-tabs" id="eraTabs"></div>
+    </div>
+    <div class="header-right">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜索近代人物…" aria-label="搜索人物和事件" />
+        <span class="search-icon">🔍</span>
+      </div>
+      <span class="header-hint">滚轮缩放 · 拖拽滚动 · 点击人物查看详情</span>
+      
+    </div>
+  </header>
+
+  <!-- 分类筛选条 -->
+  <nav id="filterBar" aria-label="分类筛选">
+    <span class="filter-label">筛选：</span>
+    <button class="filter-btn active" data-cat="all">全部</button>
+    <button class="filter-btn" data-cat="emperor">帝王</button>
+    <button class="filter-btn" data-cat="military">将领</button>
+    <button class="filter-btn" data-cat="scholar">文人</button>
+    <button class="filter-btn" data-cat="philosopher">思想家</button>
+    <button class="filter-btn" data-cat="scientist">科学家</button>
+    <button class="filter-btn" data-cat="artist">艺术家</button>
+    <button class="filter-btn" data-cat="politician">政治家</button>
+    <button class="filter-btn" data-cat="sage">圣贤</button>
+    <button class="filter-btn" data-cat="diplomat">外交家</button>
+  </nav>
+
+  <!-- 主视图容器：三时间轴同屏对比 -->
+  <main id="mainContainer">
+    <div id="dualTimelineContainer">
+
+      <!-- 中国史时间轴 -->
+      <div id="chinaBlock" class="timeline-block">
+        <div class="block-header">
+          <span class="block-title">📜 中国史</span>
+          <div class="zoom-controls">
+            <button class="btn-collapse" id="collapseChina" title="折叠/展开">▲</button>
+            <button id="zoomReset" title="重置缩放 (0)">↺</button>
+          </div>
+        </div>
+        <div id="timelineWrapper">
+          <div id="dynastyBands"></div>
+          <div id="axisLine"></div>
+          <div id="axisTicks"></div>
+          <div id="eventsAbove"></div>
+          <div id="eventsBelow"></div>
+          <div id="personsAbove"></div>
+          <div id="personsBelow"></div>
+        </div>
+      </div>
+      <div class="resize-handle" data-above="chinaBlock" data-below="japanBlock"></div>
+
+      <!-- 日本史时间轴 -->
+      <div id="japanBlock" class="timeline-block">
+        <div class="block-header">
+          <span class="block-title">🏯 日本史</span>
+          <button class="btn-collapse" id="collapseJapan" title="折叠/展开">▲</button>
+        </div>
+        <div id="japanTimelineWrapper">
+          <div id="japanDynastyBands"></div>
+          <div id="japanAxisLine"></div>
+          <div id="japanAxisTicks"></div>
+          <div id="japanEventsAbove"></div>
+          <div id="japanEventsBelow"></div>
+          <div id="japanPersonsAbove"></div>
+          <div id="japanPersonsBelow"></div>
+        </div>
+      </div>
+      <div class="resize-handle" data-above="japanBlock" data-below="worldBlock"></div>
+
+      <!-- 世界史时间轴 -->
+      <div id="worldBlock" class="timeline-block">
+        <div class="block-header">
+          <span class="block-title">🌍 世界史</span>
+          <button class="btn-collapse" id="collapseWorld" title="折叠/展开">▲</button>
+        </div>
+        <div id="worldTimelineWrapper">
+          <div id="worldDynastyBands"></div>
+          <div id="worldAxisLine"></div>
+          <div id="worldAxisTicks"></div>
+          <div id="worldEventsAbove"></div>
+          <div id="worldEventsBelow"></div>
+          <div id="worldPersonsAbove"></div>
+          <div id="worldPersonsBelow"></div>
+        </div>
+      </div>
+
+    </div>
   </main>
+
+  <!-- 人物详情面板 -->
+  <aside id="detailPanel" class="panel hidden" aria-label="人物详情">
+    <div class="panel-header-bar">
+      <button class="panel-close" id="panelClose" aria-label="关闭详情面板">✕</button>
+      <button class="panel-edit-btn" id="panelEditBtn" title="编辑人物信息">✏️ 编辑</button>
+      <button class="panel-delete-btn" id="panelDeleteBtn" title="删除此人物">🗑️ 删除</button>
+    </div>
+    <div class="panel-avatar" id="panelAvatar"></div>
+    <div class="panel-name" id="panelName"></div>
+    <div class="panel-meta" id="panelMeta"></div>
+    <div class="panel-desc" id="panelDesc"></div>
+    <div class="panel-section">
+      <div class="panel-section-title">主要成就</div>
+      <div class="panel-achievements" id="panelAchievements"></div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">相关人物</div>
+      <div class="panel-relations" id="panelRelations"></div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">相关事件</div>
+      <div class="panel-events" id="panelEvents"></div>
+    </div>
+    <!-- 编辑模式按钮 -->
+    <div class="panel-edit-actions hidden" id="panelEditActions">
+      <button class="edit-save-btn" id="editSaveBtn">💾 保存</button>
+      <button class="edit-cancel-btn" id="editCancelBtn">取消</button>
+    </div>
+  </aside>
+
+  <!-- 事件详情气泡 -->
+  <div id="eventTooltip" class="tooltip hidden" role="tooltip"></div>
+
+  <!-- 背景装饰 -->
+  <div class="bg-deco"></div>
+
+  <!-- 删除人物确认弹窗 -->
+  <div id="deletePersonModal" class="modal-overlay hidden">
+    <div class="modal-content" style="width:400px">
+      <div class="modal-header">
+        <h3>⚠️ 确认删除</h3>
+        <button class="modal-close" id="deletePersonClose">✕</button>
+      </div>
+      <div class="modal-body" style="text-align:center;padding:24px">
+        <div style="font-size:48px;margin-bottom:12px">🗑️</div>
+        <p style="font-size:15px;color:var(--text);margin-bottom:8px">确定要删除人物 <strong id="deletePersonName"></strong> 吗？</p>
+        <p style="font-size:12px;color:var(--text3)">此操作不可撤销，该人物的所有关联关系也将被移除。</p>
+      </div>
+      <div class="modal-footer">
+        <button class="edit-cancel-btn" id="deletePersonCancel">取消</button>
+        <button class="delete-confirm-btn" id="deletePersonConfirm">🗑️ 确认删除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加人物弹窗 - 分步向导 -->
+  <div id="addPersonModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>➕ 添加新人物</h3>
+        <button class="modal-close" id="addPersonClose">✕</button>
+      </div>
+      <!-- 步骤指示器 -->
+      <div class="step-indicator">
+        <div class="step-dot active" data-step="1"><span>1</span><small>基本信息</small></div>
+        <div class="step-line"></div>
+        <div class="step-dot" data-step="2"><span>2</span><small>详细介绍</small></div>
+        <div class="step-line"></div>
+        <div class="step-dot" data-step="3"><span>3</span><small>关联人物</small></div>
+      </div>
+      <!-- 第一步：基本信息 -->
+      <div class="step-panel active" id="step1">
+        <div class="modal-body">
+          <div class="form-row">
+            <label>名字 <span class="required">*</span></label>
+            <input type="text" id="addName" placeholder="如：李白" class="form-input" />
+          </div>
+          <div class="form-row form-row-3">
+            <div>
+              <label>生年 <span class="required">*</span> <small style="color:var(--text3);font-weight:400">（公元前用负数）</small></label>
+              <input type="number" id="addBirth" placeholder="-701" class="form-input" />
+            </div>
+            <div>
+              <label>卒年 <span class="required">*</span></label>
+              <input type="number" id="addDeath" placeholder="-762" class="form-input" />
+            </div>
+            <div>
+              <label>享年</label>
+              <div class="form-static" id="addLifespan">—</div>
+            </div>
+          </div>
+          <div class="form-row form-row-2">
+            <div>
+              <label>朝代 <span class="required">*</span> <small id="dynastyAutoHint" style="color:var(--accent);font-weight:400;display:none">✨ 已自动推断</small></label>
+              <select id="addDynasty" class="form-select"></select>
+            </div>
+            <div>
+              <label>类别</label>
+              <select id="addCat" class="form-select">
+                <option value="emperor">👑 帝王</option>
+                <option value="general">⚔️ 将领</option>
+                <option value="scholar">📖 文人</option>
+                <option value="philosopher">💡 思想家</option>
+                <option value="scientist">🔬 科学家</option>
+                <option value="artist">🎨 艺术家</option>
+                <option value="politician">🏛️ 政治家</option>
+                <option value="sage">🌟 圣贤</option>
+                <option value="diplomat">🤝 外交家</option>
+                <option value="inventor">🔧 发明家</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 第二步：详细介绍 -->
+      <div class="step-panel" id="step2">
+        <div class="modal-body">
+          <div class="form-row">
+            <label>简介</label>
+            <textarea id="addDesc" rows="3" placeholder="人物简介…" class="form-textarea"></textarea>
+          </div>
+          <div class="form-row">
+            <label>主要成就</label>
+            <div id="addAchievements" class="form-achievements">
+              <div class="form-achievement-item">
+                <input type="text" class="form-input add-achievement-input" placeholder="输入成就…" />
+                <button class="form-achievement-remove" title="删除">✕</button>
+              </div>
+            </div>
+            <button class="edit-add-btn" id="addMoreAchievement">+ 添加成就</button>
+          </div>
+          <div class="form-row">
+            <label>地点</label>
+            <input type="text" id="addPlace" placeholder="长安（今陕西西安）" class="form-input" />
+          </div>
+          <div class="form-row form-row-2">
+            <div>
+              <label>纬度 <small style="color:var(--text3);font-weight:400">（可选）</small></label>
+              <input type="number" id="addLat" step="0.1" placeholder="35.0" class="form-input" />
+            </div>
+            <div>
+              <label>经度 <small style="color:var(--text3);font-weight:400">（可选）</small></label>
+              <input type="number" id="addLng" step="0.1" placeholder="114.0" class="form-input" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 第三步：关联人物 -->
+      <div class="step-panel" id="step3">
+        <div class="modal-body">
+          <p class="step-hint">添加与此人物有关联的其他历史人物（可跳过）</p>
+          <div id="addRelations" class="form-relations"></div>
+          <button class="edit-add-btn" id="addMoreRelation">+ 添加关联</button>
+        </div>
+      </div>
+      <!-- 底部按钮 -->
+      <div class="modal-footer">
+        <button class="edit-cancel-btn" id="addPersonCancel">取消</button>
+        <button class="step-prev-btn" id="stepPrev" style="display:none">← 上一步</button>
+        <button class="step-next-btn" id="stepNext">下一步 →</button>
+        <button class="edit-save-btn" id="addPersonSave" style="display:none">💾 添加人物</button>
+      </div>
+    </div>
+  </div>
 </div>
-<script>
-// ===== 数据 + 配置 =====
-// =============================================
-// 近代历史数据：1800-2026 中国/日本/世界
-// =============================================
-var YEAR_START = 1800;
-var YEAR_END   = 2026;
-var PX_PER_YEAR_DEFAULT = 4;
-var pxPerYear = PX_PER_YEAR_DEFAULT;
 
-const DYNASTIES = [
-  { name: '晚清', start: 1800, end: 1912, color: '#2c3e50' },
-  { name: '民国', start: 1912, end: 1949, color: '#3498db' },
-  { name: '新中国', start: 1949, end: 2026, color: '#e74c3c' },
-];
-const ERA_GROUPS = [
-  { name: '晚清', start: 1800, end: 1912, color: '#2c3e50' },
-  { name: '民国/二战', start: 1912, end: 1949, color: '#3498db' },
-  { name: '当代', start: 1949, end: 2026, color: '#e74c3c' },
-];
-const PERSONS = [
-  // === 晚清 ===
-  { id: 'lin_zexu', name: '林则徐', birth: 1785, death: 1850, cat: 'politician', dynasty: '清', emoji: '🚭', desc: '晚清政治家、民族英雄。1839年奉旨赴广东禁烟，在虎门海滩当众销毁鸦片237万斤。虽被革职流放新疆，但其"苟利国家生死以，岂因祸福避趋之"名句千古传诵。', achievements: ['虎门销烟', '开眼看世界第一人'], relations: [], events: ['e_opium_war'] },
-  { id: 'daoguang', name: '道光帝', birth: 1782, death: 1850, cat: 'emperor', dynasty: '清', emoji: '👑', desc: '清朝第八位皇帝。在位期间发生鸦片战争，签订《南京条约》，中国开始沦为半殖民地。是一位想有作为却无力回天的悲情皇帝。', achievements: ['禁烟', '鸦片战争'], relations: [], events: ['e_opium_war'] },
-  { id: 'xianfeng', name: '咸丰帝', birth: 1831, death: 1861, cat: 'emperor', dynasty: '清', emoji: '👑', desc: '清朝第九位皇帝。太平天国起义席卷半壁江山，英法联军攻入北京火烧圆明园。被迫签订《北京条约》，崩于热河避暑山庄。', achievements: [], relations: [], events: ['e_second_opium'] },
-  { id: 'hong_xiuquan', name: '洪秀全', birth: 1814, death: 1864, cat: 'sage', dynasty: '清', emoji: '✝️', desc: '太平天国运动领袖。自称耶稣之弟，建立太平天国定都天京（南京）。历时14年，波及18省，是中国历史上最大规模的农民起义。', achievements: ['建立太平天国', '天朝田亩制度'], relations: [], events: ['e_taiping'] },
-  { id: 'zeng_guofan', name: '曾国藩', birth: 1811, death: 1872, cat: 'military', dynasty: '清', emoji: '⚔️', desc: '晚清名臣，湘军创立者。平定太平天国，开启洋务运动。以"修身齐家治国平天下"为终身准则，其《曾国藩家书》影响深远。被誉为"立德立功立言三不朽"的完人。', achievements: ['平定太平天国', '洋务运动先驱', '《曾国藩家书》'], relations: [], events: ['e_taiping', 'e_self_strengthen'] },
-  { id: 'zuo_zongtang', name: '左宗棠', birth: 1812, death: 1885, cat: 'military', dynasty: '清', emoji: '🗡️', desc: '晚清名臣。率湘军收复新疆（除伊犁外），在新疆建省。平定陕甘回乱。在福州创办船政局，是中国近代海军之父之一。', achievements: ['收复新疆', '福州船政局', '新疆建省'], relations: [], events: ['e_self_strengthen'] },
-  { id: 'li_hongzhang', name: '李鸿章', birth: 1823, death: 1901, cat: 'politician', dynasty: '清', emoji: '🎩', desc: '晚清权臣，洋务运动领袖。创办北洋水师和江南制造局，签订《马关条约》《辛丑条约》。背负卖国骂名的爱国者，被誉"东方俾斯麦"。', achievements: ['北洋水师', '洋务运动', '江南制造局'], relations: [], events: ['e_sino_japanese', 'e_boxer'] },
-  { id: 'cishan', name: '慈禧太后', birth: 1835, death: 1908, cat: 'emperor', dynasty: '清', emoji: '👑', desc: '晚清实际统治者，垂帘听政47年。镇压戊戌变法囚禁光绪帝，挪用海军军费修颐和园。在甲午战争和八国联军侵华后被迫推行新政，临终前立溥仪为帝。', achievements: ['垂帘听政47年', '晚清新政'], relations: [], events: ['e_boxer', 'e_hundred_days'] },
-  { id: 'guangxu', name: '光绪帝', birth: 1871, death: 1908, cat: 'emperor', dynasty: '清', emoji: '👑', desc: '清朝第十一位皇帝。1898年推行戊戌变法（百日维新），试图变法图强。被慈禧太后囚禁于中南海瀛台，最终在被囚十年后先慈禧一日离奇死亡。', achievements: ['戊戌变法'], relations: [], events: ['e_hundred_days'] },
-  { id: 'kang_youwei', name: '康有为', birth: 1858, death: 1927, cat: 'philosopher', dynasty: '清', emoji: '📜', desc: '戊戌变法领袖。公车上书提出变法主张，被光绪帝重用推行维新。变法失败后流亡海外，继续保皇立宪活动。著有《大同书》。', achievements: ['公车上书', '戊戌变法', '《大同书》'], relations: [], events: ['e_hundred_days'] },
-  { id: 'liang_qichao', name: '梁启超', birth: 1873, death: 1929, cat: 'scholar', dynasty: '清', emoji: '📰', desc: '近代启蒙思想家。主编《时务报》《新民丛报》，提出"新民说"。其"少年中国说""少年强则国强"激励了一代又一代中国人。', achievements: ['新民说', '少年中国说', '启蒙思想家'], relations: [], events: ['e_hundred_days'] },
-  { id: 'sun_yat_sen', name: '孙中山', birth: 1866, death: 1925, cat: 'sage', dynasty: '清', emoji: '🏛️', desc: '中国民主革命先行者。创立兴中会、同盟会，提出三民主义。领导辛亥革命推翻清朝，就任中华民国临时大总统。国共两党共同尊称"国父"。', achievements: ['辛亥革命', '三民主义', '中华民国国父'], relations: [], events: ['e_xinhai'] },
-  { id: 'yuan_shikai', name: '袁世凯', birth: 1859, death: 1916, cat: 'politician', dynasty: '清', emoji: '👑', desc: '北洋军阀首领。小站练兵创建北洋新军，逼清帝退位窃取辛亥革命果实。1915年称帝，83天后在全民声讨中被迫取消，不久忧惧而死。', achievements: ['北洋新军', '逼清帝退位', '洪宪称帝'], relations: [], events: ['e_xinhai'] },
-  { id: 'tan_sitong', name: '谭嗣同', birth: 1865, death: 1898, cat: 'scholar', dynasty: '清', emoji: '✊', desc: '戊戌六君子之首。变法失败后拒绝逃亡："各国变法无不从流血而成，今中国未闻有因变法而流血者，有之请自嗣同始。"在菜市口慷慨就义，年仅33岁。', achievements: ['戊戌六君子', '为变法献身'], relations: [], events: ['e_hundred_days'] },
-  { id: 'zhang_zhidong', name: '张之洞', birth: 1837, death: 1909, cat: 'politician', dynasty: '清', emoji: '🏗️', desc: '晚清名臣，洋务派代表。提出"中学为体西学为用"。创办汉阳铁厂、湖北织布局等重工业，推动了中国的早期工业化。', achievements: ['中学为体西学为用', '汉阳铁厂'], relations: [], events: ['e_self_strengthen'] },
-  { id: 'ding_ruchang', name: '丁汝昌', birth: 1836, death: 1895, cat: 'general', dynasty: '清', emoji: '⛵', desc: '北洋水师提督。甲午海战中率舰队与日本海军决战，威海卫被困后拒绝投降，服毒自尽殉国。是中国近代海军史上最悲壮的人物之一。', achievements: ['北洋水师提督', '殉国'], relations: [], events: ['e_sino_japanese'] },
-  { id: 'puyi', name: '溥仪（宣统帝）', birth: 1906, death: 1967, cat: 'emperor', dynasty: '清', emoji: '👑', desc: '清朝末代皇帝。3岁即位，6岁退位。后在日本扶植下成为伪满洲国傀儡皇帝。战后被苏联俘虏，引渡回国后在抚顺战犯管理所改造，成为新中国公民。著有《我的前半生》。', achievements: ['末代皇帝', '伪满洲国傀儡', '《我的前半生》'], relations: [], events: ['e_xinhai'] },
-  { id: 'cixi_note', name: '已删', birth: 0, death: 0, cat: 'emperor', dynasty: '清', emoji: 'X', desc: '', achievements: [], relations: [], events: [] },
-  { id: 'qiu_jin', name: '秋瑾', birth: 1875, death: 1907, cat: 'military', dynasty: '清', emoji: '🗡️', desc: '清末女革命家。自号"鉴湖女侠"，留学日本加入同盟会。回国后筹备武装起义被捕，在绍兴轩亭口英勇就义。遗诗"秋风秋雨愁杀人"传颂千古。', achievements: ['鉴湖女侠', '女革命先驱'], relations: [], events: ['e_xinhai'] },
-  { id: 'lu_xun', name: '鲁迅', birth: 1881, death: 1936, cat: 'artist', dynasty: '民国', emoji: '✍️', desc: '中国现代文学奠基人。以笔为刀解剖国民劣根性，《狂人日记》《阿Q正传》《呐喊》深刻影响了中国现代思想。毛泽东评价"鲁迅的骨头是最硬的"。', achievements: ['《狂人日记》', '《阿Q正传》', '中国现代文学之父'], relations: [], events: [] },
-  { id: 'hu_shi', name: '胡适', birth: 1891, death: 1962, cat: 'scholar', dynasty: '民国', emoji: '🎓', desc: '新文化运动领袖。提倡白话文，主张"大胆假设，小心求证"。曾任北大校长、驻美大使，是20世纪中国最具影响力的自由主义知识分子。', achievements: ['白话文运动', '新文化运动'], relations: [], events: [] },
-
-  // === 民国/抗战 ===
-  { id: 'jiang_jieshi', name: '蒋介石', birth: 1887, death: 1975, cat: 'politician', dynasty: '民国', emoji: '🏴', desc: '国民政府总统。领导北伐统一中国，抗日战争中指挥正面战场。国共内战中败退台湾，在台湾推行土地改革和经济发展。', achievements: ['北伐', '抗日战争', '台湾建设'], relations: [], events: ['e_ww2_china'] },
-  { id: 'mao_zedong', name: '毛泽东', birth: 1893, death: 1976, cat: 'sage', dynasty: '新中国', emoji: '✊', desc: '中国共产党创始人之一，新中国建立者。领导长征、抗日战争和解放战争，1949年建立新中国。其思想和政策深刻影响了20世纪中国和世界。', achievements: ['建立新中国', '长征', '毛泽东思想'], relations: [], events: ['e_prc_founded'] },
-  { id: 'zhou_enlai', name: '周恩来', birth: 1898, death: 1976, cat: 'politician', dynasty: '新中国', emoji: '🏛️', desc: '新中国首任总理。从建国到去世担任总理27年，以外交智慧和个人魅力赢得世界尊重。"为中华之崛起而读书"是其少年志向。', achievements: ['27年总理', '和平共处五项原则', '外交家'], relations: [], events: ['e_prc_founded'] },
-  { id: 'deng_xiaoping', name: '邓小平', birth: 1904, death: 1997, cat: 'politician', dynasty: '新中国', emoji: '🐱', desc: '改革开放总设计师。提出"实践是检验真理的唯一标准"，推行经济特区和发展是硬道理。三起三落不改初心，将中国带入经济高速增长时代。', achievements: ['改革开放', '一国两制', '经济特区'], relations: [], events: ['e_reform_opening'] },
-  { id: 'zhang_xueliang', name: '张学良', birth: 1901, death: 2001, cat: 'military', dynasty: '民国', emoji: '🔫', desc: '东北军统帅。1936年发动西安事变扣留蒋介石，迫使停止内战一致抗日。后遭蒋介石软禁半个多世纪，晚年移居夏威夷，101岁去世。', achievements: ['西安事变', '促成抗日统一战线'], relations: [], events: ['e_xian_incident'] },
-  { id: 'lin_biao', name: '林彪', birth: 1907, death: 1971, cat: 'general', dynasty: '新中国', emoji: '⭐', desc: '十大元帅之一。指挥平型关大捷和辽沈战役，从东北打到海南岛。后成为毛泽东接班人写入党章，1971年坠机温都尔汗，功过毁誉至今争议。', achievements: ['平型关大捷', '辽沈战役', '十大元帅'], relations: [], events: [] },
-  { id: 'peng_dehuai', name: '彭德怀', birth: 1898, death: 1974, cat: 'general', dynasty: '新中国', emoji: '⚔️', desc: '十大元帅之一。指挥百团大战，抗美援朝率志愿军击败美军。1959年庐山会议上书批评大跃进，遭错误批判。晚年被囚禁迫害致死，1978年平反。', achievements: ['百团大战', '抗美援朝', '敢言直谏'], relations: [], events: ['e_korean_war'] },
-  { id: 'zhu_de', name: '朱德', birth: 1886, death: 1976, cat: 'general', dynasty: '新中国', emoji: '⭐', desc: '十大元帅之首，红军之父。南昌起义后与毛泽东井冈山会师，从红军到八路军再到解放军，是我军最主要的缔造者之一。', achievements: ['红军之父', '十大元帅之首', '井冈山会师'], relations: [], events: [] },
-  { id: 'jiang_jiashi', name: '钱学森', birth: 1911, death: 2009, cat: 'scientist', dynasty: '新中国', emoji: '🚀', desc: '中国航天之父。美国留学后历经艰难回国，主持两弹一星工程。其系统工程理论指导了中国导弹和航天事业的发展，被誉为"一人抵五个师"。', achievements: ['两弹一星', '中国航天之父', '系统工程'], relations: [], events: [] },
-  { id: 'yuan_longping', name: '袁隆平', birth: 1930, death: 2021, cat: 'scientist', dynasty: '新中国', emoji: '🌾', desc: '杂交水稻之父。一生致力于杂交水稻研究，使水稻亩产从300公斤提升至1500公斤。解决了数亿人的温饱问题，荣获共和国勋章。', achievements: ['杂交水稻之父', '解决数亿人温饱', '共和国勋章'], relations: [], events: [] },
-  { id: 'tu_youyou', name: '屠呦呦', birth: 1930, death: 2026, cat: 'scientist', dynasty: '新中国', emoji: '💊', desc: '中国首位诺贝尔科学奖获得者。从青蒿中发现青蒿素，挽救了全球数百万疟疾患者的生命。其研究灵感来自东晋葛洪《肘后备急方》。', achievements: ['诺贝尔奖', '青蒿素', '拯救数百万生命'], relations: [], events: [] },
-  { id: 'zhang_boling', name: '张伯苓', birth: 1876, death: 1951, cat: 'scholar', dynasty: '民国', emoji: '🏫', desc: '南开大学创办人。以"允公允能，日新月异"为校训，培养了周恩来、曹禺等杰出人才。是近代中国最伟大的教育家之一。', achievements: ['创办南开大学', '近代教育家'], relations: [], events: [] },
-  { id: 'cao_yu', name: '曹禺', birth: 1910, death: 1996, cat: 'artist', dynasty: '新中国', emoji: '🎭', desc: '中国现代话剧奠基人。23岁创作《雷雨》，被誉为中国话剧的《哈姆雷特》。另有《日出》《原野》《北京人》等经典剧作。', achievements: ['《雷雨》', '《日出》', '话剧奠基人'], relations: [], events: [] },
-  { id: 'lao_she', name: '老舍', birth: 1899, death: 1966, cat: 'artist', dynasty: '新中国', emoji: '📖', desc: '中国现代文学大师。代表作《骆驼祥子》《茶馆》《四世同堂》，以北京方言描写底层人民生活。被授予"人民艺术家"称号。', achievements: ['《骆驼祥子》', '《茶馆》', '人民艺术家'], relations: [], events: [] },
-  { id: 'xu_beihong', name: '徐悲鸿', birth: 1895, death: 1953, cat: 'artist', dynasty: '新中国', emoji: '🐎', desc: '中国现代美术奠基人。以画马著称，代表作《奔马》《愚公移山》。留学法国带回西方写实主义，提出"尽精微致广大"。首任中央美院院长。', achievements: ['《奔马》', '中央美院院长', '美术教育先驱'], relations: [], events: [] },
-];
-
-const EVENTS = [
-  { id: 'e_opium_war', year: 1840, name: '第一次鸦片战争', type: 'war', desc: '英国以虎门销烟为借口发动侵华战争。1842年签订《南京条约》，割让香港、开放五口通商，中国开始沦为半殖民地。' },
-  { id: 'e_nanjing_treaty', year: 1842, name: '《南京条约》签订', type: 'politics', desc: '中国近代第一个不平等条约。割香港岛给英国，赔款2100万银元，开放五口通商。是中国半殖民地化的开始。' },
-  { id: 'e_taiping', year: 1851, name: '太平天国起义', type: 'war', desc: '洪秀全在广西金田村起义，建立太平天国，定都天京。历时14年，波及18省，死难数千万，是19世纪最惨烈的内战。' },
-  { id: 'e_second_opium', year: 1856, name: '第二次鸦片战争', type: 'war', desc: '英法联军攻入北京，火烧圆明园。签订《天津条约》《北京条约》，进一步丧失主权。' },
-  { id: 'e_self_strengthen', year: 1861, name: '洋务运动', type: 'politics', desc: '曾国藩、李鸿章等推行"师夷长技以制夷"，创办军事工业、新式学堂和近代海军。甲午战败证明洋务运动破产。' },
-  { id: 'e_sino_japanese', year: 1894, name: '甲午中日战争', type: 'war', desc: '日本击败北洋水师，签订《马关条约》割让台湾、赔款2亿两白银。标志着中国半殖民地化的加深，刺激了日本的扩张野心。' },
-  { id: 'e_hundred_days', year: 1898, name: '戊戌变法', type: 'politics', desc: '光绪帝推行维新变法103天即被慈禧太后政变扼杀。谭嗣同等六君子被杀，康梁逃亡海外。' },
-  { id: 'e_boxer', year: 1900, name: '义和团运动与八国联军', type: 'war', desc: '义和团以"扶清灭洋"为口号攻使馆杀教士。八国联军攻入北京，签订《辛丑条约》赔款4.5亿两，中国完全沦为半殖民地。' },
-  { id: 'e_xinhai', year: 1911, name: '辛亥革命', type: 'politics', desc: '武昌起义爆发，各省响应宣布独立。1912年清帝退位，中华民国成立，2000多年的封建帝制终结。' },
-  { id: 'e_may_fourth', year: 1919, name: '五四运动', type: 'culture', desc: '巴黎和会外交失败引发全国性爱国运动。学生罢课、工人罢工、商人罢市。"德先生"和"赛先生"深入人心，新民主主义革命开端。' },
-  { id: 'e_northern_expedition', year: 1926, name: '北伐战争', type: 'war', desc: '蒋介石率国民革命军北伐，消灭北洋军阀，形式上统一中国。' },
-  { id: 'e_xian_incident', year: 1936, name: '西安事变', type: 'politics', desc: '张学良杨虎城扣留蒋介石，迫使停止内战一致抗日。促成了国共第二次合作和抗日民族统一战线。' },
-  { id: 'e_ww2_china', year: 1937, name: '全面抗日战争', type: 'war', desc: '七七事变后中日全面战争爆发。南京大屠杀、重庆大轰炸等惨案无数。中国以巨大牺牲（3500万人伤亡）拖住日本主力，为世界反法西斯战争作出重大贡献。' },
-  { id: 'e_prc_founded', year: 1949, name: '中华人民共和国成立', type: 'politics', desc: '毛泽东在天安门宣告新中国成立。结束了1840年以来的百年屈辱，中国人民从此站立起来。' },
-  { id: 'e_korean_war', year: 1950, name: '抗美援朝战争', type: 'war', desc: '志愿军跨过鸭绿江抗击以美国为首的联合国军。经过五次战役将战线稳定在三八线，1953年签订停战协定。' },
-  { id: 'e_cultural_revolution', year: 1966, name: '文化大革命', type: 'politics', desc: '历时十年的政治运动深刻改变了中国社会。1976年结束，1978年十一届三中全会开始拨乱反正。' },
-  { id: 'e_reform_opening', year: 1978, name: '改革开放', type: 'economy', desc: '邓小平主持十一届三中全会确立改革开放政策。农村联产承包、经济特区、市场经济改革使中国成为世界第二大经济体。' },
-  { id: 'e_return_hk', year: 1997, name: '香港回归', type: 'politics', desc: '中英两国政府香港政权交接仪式在香港会展中心举行。离开155年的香港回到祖国怀抱，"一国两制"方针正式实施。' },
-  { id: 'e_beijing_olympic', year: 2008, name: '北京奥运会', type: 'culture', desc: '第29届夏季奥运会在北京成功举办。中国以51枚金牌位居榜首，"同一个世界同一个梦想"展现了中国的大国形象。' },
-];
-
-// ===== 日本近代 =====
-const JAPAN_PERSONS = [
-  { id: 'katsu_kaishu', name: '胜海舟', birth: 1823, death: 1899, cat: 'politician', emoji: '⚓', desc: '江户幕末海军奉行。创办日本近代海军，在戊辰战争最后关头促成江户城无血开城，避免了东京毁于战火。是幕末最有远见的政治家。', achievements: ['江户无血开城', '日本海军之父'], relations: [], events: ['e_meiji_restoration'] },
-  { id: 'takasugi_shinsaku', name: '高杉晋作', birth: 1839, death: 1867, cat: 'military', emoji: '⚔️', desc: '长州藩倒幕志士。创建奇兵队打破身份制度，以民兵武装击败幕府讨伐军。28岁病逝，未能亲见明治维新，但正是他的军事胜利使维新成为可能。', achievements: ['创建奇兵队', '倒幕军事胜利'], relations: [], events: ['e_meiji_restoration'] },
-  { id: 'kido_takayoshi', name: '木户孝允', birth: 1833, death: 1877, cat: 'politician', emoji: '📜', desc: '明治维新三杰之一。起草《五条誓文》，推动版籍奉还和废藩置县。是维新中最重要的制度设计师。37岁病逝。', achievements: ['维新三杰', '五条誓文', '废藩置县'], relations: [], events: ['e_meiji_restoration'] },
-  { id: 'okubo_toshimichi', name: '大久保利通', birth: 1830, death: 1878, cat: 'politician', emoji: '🏛️', desc: '明治维新三杰之一。维新后主导内政，推行殖产兴业、富国强兵。因推行过硬被不满士族刺杀。是日本近代工业化的主要推手。', achievements: ['维新三杰', '殖产兴业'], relations: [], events: ['e_meiji_restoration'] },
-  { id: 'kido_note', name: '已删', birth: 0, death: 0, cat: 'politician', emoji: 'X', desc: '', achievements: [], relations: [], events: [] },
-  { id: 'yamagata_aritomo', name: '山县有朋', birth: 1838, death: 1922, cat: 'military', emoji: '🎖️', desc: '日本近代陆军之父。模仿普鲁士建立日本陆军，出任首相推行对外扩张政策。甲午战争和日俄战争的军事策划者，日本军国主义的奠基人。', achievements: ['日本陆军之父', '军国主义奠基'], relations: [], events: ['e_sino_japanese_war', 'e_russo_jpn_war'] },
-  { id: 'fukuzawa_note', name: '已删2', birth: 0, death: 0, cat: 'philosopher', emoji: 'X', desc: '', achievements: [], relations: [], events: [] },
-  { id: 'okuma_shigenobu', name: '大隈重信', birth: 1838, death: 1922, cat: 'politician', emoji: '🏫', desc: '日本政治家。创办早稻田大学，两任首相。在任期间日本加入协约国参加一战，向中国提出《二十一条》。', achievements: ['创办早稻田大学', '两任首相'], relations: [], events: [] },
-  { id: 'togo_heihachiro', name: '东乡平八郎', birth: 1848, death: 1934, cat: 'military', emoji: '⚓', desc: '日本海军名将。日俄战争中指挥联合舰队在对马海峡全歼俄国波罗的海舰队，这一经典海战被写入全球海军教材。"皇国兴废在此一战"激励全军。', achievements: ['对马海战', '全歼俄国舰队'], relations: [], events: ['e_russo_jpn_war'] },
-  { id: 'noguchi_note', name: '已删3', birth: 0, death: 0, cat: 'scientist', emoji: 'X', desc: '', achievements: [], relations: [], events: [] },
-  { id: 'hirohito', name: '裕仁天皇（昭和）', birth: 1901, death: 1989, cat: 'emperor', emoji: '👑', desc: '日本第124代天皇，在位63年。在位期间日本发动侵华战争和太平洋战争，战败后宣布《人间宣言》放弃神格，带领日本走向和平发展。', achievements: ['在位63年', '人间宣言', '战后重建'], relations: [], events: ['e_pearl_harbor', 'e_jp_surrender'] },
-  { id: 'hideki_tojo', name: '东条英机', birth: 1884, death: 1948, cat: 'politician', emoji: '💀', desc: '日本第40任首相。发动珍珠港事件挑起太平洋战争，对亚洲各国犯下滔天罪行。战败后自杀未遂，被东京审判判处绞刑。', achievements: [], relations: [], events: ['e_pearl_harbor'] },
-  { id: 'yamamoto_isoroku', name: '山本五十六', birth: 1884, death: 1943, cat: 'military', emoji: '✈️', desc: '日本海军联合舰队司令长官。策划珍珠港偷袭，中途岛海战大败后座机被美军截击身亡。其"唤醒沉睡的巨人"一语成谶。', achievements: ['策划珍珠港', '中途岛海战'], relations: [], events: ['e_pearl_harbor'] },
-  { id: 'kurosawa_note', name: '已删4', birth: 0, death: 0, cat: 'artist', emoji: 'X', desc: '', achievements: [], relations: [], events: [] },
-  { id: 'mori_ogai', name: '森鸥外', birth: 1862, death: 1922, cat: 'artist', emoji: '📚', desc: '明治-大正时期文学巨匠。代表《舞姬》《雁》《阿部一族》，将欧洲文学引入日本。与夏目漱石并称明治文学双璧。', achievements: ['明治文学双璧', '《舞姬》'], relations: [], events: [] },
-  { id: 'kawabata_note', name: '已删5', birth: 0, death: 0, cat: 'artist', emoji: 'X', desc: '', achievements: [], relations: [], events: [] },
-  { id: 'abe_shinzo', name: '安倍晋三', birth: 1954, death: 2022, cat: 'politician', emoji: '🏛️', desc: '日本任期最长首相。推行安倍经济学振兴经济，积极推动修宪和正常国家化。2022年在奈良街头演说时遇刺身亡，震惊世界。', achievements: ['最长任期首相', '安倍经济学'], relations: [], events: [] },
-];
-
-const JAPAN_EVENTS = [
-  { id: 'e_perry_expedition', year: 1853, name: '黑船来航', type: 'politics', desc: '美国佩里准将率黑船驶入江户湾强迫日本开国。次年签订《神奈川条约》，结束了日本200多年锁国。', dynasty: '江户' },
-  { id: 'e_meiji_restoration', year: 1868, name: '明治维新', type: 'politics', desc: '萨长土肥等藩倒幕派推翻江户幕府，明治天皇建立新政府。推行富国强兵、殖产兴业、文明开化三大政策，日本迅速近代化。', dynasty: '明治' },
-  { id: 'e_sino_japanese_war', year: 1894, name: '甲午中日战争', type: 'war', desc: '日本击败清政府，割占台湾和澎湖列岛，获得2亿两白银赔款。标志着日本成为亚洲第一强国。', dynasty: '明治' },
-  { id: 'e_anglo_jpn_alliance', year: 1902, name: '日英同盟缔结', type: 'politics', desc: '日本与英国结盟，标志着日本成为被西方列强认可的平等大国，也为其后来对俄开战提供了外交保障。', dynasty: '明治' },
-  { id: 'e_russo_jpn_war', year: 1904, name: '日俄战争', type: 'war', desc: '日本海军在对马海战中全歼俄国舰队，陆军攻占旅顺。这是近代亚洲国家首次击败欧洲列强，震惊世界。', dynasty: '明治' },
-  { id: 'e_jpn_annex_kr', year: 1910, name: '日本吞并朝鲜', type: 'politics', desc: '日本正式吞并大韩帝国，朝鲜沦为日本殖民地35年。', dynasty: '明治' },
-  { id: 'e_taisho_democracy', year: 1918, name: '大正民主运动', type: 'politics', desc: '日本出现了短暂的民主化和政党政治。"米骚动"迫使军人内阁下台，政党领袖原敬成为首位平民首相。', dynasty: '大正' },
-  { id: 'e_mukden_incident', year: 1931, name: '九一八事变(满洲事变)', type: 'war', desc: '关东军自导自演炸毁南满铁路，以此为借口侵占中国东北全境，扶植溥仪建立伪满洲国。', dynasty: '昭和' },
-  { id: 'e_pearl_harbor', year: 1941, name: '偷袭珍珠港', type: 'war', desc: '日本海军偷袭美国珍珠港，将美国拉入二战。太平洋战争爆发，日本开始从扩张转向溃败。', dynasty: '昭和' },
-  { id: 'e_nanjing_massacre', year: 1937, name: '南京大屠杀', type: 'war', desc: '日军占领南京后进行长达六周的大规模屠杀、强奸和纵火，三十多万中国军民惨遭杀害。是二战中最残酷的暴行之一。', dynasty: '昭和' },
-  { id: 'e_atomic_bombs', year: 1945, name: '广岛长崎原子弹', type: 'war', desc: '美国向广岛和长崎投下两颗原子弹，死伤数十万平民。6天后日本天皇宣布无条件投降，二战结束。', dynasty: '昭和' },
-  { id: 'e_jp_postwar_miracle', year: 1955, name: '日本战后经济奇迹', type: 'economy', desc: '从废墟中迅速崛起，到1968年成为世界第二大经济体。汽车、电子、制造业遍布全球。', dynasty: '昭和' },
-  { id: 'e_jp_bubble', year: 1989, name: '日本泡沫经济顶峰', type: 'economy', desc: '昭和天皇去世、平成改元。日本股市房市泡沫达到巅峰，此后崩盘进入"失去的三十年"。', dynasty: '平成' },
-  { id: 'e_fukushima', year: 2011, name: '东日本大地震与福岛核灾', type: 'economy', desc: '9级地震引发海啸导致福岛核电站熔毁，是切尔诺贝利以来最严重的核事故。数万人至今无法返回家园。', dynasty: '平成' },
-];
-
-// ===== 世界近代 =====
-const WORLD_PERSONS = [
-  { id: 'napoleon_bonaparte', name: '拿破仑·波拿巴', birth: 1769, death: 1821, cat: 'emperor', emoji: '🎖️', desc: '法兰西第一帝国皇帝。以军事天才横扫欧洲，颁布《拿破仑法典》影响现代法律。滑铁卢战败后流放圣赫勒拿岛，是近代史上最耀眼的人物之一。', achievements: ['法兰西帝国皇帝', '《拿破仑法典》', '征服欧洲'], relations: [], events: ['e_napoleon'] },
-  { id: 'wellington', name: '威灵顿公爵', birth: 1769, death: 1852, cat: 'military', emoji: '⚔️', desc: '英国军事统帅。在滑铁卢战役中击败拿破仑，结束了拿破仑战争。绰号"铁公爵"。', achievements: ['滑铁卢战役', '击败拿破仑'], relations: [], events: ['e_napoleon'] },
-  { id: 'queen_victoria', name: '维多利亚女王', birth: 1819, death: 1901, cat: 'emperor', emoji: '👑', desc: '英国女王，在位63年。维多利亚时代是大英帝国的黄金时代，工业革命达到顶峰，帝国版图覆盖世界四分之一，号称"日不落帝国"。', achievements: ['日不落帝国', '在位63年', '维多利亚时代'], relations: [], events: [] },
-  { id: 'metternich', name: '梅特涅', birth: 1773, death: 1859, cat: 'politician', emoji: '🎩', desc: '奥地利首相。维也纳会议的主导者，建立梅特涅体系维持欧洲均势近40年。是19世纪欧洲保守主义政治的代表人物。', achievements: ['维也纳体系', '均势外交', '保守主义代表'], relations: [], events: ['e_vienna_congress'] },
-  { id: 'bismarck_otto', name: '奥托·冯·俾斯麦', birth: 1815, death: 1898, cat: 'politician', emoji: '🔨', desc: '德意志帝国铁血宰相。通过三次王朝战争统一德意志，推行社会保险制度开创现代福利国家先河。"当代重大问题不是靠演说和多数派决议决定的——而是靠铁和血。"', achievements: ['统一德意志', '铁血宰相', '现代福利制度'], relations: [], events: [] },
-  { id: 'garibaldi', name: '加里波第', birth: 1807, death: 1882, cat: 'military', emoji: '🗡️', desc: '意大利统一运动领袖。率红衫军千人远征统一南意大利，为实现意大利统一立下不朽功勋。被誉为"意大利统一三杰"之一。', achievements: ['红衫军远征', '统一意大利'], relations: [], events: [] },
-  { id: 'lincoln_abraham', name: '亚伯拉罕·林肯', birth: 1809, death: 1865, cat: 'politician', emoji: '🏛️', desc: '美国第16任总统。领导北方赢得南北战争，废除奴隶制，颁布《解放宣言》。1865年在剧院被刺杀，是美国最伟大的总统之一。', achievements: ['废除奴隶制', '维护联邦统一', '葛底斯堡演说'], relations: [], events: ['e_civil_war'] },
-  { id: 'lee_general', name: '罗伯特·李', birth: 1807, death: 1870, cat: 'military', emoji: '⚔️', desc: '美国南北战争南方联军总司令。以其卓越的战术才能多次以少胜多。最终向格兰特投降，呼吁南方人民和解，"让我们回家种地"。', achievements: ['南军总司令', '战后和解'], relations: [], events: ['e_civil_war'] },
-  { id: 'marx_karl', name: '卡尔·马克思', birth: 1818, death: 1883, cat: 'philosopher', emoji: '📕', desc: '马克思主义创始人。与恩格斯发表《共产党宣言》，撰写《资本论》。其思想深刻改变了19世纪以后的世界政治格局。', achievements: ['《共产党宣言》', '《资本论》', '马克思主义'], relations: [], events: ['e_communist_manifesto'] },
-  { id: 'darwin_charles', name: '查尔斯·达尔文', birth: 1809, death: 1882, cat: 'scientist', emoji: '🧬', desc: '进化论之父。乘坐小猎犬号环球考察5年，1859年出版《物种起源》，提出自然选择理论，彻底改变了人类对生命起源的认识。', achievements: ['进化论', '《物种起源》', '自然选择'], relations: [], events: [] },
-  { id: 'pasteur_louis', name: '路易·巴斯德', birth: 1822, death: 1895, cat: 'scientist', emoji: '🧫', desc: '法国微生物学之父。发明巴氏杀菌法，研制狂犬病和炭疽疫苗。用实验否定了生命自生说，奠定了现代微生物学基础。', achievements: ['巴氏杀菌', '狂犬病疫苗', '微生物学之父'], relations: [], events: [] },
-  { id: 'edison_thomas', name: '托马斯·爱迪生', birth: 1847, death: 1931, cat: 'inventor', emoji: '💡', desc: '美国发明大王，一生拥有1093项专利。发明电灯、留声机、电影摄影机，建立首个工业实验室。名言天才是1%的灵感加99%的汗水。', achievements: ['电灯', '留声机', '1093项专利'], relations: [], events: [] },
-  { id: 'tesla_nikola', name: '尼古拉·特斯拉', birth: 1856, death: 1943, cat: 'scientist', emoji: '⚡', desc: '塞尔维亚裔美国发明家。发明交流电系统，奠定了现代电力工业基础。拥有700多项专利，一生贫困但才华横溢。', achievements: ['交流电系统', '特斯拉线圈', '700多项专利'], relations: [], events: [] },
-  { id: 'wilson_woodrow', name: '威尔逊总统', birth: 1856, death: 1924, cat: 'politician', emoji: '🕊️', desc: '美国第28任总统。领导美国参加一战，提出"十四点和平原则"，倡导成立国际联盟。获诺贝尔和平奖，其民族自决理念影响深远。', achievements: ['十四点原则', '国际联盟', '诺贝尔和平奖'], relations: [], events: ['e_ww1'] },
-  { id: 'lenin_vladimir', name: '弗拉基米尔·列宁', birth: 1870, death: 1924, cat: 'sage', emoji: '✊', desc: '苏联创立者。领导十月革命推翻沙皇制度，建立世界上第一个社会主义国家。提出新经济政策和列宁主义，其遗体至今保存于莫斯科红场。', achievements: ['十月革命', '建立苏联', '列宁主义'], relations: [], events: ['e_russian_revolution'] },
-  { id: 'stalin_joseph', name: '约瑟夫·斯大林', birth: 1878, death: 1953, cat: 'politician', emoji: '🔨', desc: '苏联最高领导人。领导苏联工业化，在二战中击败纳粹德国。但其统治期间的清洗和饥荒也造成数百万人死亡。', achievements: ['领导二战胜利', '苏联工业化'], relations: [], events: ['e_ww2'] },
-  { id: 'hitler_adolf', name: '阿道夫·希特勒', birth: 1889, death: 1945, cat: 'politician', emoji: '💀', desc: '德国纳粹党领袖，第三帝国元首。发动二战，推行种族灭绝政策，600万犹太人惨遭屠杀。1945年在柏林地堡自杀。', achievements: [], relations: [], events: ['e_ww2', 'e_holocaust'] },
-  { id: 'churchill_winston', name: '温斯顿·丘吉尔', birth: 1874, death: 1965, cat: 'politician', emoji: '🎩', desc: '二战期间英国首相。以"我们将在海滩上战斗""永不言败"的演说激励英国人民抵抗纳粹。与罗斯福、斯大林并称"三巨头"。', achievements: ['领导英国抗战', '三巨头', '铁幕演说'], relations: [], events: ['e_ww2'] },
-  { id: 'roosevelt_fdr', name: '富兰克林·罗斯福', birth: 1882, death: 1945, cat: 'politician', emoji: '🇺🇸', desc: '美国第32任总统，唯一连任四届。推行"新政"带领美国走出大萧条，领导美国参加二战，筹划联合国。', achievements: ['新政', '领导二战', '筹划联合国'], relations: [], events: ['e_great_depression', 'e_ww2'] },
-  { id: 'einstein_albert', name: '阿尔伯特·爱因斯坦', birth: 1879, death: 1955, cat: 'scientist', emoji: '⚛️', desc: '史上最伟大的物理学家之一。提出狭义和广义相对论，E=mc²改变了人类对宇宙的认识。1939年写信给罗斯福总统建议研制原子弹，后为反核奔走。', achievements: ['相对论', 'E=mc²', '诺贝尔奖'], relations: [], events: ['e_manhattan'] },
-  { id: 'curie_marie', name: '玛丽·居里', birth: 1867, death: 1934, cat: 'scientist', emoji: '⚗️', desc: '首位诺贝尔奖女性得主。发现钋和镭两种放射性元素，在一战中用移动X光车救治伤员。因长期接触辐射患白血病逝世。', achievements: ['两次诺贝尔奖', '发现镭和钋', '放射性研究'], relations: [], events: [] },
-  { id: 'turing_alan', name: '艾伦·图灵', birth: 1912, death: 1954, cat: 'scientist', emoji: '💻', desc: '计算机科学之父。提出图灵机概念奠定计算机理论基础，二战中破解德国Enigma密码。因同性恋身份被迫害，41岁服毒苹果自杀。', achievements: ['图灵机', '破解Enigma', '计算机之父'], relations: [], events: ['e_ww2'] },
-  { id: 'mandela_nelson', name: '纳尔逊·曼德拉', birth: 1918, death: 2013, cat: 'sage', emoji: '✊🏿', desc: '南非反种族隔离斗士。被囚禁27年，出狱后以宽容精神领导南非废除种族隔离制度，成为首位黑人总统。获诺贝尔和平奖。', achievements: ['结束种族隔离', '诺贝尔和平奖', '和解精神'], relations: [], events: [] },
-  { id: 'gandhi_mahatma', name: '圣雄甘地', birth: 1869, death: 1948, cat: 'philosopher', emoji: '🕊️', desc: '印度独立运动领袖。以非暴力不合作的独特方式领导印度摆脱英国殖民统治。1948年被印度教极端分子刺杀。', achievements: ['非暴力不合作', '印度独立', '圣雄'], relations: [], events: ['e_india_independence'] },
-  { id: 'mlk_martin', name: '马丁·路德·金', birth: 1929, death: 1968, cat: 'philosopher', emoji: '🫱🏿‍🫲🏻', desc: '美国民权运动领袖。发表"我有一个梦想"演讲，以非暴力方式推动废除种族隔离。1968年遇刺，年仅39岁。', achievements: ['民权运动', '"我有一个梦想"', '诺贝尔和平奖'], relations: [], events: [] },
-  { id: 'kennedy_jfk', name: '约翰·肯尼迪', birth: 1917, death: 1963, cat: 'politician', emoji: '🇺🇸', desc: '美国第35任总统。古巴导弹危机中力挽狂澜避免核战，提出登月计划。1963年在达拉斯遇刺身亡，是美国现代史上最震惊的事件之一。', achievements: ['古巴导弹危机', '登月计划', '遇刺'], relations: [], events: ['e_cuban_missile'] },
-  { id: 'gates_bill', name: '比尔·盖茨', birth: 1955, death: 2026, cat: 'inventor', emoji: '💻', desc: '微软创始人。20岁辍学创办微软，将个人电脑带入千家万户。退休后全力投入全球健康慈善事业，捐赠数百亿美元。', achievements: ['微软', 'PC革命', '全球慈善'], relations: [], events: [] },
-  { id: 'jobs_steve', name: '史蒂夫·乔布斯', birth: 1955, death: 2011, cat: 'inventor', emoji: '🍎', desc: '苹果公司创始人。推出Mac、iPod、iPhone和iPad，重新定义了个人电脑、音乐、手机和出版行业。'Stay Hungry, Stay Foolish'激励了一代人。', achievements: ['苹果公司', 'iPhone', 'Stay Hungry'], relations: [], events: [] },
-  { id: 'obama_barack', name: '巴拉克·奥巴马', birth: 1961, death: 2026, cat: 'politician', emoji: '🇺🇸', desc: '美国首位非裔总统。提出"Yes We Can"口号，推行医改法案。获诺贝尔和平奖，其当选是美国种族平等的重要里程碑。', achievements: ['首位非裔总统', '奥巴马医改', '诺贝尔和平奖'], relations: [], events: [] },
-];
-
-const WORLD_EVENTS = [
-  { id: 'e_napoleon', year: 1804, name: '拿破仑称帝', type: 'politics', desc: '拿破仑在巴黎圣母院加冕为法兰西皇帝。此后十年间横扫欧洲，将法国大革命的思想传播到全欧。' },
-  { id: 'e_vienna_congress', year: 1815, name: '维也纳会议', type: 'politics', desc: '拿破仑战败后欧洲列强在维也纳召开会议重建秩序。梅特涅主导的均势体系维持了近40年的欧洲和平。' },
-  { id: 'e_waterloo', year: 1815, name: '滑铁卢战役', type: 'war', desc: '威灵顿公爵和布吕歇尔联军在滑铁卢击败拿破仑。拿破仑被流放圣赫勒拿岛，法兰西第一帝国终结。' },
-  { id: 'e_monroe_doctrine', year: 1823, name: '门罗主义', type: 'politics', desc: '美国总统门罗宣布"美洲是美洲人的"，反对欧洲干预美洲事务。奠定了美国在西半球的主导地位。' },
-  { id: 'e_1848_revolutions', year: 1848, name: '1848年欧洲革命', type: 'politics', desc: '席卷全欧洲的革命浪潮。法国、德国、奥地利、意大利等国民众起义要求民主与统一。虽大多失败，但埋下了民族主义和民主的种子。' },
-  { id: 'e_communist_manifesto', year: 1848, name: '《共产党宣言》发表', type: 'culture', desc: '马克思和恩格斯发表《共产党宣言》，"全世界无产者联合起来！"的口号震撼世界，开启了共产主义运动。' },
-  { id: 'e_crimean_war', year: 1854, name: '克里米亚战争', type: 'war', desc: '英法土联军与俄国在黑海地区决战。南丁格尔在战地开创现代护理学。俄国战败，现代战争的雏形出现。' },
-  { id: 'e_origin_species', year: 1859, name: '《物种起源》出版', type: 'science', desc: '达尔文出版《物种起源》，提出自然选择进化论。彻底颠覆了神创论，是科学史上最重要的里程碑之一。' },
-  { id: 'e_civil_war', year: 1861, name: '美国南北战争', type: 'war', desc: '林肯领导北方击败南方，废除奴隶制。62万人死亡，是美国历史上最惨烈的战争。' },
-  { id: 'e_germany_unification', year: 1871, name: '德意志统一', type: 'politics', desc: '普鲁士在普法战争中击败法国，威廉一世在凡尔赛宫加冕为德意志帝国皇帝。德国崛起改变欧洲均势。' },
-  { id: 'e_spanish_american', year: 1898, name: '美西战争', type: 'war', desc: '美国击败西班牙，夺取菲律宾、关岛和波多黎各。标志着美国开始作为一个帝国主义强国出现。' },
-  { id: 'e_ww1', year: 1914, name: '第一次世界大战', type: 'war', desc: '萨拉热窝事件引发欧洲大战。同盟国vs协约国，新式武器（机枪、毒气、坦克、飞机）造成前所未有的千万人伤亡。四大帝国崩溃。' },
-  { id: 'e_russian_revolution', year: 1917, name: '俄国十月革命', type: 'politics', desc: '列宁领导布尔什维克推翻临时政府，建立世界第一个社会主义国家。深刻改变了20世纪世界格局。' },
-  { id: 'e_versailles', year: 1919, name: '凡尔赛和约', type: 'politics', desc: '巴黎和会上战胜国对德国施加严苛惩罚。巨额赔款和领土割让埋下了德国的复仇种子，20年后引爆二战。' },
-  { id: 'e_great_depression', year: 1929, name: '世界经济大萧条', type: 'economy', desc: '华尔街股市崩盘引发世界经济危机。数千万人失业，各国经济崩溃。促成纳粹上台和新政改革。' },
-  { id: 'e_ww2', year: 1939, name: '第二次世界大战', type: 'war', desc: '纳粹德国入侵波兰，欧亚战场全面爆发。6000万-8000万人死亡，是人类历史上最惨烈的战争。' },
-  { id: 'e_holocaust', year: 1942, name: '犹太人大屠杀', type: 'war', desc: '纳粹德国有组织地屠杀约600万犹太人。奥斯维辛等集中营成为人类黑暗历史的象征。' },
-  { id: 'e_dday', year: 1944, name: '诺曼底登陆(D-Day)', type: 'war', desc: '盟军在法国诺曼底海滩登陆，15万大军横渡英吉利海峡，开辟欧洲第二战场。是史上最大规模的两栖作战。' },
-  { id: 'e_manhattan', year: 1945, name: '曼哈顿计划成功', type: 'science', desc: '美国研制原子弹成功，先后投于广岛和长崎。核武器时代到来，改变了战争和国际政治的基本逻辑。' },
-  { id: 'e_un_founded', year: 1945, name: '联合国成立', type: 'politics', desc: '51个国家签署联合国宪章，旨在维护世界和平与安全。总部设在纽约，现有193个成员国。' },
-  { id: 'e_marshall_plan', year: 1948, name: '马歇尔计划', type: 'economy', desc: '美国向西欧提供130亿美元援助重建战后经济。西欧迅速复兴，同时也遏制了苏联势力的扩张。' },
-  { id: 'e_india_independence', year: 1947, name: '印度独立与印巴分治', type: 'politics', desc: '英国退出南亚，印度和巴基斯坦分别独立。甘地非暴力运动实现目标，但分治造成百万人伤亡的惨剧。' },
-  { id: 'e_berlin_airlift', year: 1948, name: '柏林空运', type: 'politics', desc: '苏联封锁柏林，美英用空运维持西柏林供应近一年。是冷战早期最惊险的对峙之一。' },
-  { id: 'e_cuban_missile', year: 1962, name: '古巴导弹危机', type: 'politics', desc: '苏联在古巴部署核导弹，美国海军封锁古巴。人类历史上最接近核战争的13天。肯尼迪和赫鲁晓夫最终达成妥协。' },
-  { id: 'e_moon_landing', year: 1969, name: '人类登月', type: 'science', desc: '阿波罗11号登月成功。阿姆斯特朗踏上月球："这是个人的一小步，却是人类的一大步。"' },
-  { id: 'e_berlin_wall_fall', year: 1989, name: '柏林墙倒塌', type: 'politics', desc: '分隔东西柏林28年的柏林墙在欢呼声中被推倒。象征冷战结束，此后东欧剧变、苏联解体。' },
-  { id: 'e_ussr_collapse', year: 1991, name: '苏联解体', type: 'politics', desc: '苏联正式解体为15个独立国家。冷战结束，美国成为世界唯一超级大国。20世纪最重大的地缘政治事件之一。' },
-  { id: 'e_911', year: 2001, name: '911恐怖袭击', type: 'war', desc: '基地组织劫持客机撞击世贸中心和五角大楼，近3000人死亡。美国发动全球反恐战争，世界进入反恐时代。' },
-  { id: 'e_covid_19', year: 2020, name: '新冠疫情全球大流行', type: 'economy', desc: 'COVID-19席卷全球，数百万人死亡。全球经济停摆，深刻改变了人类生活和工作方式。' },
-];
-
-const YS = 1800, YE = 2026, PPY = 4;
-let pxPerYear = PPY;
-const CAT_COLORS = { emperor:'#e74c3c', military:'#e67e22', scholar:'#3498db', philosopher:'#9b59b6', scientist:'#2ecc71', artist:'#f39c12', politician:'#1abc9c', sage:'#f1c40f', diplomat:'#ff6b6b', general:'#e67e22', inventor:'#00b894' };
-
-const ERA_GROUPS = [
-  { name:'晚清', start:1800, end:1912, color:'#2c3e50' },
-  { name:'民国/二战', start:1912, end:1949, color:'#3498db' },
-  { name:'当代', start:1949, end:2026, color:'#e74c3c' },
-];
-
-// ===== 工具函数 =====
-function x(year) { return (year - YS) * pxPerYear; }
-function totalWidth() { return (YE - YS) * pxPerYear + 200; }
-
-// ===== 数据加载 =====
-
-
-// ===== 渲染函数 =====
-function renderBlock(idPrefix, data, events, eras) {
-  const canvas = document.getElementById(idPrefix + 'Canvas');
-  if (!canvas) return;
-  const w = totalWidth();
-  canvas.style.width = w + 'px';
-  const axisTop = canvas.clientHeight * 0.5;
-
-  // Bands
-  const bandsEl = document.getElementById(idPrefix + 'Bands');
-  if (bandsEl && eras) {
-    bandsEl.innerHTML = '';
-    eras.forEach(era => {
-      const x1 = x(era.start), x2 = x(era.end);
-      const b = document.createElement('div');
-      b.className = 'dynasty-band';
-      b.style.cssText = `left:${x1}px;width:${Math.max(x2-x1,2)}px;background:${era.color};`;
-      bandsEl.appendChild(b);
-      if (x2 - x1 > 40) {
-        const l = document.createElement('div');
-        l.className = 'dynasty-label';
-        l.style.cssText = `left:${x1+(x2-x1)/2}px;`;
-        l.textContent = era.name;
-        bandsEl.appendChild(l);
-      }
-    });
-  }
-
-  // Axis
-  const axisEl = document.getElementById(idPrefix + 'Axis');
-  if (axisEl) axisEl.style.cssText = `top:${axisTop}px;left:0;width:${w}px;`;
-  const axisLine = axisTop;
-
-  // Ticks
-  const ticksEl = document.getElementById(idPrefix + 'Ticks');
-  if (ticksEl) {
-    ticksEl.innerHTML = '';
-    const ms = pxPerYear < 1 ? 100 : pxPerYear < 3 ? 50 : 25;
-    for (let y = Math.ceil(YS/ms)*ms; y <= YE; y += ms) {
-      const isMajor = y % (ms*5) === 0;
-      const px = x(y);
-      const t = document.createElement('div');
-      t.className = 'tick-mark';
-      t.style.cssText = `left:${px}px;top:${axisLine - (isMajor?8:4)}px;`;
-      const ln = document.createElement('div');
-      ln.className = 'tick-line';
-      ln.style.height = (isMajor?16:8) + 'px';
-      t.appendChild(ln);
-      if (isMajor) {
-        const lb = document.createElement('div');
-        lb.className = 'tick-label';
-        lb.textContent = '' + y;
-        t.appendChild(lb);
-      }
-      ticksEl.appendChild(t);
-    }
-  }
-
-  // Events
-  const evtA = document.getElementById(idPrefix + 'EvtA');
-  const evtB = document.getElementById(idPrefix + 'EvtB');
-  if (evtA) { evtA.innerHTML = ''; evtA.style.top = '0'; }
-  if (evtB) { evtB.innerHTML = ''; evtB.style.top = axisLine + 'px'; }
-  if (events) {
-    events.forEach((ev, i) => {
-      const px = x(ev.year);
-      const above = i % 2 === 0;
-      const c = above ? evtA : evtB;
-      if (!c) return;
-      const colors = { war:'#e74c3c', politics:'#3498db', culture:'#f39c12', economy:'#2ecc71', science:'#9b59b6' };
-      const col = colors[ev.type] || '#888';
-      const n = document.createElement('div');
-      n.className = 'event-node ' + (above ? 'above' : 'below');
-      n.style.cssText = `left:${px}px;${above?'bottom:0;':'top:0;'}`;
-      n.innerHTML = `<div class="event-dot" style="border-color:${col}"></div><div class="event-line" style="height:${20+(i%5)*8}px;background:${col}"></div><div class="event-label">${ev.name}</div>`;
-      c.appendChild(n);
-    });
-  }
-
-  // Persons
-  const perA = document.getElementById(idPrefix + 'PerA');
-  const perB = document.getElementById(idPrefix + 'PerB');
-  if (perA) { perA.innerHTML = ''; perA.style.top = '0'; }
-  if (perB) { perB.innerHTML = ''; perB.style.top = axisLine + 'px'; }
-  if (data) {
-    const sorted = [...data].sort((a,b) => a.birth - b.birth);
-    // 分组
-    const groupA = sorted.filter((_,i) => i % 2 === 0);
-    const groupB = sorted.filter((_,i) => i % 2 !== 0);
-    [groupA, groupB].forEach((grp, idx) => {
-      const container = idx === 0 ? perA : perB;
-      if (!container) return;
-      const rowH = 28;
-      grp.forEach((p, i) => {
-        const px = x(p.birth);
-        const top = axisLine + (idx === 0 ? -(i+1)*rowH : 10 + i*rowH);
-        if (top < 0) return; // above viewport
-        const col = CAT_COLORS[p.cat] || '#888';
-        const row = document.createElement('div');
-        row.className = 'person-row';
-        row.style.cssText = `left:${px}px;top:${(idx===0?top-18:top)}px;`;
-        row.innerHTML = `<span class="person-emoji">${p.emoji||'👤'}</span><span class="person-name" style="border-left:2px solid ${col};padding-left:3px">${p.name}</span>`;
-        row.title = `${p.name} (${p.birth}-${p.death})\n${p.desc}`;
-        container.appendChild(row);
-      });
-    });
-    // Wrapper height
-    const maxRows = Math.ceil(data.length / 2) + 2;
-    const h = axisLine + maxRows * rowH + 40 + 'px';
-    canvas.style.minHeight = h;
-  }
-}
-
-function initTimelines() {
-  if (typeof PERSONS === 'undefined') { console.error('Data not loaded'); return; }
-
-  // 设置容器宽度
-  const w = totalWidth();
-  document.getElementById('mainContainer').style.width = Math.max(w, window.innerWidth) + 'px';
-
-  renderBlock('china', PERSONS, EVENTS, ERA_GROUPS);
-  renderBlock('japan', JAPAN_PERSONS, JAPAN_EVENTS, [
-    { name:'江户末', start:1800, end:1868, color:'#2a2a5a' },
-    { name:'明治', start:1868, end:1912, color:'#c0392b' },
-    { name:'大正', start:1912, end:1926, color:'#8e44ad' },
-    { name:'昭和', start:1926, end:1989, color:'#2980b9' },
-    { name:'平成/令和', start:1989, end:2026, color:'#27ae60' },
-  ]);
-  renderBlock('world', WORLD_PERSONS, WORLD_EVENTS, [
-    { name:'拿破仑', start:1800, end:1815, color:'#8B0000' },
-    { name:'殖民帝国', start:1815, end:1918, color:'#2c3e50' },
-    { name:'战间期', start:1918, end:1939, color:'#7f8c8d' },
-    { name:'冷战', start:1947, end:1991, color:'#34495e' },
-    { name:'后冷战', start:1991, end:2026, color:'#2980b9' },
-  ]);
-}
-
-// 折叠按钮
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.btn-collapse');
-  if (!btn) return;
-  const block = btn.closest('.timeline-block');
-  block.classList.toggle('collapsed');
-  if (block.classList.contains('collapsed')) {
-    btn.textContent = '▼';
-  } else {
-    btn.textContent = '▲';
-  }
-});
-
-// 拖拽滚动
-(function() {
-  const mc = document.getElementById('mainContainer');
-  let isDown = false, startX, scrollLeft;
-  mc.addEventListener('mousedown', (e) => {
-    if (e.target.closest('.person-row')) return;
-    isDown = true; startX = e.pageX - mc.offsetLeft; scrollLeft = mc.scrollLeft;
-    mc.style.cursor = 'grabbing';
-  });
-  document.addEventListener('mouseup', () => { isDown = false; mc.style.cursor = 'grab'; });
-  document.addEventListener('mousemove', (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    mc.scrollLeft = scrollLeft - (e.pageX - mc.offsetLeft - startX) * 2;
-  });
-  mc.style.cursor = 'grab';
-})();
-
-// 滚轮缩放
-document.getElementById('mainContainer').addEventListener('wheel', (e) => {
-  e.preventDefault();
-  const rect = document.getElementById('mainContainer').getBoundingClientRect();
-  const mouseX = e.clientX - rect.left + document.getElementById('mainContainer').scrollLeft;
-  const targetYear = YS + mouseX / pxPerYear;
-  pxPerYear *= (e.deltaY > 0 ? 0.85 : 1.18);
-  pxPerYear = Math.max(1, Math.min(50, pxPerYear));
-  initTimelines();
-  document.getElementById('mainContainer').scrollLeft = (targetYear - YS) * pxPerYear - (e.clientX - rect.left);
-}, { passive: false });
-
-setTimeout(initTimelines, 50);
-</script>
+<script src="modern_data.js?v=20260519"></script>
+<script src="modern_main.js?v=20260519"></script>
 </body>
 </html>

@@ -1,10 +1,6 @@
 // =============================================
 // 近代历史数据：1800-2026 中国/日本/世界
 // =============================================
-var YEAR_START = 1800;
-var YEAR_END   = 2026;
-var PX_PER_YEAR_DEFAULT = 4;
-var pxPerYear = PX_PER_YEAR_DEFAULT;
 
 const DYNASTIES = [
   { name: '晚清', start: 1800, end: 1912, color: '#2c3e50' },
